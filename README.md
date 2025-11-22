@@ -60,12 +60,12 @@ This produces `ghidra_output.json` (or individual JSONs depending on script conf
 
 Extracts ML-ready features from a binary and its corresponding Ghidra analysis JSON.
 
----
 
-### **`features.json`**
+
+### **`4.features.json`**
 Final feature vector for **Machine Learning** or **rule-based crypto detection**.
 
----
+
 
 ```bash
 python3 extract_features.py
