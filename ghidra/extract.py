@@ -82,7 +82,7 @@ def detect_crypto_signatures(func, immediates):
         "rsa_bigint_detected": 0
     }
     
-    # Check for AES S-Box (look for consecutive S-Box values)
+    # Check for AES S-Box (look for consecutive S-Box values in immediates)
     aes_sbox_matches = 0
     for i in range(len(immediates) - 7):
         consecutive = immediates[i:i+8]
@@ -93,6 +93,32 @@ def detect_crypto_signatures(func, immediates):
                 break
     if aes_sbox_matches >= 2:
         signatures["has_aes_sbox"] = 1
+        
+    # Check for AES S-Box via data references (global arrays)
+    if signatures["has_aes_sbox"] == 0:
+        inst_iter = currentProgram.getListing().getInstructions(func.getBody(), True)
+        while inst_iter.hasNext():
+            inst = inst_iter.next()
+            refs = inst.getReferencesFrom()
+            for ref in refs:
+                if ref.isMemoryReference() and not ref.isStackReference():
+                    to_addr = ref.getToAddress()
+                    try:
+                        # Read 10 bytes to check for S-box pattern
+                        mem_bytes = []
+                        for k in range(10):
+                            b = currentProgram.getMemory().getByte(to_addr.add(k)) & 0xFF
+                            mem_bytes.append(b)
+                        
+                        # Check against S-Box
+                        for j in range(len(AES_SBOX) - 10):
+                            if mem_bytes == AES_SBOX[j:j+10]:
+                                signatures["has_aes_sbox"] = 1
+                                break
+                    except:
+                        pass
+            if signatures["has_aes_sbox"] == 1:
+                break
     
     # Check for AES Rcon
     rcon_matches = sum(1 for val in immediates if val in AES_RCON)

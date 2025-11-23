@@ -35,11 +35,16 @@ SCRIPT_PATH = "ghidra/extract.py"
 BATCH_SIZE = 10  # Process in batches to show progress
 TIMEOUT_PER_BINARY = 180  # 3 minutes per binary
 
+import shutil
+
 def run_ghidra_on_binary(binary_path):
     """Run Ghidra analysis on a single binary"""
     analyzer_bin = os.path.join(GHIDRA_HOME, "support", "analyzeHeadless")
     binary_name = os.path.basename(binary_path)
     
+    # Ensure a clean temporary project directory
+    if os.path.isdir(PROJECT_DIR):
+        shutil.rmtree(PROJECT_DIR)
     os.makedirs(PROJECT_DIR, exist_ok=True)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
