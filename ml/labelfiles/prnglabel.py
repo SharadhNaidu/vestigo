@@ -22,7 +22,7 @@ import csv
 # CONFIG
 # ============================================================
 TARGET_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "ghidra_output")
+    os.path.join(os.path.dirname(__file__), "..", "..", "ghidra_output")
 )
 
 

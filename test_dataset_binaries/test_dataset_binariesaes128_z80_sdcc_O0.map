@@ -1,0 +1,1457 @@
+ASxxxx Linker V03.00 + NoICE + sdld,  page 1.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+.  .ABS.                            00000000    00000000 =           0. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000000  .__.ABS.                           
+     00000000  _putchar                        
+     00000000  l__BSEG                         
+     00000000  l__BSS                          
+     00000000  l__CABS                         
+     00000000  l__DABS                         
+     00000000  l__DATA                         
+     00000000  l__HEADER                       
+     00000000  l__HEAP                         
+     00000000  l__HOME                         
+     00000000  l__INITIALIZED                  
+     00000000  l__INITIALIZER                  
+     00000000  s__CABS                         
+     00000000  s__DABS                         
+     00000000  s__HEADER                       
+     00000000  s__HEADER0                      
+     00000000  s__HEADER1                      
+     00000000  s__HEADER2                      
+     00000000  s__HEADER3                      
+     00000000  s__HEADER4                      
+     00000000  s__HEADER5                      
+     00000000  s__HEADER6                      
+     00000000  s__HEADER7                      
+     00000000  s__HEADER8                      
+     00000001  l__GSFINAL                      
+     00000003  l__HEADER0                      
+     00000003  l__HEADER2                      
+     00000003  l__HEADER3                      
+     00000003  l__HEADER4                      
+     00000003  l__HEADER5                      
+     00000003  l__HEADER6                      
+     00000003  l__HEADER7                      
+     00000004  l__HEADER1                      
+     0000000C  l__HEADER8                      
+     0000000F  l__GSINIT                       
+     00000200  s__CODE                         
+     00001530  l__CODE                         
+     00001730  s__GSINIT                       
+     00001730  s__HOME                         
+     00001730  s__INITIALIZER                  
+     0000173F  s__GSFINAL                      
+     00008000  s__BSEG                         
+     00008000  s__BSS                          
+     00008000  s__DATA                         
+     00008000  s__HEAP                         
+     00008000  s__INITIALIZED                  
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000200  __clock                            crt0
+     00000204  _exit                              crt0
+     0000020A  A$test_dataset_binariesaes128_z8   aes128
+     0000020A  C$aes128.c$32$0_0$35               aes128
+     0000020A  Faes128$xt$0$0                     aes128
+     0000020C  A$test_dataset_binariesaes128_z8   aes128
+     00000210  A$test_dataset_binariesaes128_z8   aes128
+     00000212  A$test_dataset_binariesaes128_z8   aes128
+     00000212  C$aes128.c$33$1_0$35               aes128
+     00000215  A$test_dataset_binariesaes128_z8   aes128
+     00000216  A$test_dataset_binariesaes128_z8   aes128
+     00000217  A$test_dataset_binariesaes128_z8   aes128
+     0000021A  A$test_dataset_binariesaes128_z8   aes128
+     0000021B  A$test_dataset_binariesaes128_z8   aes128
+     0000021E  A$test_dataset_binariesaes128_z8   aes128
+     00000221  A$test_dataset_binariesaes128_z8   aes128
+     00000224  A$test_dataset_binariesaes128_z8   aes128
+     00000227  A$test_dataset_binariesaes128_z8   aes128
+     0000022A  A$test_dataset_binariesaes128_z8   aes128
+     0000022B  A$test_dataset_binariesaes128_z8   aes128
+     0000022C  A$test_dataset_binariesaes128_z8   aes128
+     0000022D  A$test_dataset_binariesaes128_z8   aes128
+     0000022E  A$test_dataset_binariesaes128_z8   aes128
+     0000022F  A$test_dataset_binariesaes128_z8   aes128
+     00000230  A$test_dataset_binariesaes128_z8   aes128
+     00000231  A$test_dataset_binariesaes128_z8   aes128
+     00000232  A$test_dataset_binariesaes128_z8   aes128
+     00000233  A$test_dataset_binariesaes128_z8   aes128
+     00000235  A$test_dataset_binariesaes128_z8   aes128
+     00000235  C$aes128.c$34$1_0$35               aes128
+     00000235  XFaes128$xt$0$0                    aes128
+     00000236  Faes128$SBOX$0_0$0                 aes128
+     00000336  Faes128$RCON$0_0$0                 aes128
+     00000341  A$test_dataset_binariesaes128_z8   aes128
+     00000341  C$aes128.c$36$1_0$38               aes128
+     00000341  Faes128$SubBytes$0$0               aes128
+     00000343  A$test_dataset_binariesaes128_z8   aes128
+     00000347  A$test_dataset_binariesaes128_z8   aes128
+     00000349  A$test_dataset_binariesaes128_z8   aes128
+     0000034C  A$test_dataset_binariesaes128_z8   aes128
+     0000034D  A$test_dataset_binariesaes128_z8   aes128
+     0000034F  A$test_dataset_binariesaes128_z8   aes128
+     00000350  A$test_dataset_binariesaes128_z8   aes128
+     00000351  A$test_dataset_binariesaes128_z8   aes128
+     00000352  A$test_dataset_binariesaes128_z8   aes128
+     00000353  A$test_dataset_binariesaes128_z8   aes128
+     00000355  A$test_dataset_binariesaes128_z8   aes128
+     00000358  A$test_dataset_binariesaes128_z8   aes128
+     00000358  C$aes128.c$38$2_0$38               aes128
+     0000035B  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000035C  A$test_dataset_binariesaes128_z8   aes128
+     0000035D  A$test_dataset_binariesaes128_z8   aes128
+     00000360  A$test_dataset_binariesaes128_z8   aes128
+     00000361  A$test_dataset_binariesaes128_z8   aes128
+     00000362  A$test_dataset_binariesaes128_z8   aes128
+     00000363  A$test_dataset_binariesaes128_z8   aes128
+     00000365  A$test_dataset_binariesaes128_z8   aes128
+     00000366  A$test_dataset_binariesaes128_z8   aes128
+     00000368  A$test_dataset_binariesaes128_z8   aes128
+     0000036A  A$test_dataset_binariesaes128_z8   aes128
+     0000036B  A$test_dataset_binariesaes128_z8   aes128
+     0000036C  A$test_dataset_binariesaes128_z8   aes128
+     0000036D  A$test_dataset_binariesaes128_z8   aes128
+     0000036D  C$aes128.c$37$2_0$38               aes128
+     0000036E  A$test_dataset_binariesaes128_z8   aes128
+     00000371  A$test_dataset_binariesaes128_z8   aes128
+     00000373  A$test_dataset_binariesaes128_z8   aes128
+     00000373  C$aes128.c$39$2_0$38               aes128
+     00000373  XFaes128$SubBytes$0$0              aes128
+     00000374  A$test_dataset_binariesaes128_z8   aes128
+     00000374  C$aes128.c$41$2_0$40               aes128
+     00000374  Faes128$ShiftRows$0$0              aes128
+     00000376  A$test_dataset_binariesaes128_z8   aes128
+     0000037A  A$test_dataset_binariesaes128_z8   aes128
+     0000037C  A$test_dataset_binariesaes128_z8   aes128
+     0000037F  A$test_dataset_binariesaes128_z8   aes128
+     00000380  A$test_dataset_binariesaes128_z8   aes128
+     00000381  A$test_dataset_binariesaes128_z8   aes128
+     00000381  C$aes128.c$43$1_0$40               aes128
+     00000384  A$test_dataset_binariesaes128_z8   aes128
+     00000385  A$test_dataset_binariesaes128_z8   aes128
+     00000386  A$test_dataset_binariesaes128_z8   aes128
+     00000387  A$test_dataset_binariesaes128_z8   aes128
+     00000388  A$test_dataset_binariesaes128_z8   aes128
+     00000389  A$test_dataset_binariesaes128_z8   aes128
+     0000038C  A$test_dataset_binariesaes128_z8   aes128
+     0000038F  A$test_dataset_binariesaes128_z8   aes128
+     00000390  A$test_dataset_binariesaes128_z8   aes128
+     00000393  A$test_dataset_binariesaes128_z8   aes128
+     00000395  A$test_dataset_binariesaes128_z8   aes128
+     00000396  A$test_dataset_binariesaes128_z8   aes128
+     00000396  C$aes128.c$45$1_0$40               aes128
+     00000399  A$test_dataset_binariesaes128_z8   aes128
+     0000039C  A$test_dataset_binariesaes128_z8   aes128
+     0000039D  A$test_dataset_binariesaes128_z8   aes128
+     0000039E  A$test_dataset_binariesaes128_z8   aes128
+     0000039F  A$test_dataset_binariesaes128_z8   aes128
+     000003A0  A$test_dataset_binariesaes128_z8   aes128
+     000003A1  A$test_dataset_binariesaes128_z8   aes128
+     000003A2  A$test_dataset_binariesaes128_z8   aes128
+     000003A3  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 4.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000003A4  A$test_dataset_binariesaes128_z8   aes128
+     000003A5  A$test_dataset_binariesaes128_z8   aes128
+     000003A6  A$test_dataset_binariesaes128_z8   aes128
+     000003A9  A$test_dataset_binariesaes128_z8   aes128
+     000003AB  A$test_dataset_binariesaes128_z8   aes128
+     000003AC  A$test_dataset_binariesaes128_z8   aes128
+     000003AF  A$test_dataset_binariesaes128_z8   aes128
+     000003B1  A$test_dataset_binariesaes128_z8   aes128
+     000003B2  A$test_dataset_binariesaes128_z8   aes128
+     000003B3  A$test_dataset_binariesaes128_z8   aes128
+     000003B4  A$test_dataset_binariesaes128_z8   aes128
+     000003B5  A$test_dataset_binariesaes128_z8   aes128
+     000003B8  A$test_dataset_binariesaes128_z8   aes128
+     000003B9  A$test_dataset_binariesaes128_z8   aes128
+     000003BA  A$test_dataset_binariesaes128_z8   aes128
+     000003BB  A$test_dataset_binariesaes128_z8   aes128
+     000003BC  A$test_dataset_binariesaes128_z8   aes128
+     000003BF  A$test_dataset_binariesaes128_z8   aes128
+     000003C1  A$test_dataset_binariesaes128_z8   aes128
+     000003C2  A$test_dataset_binariesaes128_z8   aes128
+     000003C5  A$test_dataset_binariesaes128_z8   aes128
+     000003C7  A$test_dataset_binariesaes128_z8   aes128
+     000003C8  A$test_dataset_binariesaes128_z8   aes128
+     000003C9  A$test_dataset_binariesaes128_z8   aes128
+     000003CA  A$test_dataset_binariesaes128_z8   aes128
+     000003CB  A$test_dataset_binariesaes128_z8   aes128
+     000003CE  A$test_dataset_binariesaes128_z8   aes128
+     000003CF  A$test_dataset_binariesaes128_z8   aes128
+     000003D0  A$test_dataset_binariesaes128_z8   aes128
+     000003D1  A$test_dataset_binariesaes128_z8   aes128
+     000003D2  A$test_dataset_binariesaes128_z8   aes128
+     000003D5  A$test_dataset_binariesaes128_z8   aes128
+     000003D7  A$test_dataset_binariesaes128_z8   aes128
+     000003D8  A$test_dataset_binariesaes128_z8   aes128
+     000003DB  A$test_dataset_binariesaes128_z8   aes128
+     000003DD  A$test_dataset_binariesaes128_z8   aes128
+     000003DE  A$test_dataset_binariesaes128_z8   aes128
+     000003DF  A$test_dataset_binariesaes128_z8   aes128
+     000003E0  A$test_dataset_binariesaes128_z8   aes128
+     000003E1  A$test_dataset_binariesaes128_z8   aes128
+     000003E2  A$test_dataset_binariesaes128_z8   aes128
+     000003E3  A$test_dataset_binariesaes128_z8   aes128
+     000003E3  C$aes128.c$46$1_0$40               aes128
+     000003E6  A$test_dataset_binariesaes128_z8   aes128
+     000003E9  A$test_dataset_binariesaes128_z8   aes128
+     000003EA  A$test_dataset_binariesaes128_z8   aes128
+     000003EB  A$test_dataset_binariesaes128_z8   aes128
+     000003EC  A$test_dataset_binariesaes128_z8   aes128
+     000003ED  A$test_dataset_binariesaes128_z8   aes128
+     000003EE  A$test_dataset_binariesaes128_z8   aes128
+     000003F1  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 5.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000003F2  A$test_dataset_binariesaes128_z8   aes128
+     000003F3  A$test_dataset_binariesaes128_z8   aes128
+     000003F4  A$test_dataset_binariesaes128_z8   aes128
+     000003F5  A$test_dataset_binariesaes128_z8   aes128
+     000003F8  A$test_dataset_binariesaes128_z8   aes128
+     000003FA  A$test_dataset_binariesaes128_z8   aes128
+     000003FB  A$test_dataset_binariesaes128_z8   aes128
+     000003FE  A$test_dataset_binariesaes128_z8   aes128
+     00000400  A$test_dataset_binariesaes128_z8   aes128
+     00000401  A$test_dataset_binariesaes128_z8   aes128
+     00000402  A$test_dataset_binariesaes128_z8   aes128
+     00000403  A$test_dataset_binariesaes128_z8   aes128
+     00000404  A$test_dataset_binariesaes128_z8   aes128
+     00000405  A$test_dataset_binariesaes128_z8   aes128
+     00000406  A$test_dataset_binariesaes128_z8   aes128
+     00000407  A$test_dataset_binariesaes128_z8   aes128
+     0000040A  A$test_dataset_binariesaes128_z8   aes128
+     0000040C  A$test_dataset_binariesaes128_z8   aes128
+     0000040D  A$test_dataset_binariesaes128_z8   aes128
+     00000410  A$test_dataset_binariesaes128_z8   aes128
+     00000412  A$test_dataset_binariesaes128_z8   aes128
+     00000413  A$test_dataset_binariesaes128_z8   aes128
+     00000414  A$test_dataset_binariesaes128_z8   aes128
+     00000415  A$test_dataset_binariesaes128_z8   aes128
+     00000416  A$test_dataset_binariesaes128_z8   aes128
+     00000419  A$test_dataset_binariesaes128_z8   aes128
+     0000041A  A$test_dataset_binariesaes128_z8   aes128
+     0000041B  A$test_dataset_binariesaes128_z8   aes128
+     0000041C  A$test_dataset_binariesaes128_z8   aes128
+     0000041D  A$test_dataset_binariesaes128_z8   aes128
+     00000420  A$test_dataset_binariesaes128_z8   aes128
+     00000422  A$test_dataset_binariesaes128_z8   aes128
+     00000423  A$test_dataset_binariesaes128_z8   aes128
+     00000426  A$test_dataset_binariesaes128_z8   aes128
+     00000428  A$test_dataset_binariesaes128_z8   aes128
+     00000429  A$test_dataset_binariesaes128_z8   aes128
+     0000042A  A$test_dataset_binariesaes128_z8   aes128
+     0000042B  A$test_dataset_binariesaes128_z8   aes128
+     0000042C  A$test_dataset_binariesaes128_z8   aes128
+     0000042F  A$test_dataset_binariesaes128_z8   aes128
+     00000430  A$test_dataset_binariesaes128_z8   aes128
+     00000431  A$test_dataset_binariesaes128_z8   aes128
+     00000432  A$test_dataset_binariesaes128_z8   aes128
+     00000433  A$test_dataset_binariesaes128_z8   aes128
+     00000433  C$aes128.c$47$1_0$40               aes128
+     00000436  A$test_dataset_binariesaes128_z8   aes128
+     00000439  A$test_dataset_binariesaes128_z8   aes128
+     0000043A  A$test_dataset_binariesaes128_z8   aes128
+     0000043B  A$test_dataset_binariesaes128_z8   aes128
+     0000043C  A$test_dataset_binariesaes128_z8   aes128
+     0000043D  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 6.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000043E  A$test_dataset_binariesaes128_z8   aes128
+     0000043F  A$test_dataset_binariesaes128_z8   aes128
+     00000442  A$test_dataset_binariesaes128_z8   aes128
+     00000443  A$test_dataset_binariesaes128_z8   aes128
+     00000444  A$test_dataset_binariesaes128_z8   aes128
+     00000445  A$test_dataset_binariesaes128_z8   aes128
+     00000446  A$test_dataset_binariesaes128_z8   aes128
+     00000449  A$test_dataset_binariesaes128_z8   aes128
+     0000044B  A$test_dataset_binariesaes128_z8   aes128
+     0000044C  A$test_dataset_binariesaes128_z8   aes128
+     0000044F  A$test_dataset_binariesaes128_z8   aes128
+     00000451  A$test_dataset_binariesaes128_z8   aes128
+     00000452  A$test_dataset_binariesaes128_z8   aes128
+     00000453  A$test_dataset_binariesaes128_z8   aes128
+     00000454  A$test_dataset_binariesaes128_z8   aes128
+     00000455  A$test_dataset_binariesaes128_z8   aes128
+     00000456  A$test_dataset_binariesaes128_z8   aes128
+     00000457  A$test_dataset_binariesaes128_z8   aes128
+     00000458  A$test_dataset_binariesaes128_z8   aes128
+     00000459  A$test_dataset_binariesaes128_z8   aes128
+     0000045C  A$test_dataset_binariesaes128_z8   aes128
+     0000045E  A$test_dataset_binariesaes128_z8   aes128
+     0000045F  A$test_dataset_binariesaes128_z8   aes128
+     00000462  A$test_dataset_binariesaes128_z8   aes128
+     00000464  A$test_dataset_binariesaes128_z8   aes128
+     00000465  A$test_dataset_binariesaes128_z8   aes128
+     00000466  A$test_dataset_binariesaes128_z8   aes128
+     00000467  A$test_dataset_binariesaes128_z8   aes128
+     00000468  A$test_dataset_binariesaes128_z8   aes128
+     0000046B  A$test_dataset_binariesaes128_z8   aes128
+     0000046C  A$test_dataset_binariesaes128_z8   aes128
+     0000046D  A$test_dataset_binariesaes128_z8   aes128
+     0000046E  A$test_dataset_binariesaes128_z8   aes128
+     0000046F  A$test_dataset_binariesaes128_z8   aes128
+     00000472  A$test_dataset_binariesaes128_z8   aes128
+     00000474  A$test_dataset_binariesaes128_z8   aes128
+     00000475  A$test_dataset_binariesaes128_z8   aes128
+     00000478  A$test_dataset_binariesaes128_z8   aes128
+     0000047A  A$test_dataset_binariesaes128_z8   aes128
+     0000047B  A$test_dataset_binariesaes128_z8   aes128
+     0000047C  A$test_dataset_binariesaes128_z8   aes128
+     0000047D  A$test_dataset_binariesaes128_z8   aes128
+     00000480  A$test_dataset_binariesaes128_z8   aes128
+     00000481  A$test_dataset_binariesaes128_z8   aes128
+     00000482  A$test_dataset_binariesaes128_z8   aes128
+     00000483  A$test_dataset_binariesaes128_z8   aes128
+     00000485  A$test_dataset_binariesaes128_z8   aes128
+     00000487  A$test_dataset_binariesaes128_z8   aes128
+     00000487  C$aes128.c$48$1_0$40               aes128
+     00000487  XFaes128$ShiftRows$0$0             aes128
+     00000488  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 7.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000488  C$aes128.c$50$1_0$43               aes128
+     00000488  Faes128$MixColumns$0$0             aes128
+     0000048A  A$test_dataset_binariesaes128_z8   aes128
+     0000048E  A$test_dataset_binariesaes128_z8   aes128
+     00000490  A$test_dataset_binariesaes128_z8   aes128
+     00000493  A$test_dataset_binariesaes128_z8   aes128
+     00000494  A$test_dataset_binariesaes128_z8   aes128
+     00000495  A$test_dataset_binariesaes128_z8   aes128
+     00000498  A$test_dataset_binariesaes128_z8   aes128
+     00000499  A$test_dataset_binariesaes128_z8   aes128
+     0000049B  A$test_dataset_binariesaes128_z8   aes128
+     0000049C  A$test_dataset_binariesaes128_z8   aes128
+     0000049D  A$test_dataset_binariesaes128_z8   aes128
+     0000049E  A$test_dataset_binariesaes128_z8   aes128
+     0000049F  A$test_dataset_binariesaes128_z8   aes128
+     000004A1  A$test_dataset_binariesaes128_z8   aes128
+     000004A4  A$test_dataset_binariesaes128_z8   aes128
+     000004A4  C$aes128.c$52$3_0$44               aes128
+     000004A5  A$test_dataset_binariesaes128_z8   aes128
+     000004A6  A$test_dataset_binariesaes128_z8   aes128
+     000004A8  A$test_dataset_binariesaes128_z8   aes128
+     000004AA  A$test_dataset_binariesaes128_z8   aes128
+     000004AC  A$test_dataset_binariesaes128_z8   aes128
+     000004AE  A$test_dataset_binariesaes128_z8   aes128
+     000004AE  C$aes128.c$53$3_0$44               aes128
+     000004B1  A$test_dataset_binariesaes128_z8   aes128
+     000004B2  A$test_dataset_binariesaes128_z8   aes128
+     000004B5  A$test_dataset_binariesaes128_z8   aes128
+     000004B8  A$test_dataset_binariesaes128_z8   aes128
+     000004B9  A$test_dataset_binariesaes128_z8   aes128
+     000004BC  A$test_dataset_binariesaes128_z8   aes128
+     000004BD  A$test_dataset_binariesaes128_z8   aes128
+     000004BE  A$test_dataset_binariesaes128_z8   aes128
+     000004BF  A$test_dataset_binariesaes128_z8   aes128
+     000004C2  A$test_dataset_binariesaes128_z8   aes128
+     000004C5  A$test_dataset_binariesaes128_z8   aes128
+     000004C6  A$test_dataset_binariesaes128_z8   aes128
+     000004C9  A$test_dataset_binariesaes128_z8   aes128
+     000004CC  A$test_dataset_binariesaes128_z8   aes128
+     000004CF  A$test_dataset_binariesaes128_z8   aes128
+     000004D2  A$test_dataset_binariesaes128_z8   aes128
+     000004D5  A$test_dataset_binariesaes128_z8   aes128
+     000004D8  A$test_dataset_binariesaes128_z8   aes128
+     000004DB  A$test_dataset_binariesaes128_z8   aes128
+     000004DE  A$test_dataset_binariesaes128_z8   aes128
+     000004E1  A$test_dataset_binariesaes128_z8   aes128
+     000004E4  A$test_dataset_binariesaes128_z8   aes128
+     000004E5  A$test_dataset_binariesaes128_z8   aes128
+     000004E8  A$test_dataset_binariesaes128_z8   aes128
+     000004EB  A$test_dataset_binariesaes128_z8   aes128
+     000004EC  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000004EF  A$test_dataset_binariesaes128_z8   aes128
+     000004F2  A$test_dataset_binariesaes128_z8   aes128
+     000004F5  A$test_dataset_binariesaes128_z8   aes128
+     000004F8  A$test_dataset_binariesaes128_z8   aes128
+     000004FB  A$test_dataset_binariesaes128_z8   aes128
+     000004FE  A$test_dataset_binariesaes128_z8   aes128
+     00000501  A$test_dataset_binariesaes128_z8   aes128
+     00000504  A$test_dataset_binariesaes128_z8   aes128
+     00000507  A$test_dataset_binariesaes128_z8   aes128
+     0000050A  A$test_dataset_binariesaes128_z8   aes128
+     0000050B  A$test_dataset_binariesaes128_z8   aes128
+     0000050E  A$test_dataset_binariesaes128_z8   aes128
+     0000050F  A$test_dataset_binariesaes128_z8   aes128
+     00000510  A$test_dataset_binariesaes128_z8   aes128
+     00000511  A$test_dataset_binariesaes128_z8   aes128
+     00000512  A$test_dataset_binariesaes128_z8   aes128
+     00000515  A$test_dataset_binariesaes128_z8   aes128
+     00000518  A$test_dataset_binariesaes128_z8   aes128
+     00000519  A$test_dataset_binariesaes128_z8   aes128
+     0000051C  A$test_dataset_binariesaes128_z8   aes128
+     0000051F  A$test_dataset_binariesaes128_z8   aes128
+     00000522  A$test_dataset_binariesaes128_z8   aes128
+     00000525  A$test_dataset_binariesaes128_z8   aes128
+     00000526  A$test_dataset_binariesaes128_z8   aes128
+     00000526  C$aes128.c$55$3_0$44               aes128
+     00000527  A$test_dataset_binariesaes128_z8   aes128
+     00000528  A$test_dataset_binariesaes128_z8   aes128
+     0000052B  A$test_dataset_binariesaes128_z8   aes128
+     0000052C  A$test_dataset_binariesaes128_z8   aes128
+     0000052D  A$test_dataset_binariesaes128_z8   aes128
+     00000530  A$test_dataset_binariesaes128_z8   aes128
+     00000531  A$test_dataset_binariesaes128_z8   aes128
+     00000532  A$test_dataset_binariesaes128_z8   aes128
+     00000533  A$test_dataset_binariesaes128_z8   aes128
+     00000534  A$test_dataset_binariesaes128_z8   aes128
+     00000535  A$test_dataset_binariesaes128_z8   aes128
+     00000536  A$test_dataset_binariesaes128_z8   aes128
+     00000539  A$test_dataset_binariesaes128_z8   aes128
+     0000053A  A$test_dataset_binariesaes128_z8   aes128
+     0000053B  A$test_dataset_binariesaes128_z8   aes128
+     0000053E  A$test_dataset_binariesaes128_z8   aes128
+     0000053F  A$test_dataset_binariesaes128_z8   aes128
+     00000540  A$test_dataset_binariesaes128_z8   aes128
+     00000541  A$test_dataset_binariesaes128_z8   aes128
+     00000542  A$test_dataset_binariesaes128_z8   aes128
+     00000543  A$test_dataset_binariesaes128_z8   aes128
+     00000544  A$test_dataset_binariesaes128_z8   aes128
+     00000547  A$test_dataset_binariesaes128_z8   aes128
+     0000054A  A$test_dataset_binariesaes128_z8   aes128
+     0000054B  A$test_dataset_binariesaes128_z8   aes128
+     0000054C  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000054D  A$test_dataset_binariesaes128_z8   aes128
+     0000054E  A$test_dataset_binariesaes128_z8   aes128
+     0000054E  C$aes128.c$56$3_0$44               aes128
+     0000054F  A$test_dataset_binariesaes128_z8   aes128
+     00000550  A$test_dataset_binariesaes128_z8   aes128
+     00000553  A$test_dataset_binariesaes128_z8   aes128
+     00000554  A$test_dataset_binariesaes128_z8   aes128
+     00000555  A$test_dataset_binariesaes128_z8   aes128
+     00000558  A$test_dataset_binariesaes128_z8   aes128
+     00000559  A$test_dataset_binariesaes128_z8   aes128
+     0000055A  A$test_dataset_binariesaes128_z8   aes128
+     0000055B  A$test_dataset_binariesaes128_z8   aes128
+     0000055C  A$test_dataset_binariesaes128_z8   aes128
+     0000055F  A$test_dataset_binariesaes128_z8   aes128
+     00000560  A$test_dataset_binariesaes128_z8   aes128
+     00000561  A$test_dataset_binariesaes128_z8   aes128
+     00000562  A$test_dataset_binariesaes128_z8   aes128
+     00000565  A$test_dataset_binariesaes128_z8   aes128
+     00000566  A$test_dataset_binariesaes128_z8   aes128
+     00000567  A$test_dataset_binariesaes128_z8   aes128
+     0000056A  A$test_dataset_binariesaes128_z8   aes128
+     0000056B  A$test_dataset_binariesaes128_z8   aes128
+     0000056C  A$test_dataset_binariesaes128_z8   aes128
+     0000056D  A$test_dataset_binariesaes128_z8   aes128
+     0000056E  A$test_dataset_binariesaes128_z8   aes128
+     0000056F  A$test_dataset_binariesaes128_z8   aes128
+     00000572  A$test_dataset_binariesaes128_z8   aes128
+     00000573  A$test_dataset_binariesaes128_z8   aes128
+     00000576  A$test_dataset_binariesaes128_z8   aes128
+     00000579  A$test_dataset_binariesaes128_z8   aes128
+     0000057A  A$test_dataset_binariesaes128_z8   aes128
+     0000057A  C$aes128.c$57$3_0$44               aes128
+     0000057D  A$test_dataset_binariesaes128_z8   aes128
+     00000580  A$test_dataset_binariesaes128_z8   aes128
+     00000581  A$test_dataset_binariesaes128_z8   aes128
+     00000582  A$test_dataset_binariesaes128_z8   aes128
+     00000583  A$test_dataset_binariesaes128_z8   aes128
+     00000586  A$test_dataset_binariesaes128_z8   aes128
+     00000587  A$test_dataset_binariesaes128_z8   aes128
+     00000588  A$test_dataset_binariesaes128_z8   aes128
+     0000058B  A$test_dataset_binariesaes128_z8   aes128
+     0000058C  A$test_dataset_binariesaes128_z8   aes128
+     0000058D  A$test_dataset_binariesaes128_z8   aes128
+     0000058E  A$test_dataset_binariesaes128_z8   aes128
+     0000058F  A$test_dataset_binariesaes128_z8   aes128
+     00000590  A$test_dataset_binariesaes128_z8   aes128
+     00000591  A$test_dataset_binariesaes128_z8   aes128
+     00000592  A$test_dataset_binariesaes128_z8   aes128
+     00000593  A$test_dataset_binariesaes128_z8   aes128
+     00000594  A$test_dataset_binariesaes128_z8   aes128
+     00000595  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000596  A$test_dataset_binariesaes128_z8   aes128
+     00000599  A$test_dataset_binariesaes128_z8   aes128
+     0000059A  A$test_dataset_binariesaes128_z8   aes128
+     0000059B  A$test_dataset_binariesaes128_z8   aes128
+     0000059C  A$test_dataset_binariesaes128_z8   aes128
+     0000059D  A$test_dataset_binariesaes128_z8   aes128
+     0000059E  A$test_dataset_binariesaes128_z8   aes128
+     0000059F  A$test_dataset_binariesaes128_z8   aes128
+     000005A2  A$test_dataset_binariesaes128_z8   aes128
+     000005A5  A$test_dataset_binariesaes128_z8   aes128
+     000005A6  A$test_dataset_binariesaes128_z8   aes128
+     000005A6  C$aes128.c$58$3_0$44               aes128
+     000005A7  A$test_dataset_binariesaes128_z8   aes128
+     000005A8  A$test_dataset_binariesaes128_z8   aes128
+     000005AB  A$test_dataset_binariesaes128_z8   aes128
+     000005AC  A$test_dataset_binariesaes128_z8   aes128
+     000005AD  A$test_dataset_binariesaes128_z8   aes128
+     000005B0  A$test_dataset_binariesaes128_z8   aes128
+     000005B1  A$test_dataset_binariesaes128_z8   aes128
+     000005B2  A$test_dataset_binariesaes128_z8   aes128
+     000005B3  A$test_dataset_binariesaes128_z8   aes128
+     000005B4  A$test_dataset_binariesaes128_z8   aes128
+     000005B7  A$test_dataset_binariesaes128_z8   aes128
+     000005BA  A$test_dataset_binariesaes128_z8   aes128
+     000005BD  A$test_dataset_binariesaes128_z8   aes128
+     000005BE  A$test_dataset_binariesaes128_z8   aes128
+     000005BF  A$test_dataset_binariesaes128_z8   aes128
+     000005C0  A$test_dataset_binariesaes128_z8   aes128
+     000005C1  A$test_dataset_binariesaes128_z8   aes128
+     000005C2  A$test_dataset_binariesaes128_z8   aes128
+     000005C3  A$test_dataset_binariesaes128_z8   aes128
+     000005C6  A$test_dataset_binariesaes128_z8   aes128
+     000005C7  A$test_dataset_binariesaes128_z8   aes128
+     000005C8  A$test_dataset_binariesaes128_z8   aes128
+     000005C9  A$test_dataset_binariesaes128_z8   aes128
+     000005CA  A$test_dataset_binariesaes128_z8   aes128
+     000005CB  A$test_dataset_binariesaes128_z8   aes128
+     000005CE  A$test_dataset_binariesaes128_z8   aes128
+     000005D1  A$test_dataset_binariesaes128_z8   aes128
+     000005D2  A$test_dataset_binariesaes128_z8   aes128
+     000005D2  C$aes128.c$51$2_0$43               aes128
+     000005D3  A$test_dataset_binariesaes128_z8   aes128
+     000005D6  A$test_dataset_binariesaes128_z8   aes128
+     000005D8  A$test_dataset_binariesaes128_z8   aes128
+     000005DA  A$test_dataset_binariesaes128_z8   aes128
+     000005DA  C$aes128.c$60$2_0$43               aes128
+     000005DA  XFaes128$MixColumns$0$0            aes128
+     000005DB  A$test_dataset_binariesaes128_z8   aes128
+     000005DB  C$aes128.c$62$2_0$47               aes128
+     000005DB  Faes128$AddRoundKey$0$0            aes128
+     000005DD  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 11.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000005E1  A$test_dataset_binariesaes128_z8   aes128
+     000005E3  A$test_dataset_binariesaes128_z8   aes128
+     000005E4  A$test_dataset_binariesaes128_z8   aes128
+     000005E4  C$aes128.c$63$2_0$47               aes128
+     000005E7  A$test_dataset_binariesaes128_z8   aes128
+     000005E8  A$test_dataset_binariesaes128_z8   aes128
+     000005EA  A$test_dataset_binariesaes128_z8   aes128
+     000005EB  A$test_dataset_binariesaes128_z8   aes128
+     000005EC  A$test_dataset_binariesaes128_z8   aes128
+     000005ED  A$test_dataset_binariesaes128_z8   aes128
+     000005EE  A$test_dataset_binariesaes128_z8   aes128
+     000005F0  A$test_dataset_binariesaes128_z8   aes128
+     000005F3  A$test_dataset_binariesaes128_z8   aes128
+     000005F6  A$test_dataset_binariesaes128_z8   aes128
+     000005F7  A$test_dataset_binariesaes128_z8   aes128
+     000005F8  A$test_dataset_binariesaes128_z8   aes128
+     000005FB  A$test_dataset_binariesaes128_z8   aes128
+     000005FC  A$test_dataset_binariesaes128_z8   aes128
+     000005FD  A$test_dataset_binariesaes128_z8   aes128
+     000005FE  A$test_dataset_binariesaes128_z8   aes128
+     00000601  A$test_dataset_binariesaes128_z8   aes128
+     00000604  A$test_dataset_binariesaes128_z8   aes128
+     00000607  A$test_dataset_binariesaes128_z8   aes128
+     00000608  A$test_dataset_binariesaes128_z8   aes128
+     00000609  A$test_dataset_binariesaes128_z8   aes128
+     0000060C  A$test_dataset_binariesaes128_z8   aes128
+     0000060D  A$test_dataset_binariesaes128_z8   aes128
+     0000060E  A$test_dataset_binariesaes128_z8   aes128
+     00000611  A$test_dataset_binariesaes128_z8   aes128
+     00000612  A$test_dataset_binariesaes128_z8   aes128
+     00000614  A$test_dataset_binariesaes128_z8   aes128
+     00000614  C$aes128.c$64$2_0$47               aes128
+     00000614  XFaes128$AddRoundKey$0$0           aes128
+     00000615  A$test_dataset_binariesaes128_z8   aes128
+     00000615  C$aes128.c$66$2_0$49               aes128
+     00000615  Faes128$KeyExpansion$0$0           aes128
+     00000617  A$test_dataset_binariesaes128_z8   aes128
+     0000061B  A$test_dataset_binariesaes128_z8   aes128
+     0000061D  A$test_dataset_binariesaes128_z8   aes128
+     00000620  A$test_dataset_binariesaes128_z8   aes128
+     00000621  A$test_dataset_binariesaes128_z8   aes128
+     00000622  A$test_dataset_binariesaes128_z8   aes128
+     00000622  C$aes128.c$67$1_0$49               aes128
+     00000625  A$test_dataset_binariesaes128_z8   aes128
+     00000628  A$test_dataset_binariesaes128_z8   aes128
+     00000629  A$test_dataset_binariesaes128_z8   aes128
+     0000062A  A$test_dataset_binariesaes128_z8   aes128
+     0000062D  A$test_dataset_binariesaes128_z8   aes128
+     00000630  A$test_dataset_binariesaes128_z8   aes128
+     00000631  A$test_dataset_binariesaes128_z8   aes128
+     00000634  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 12.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000636  A$test_dataset_binariesaes128_z8   aes128
+     00000637  A$test_dataset_binariesaes128_z8   aes128
+     00000637  C$aes128.c$69$3_0$51               aes128
+     0000063A  A$test_dataset_binariesaes128_z8   aes128
+     0000063C  A$test_dataset_binariesaes128_z8   aes128
+     0000063D  A$test_dataset_binariesaes128_z8   aes128
+     0000063F  A$test_dataset_binariesaes128_z8   aes128
+     00000640  A$test_dataset_binariesaes128_z8   aes128
+     00000643  A$test_dataset_binariesaes128_z8   aes128
+     00000645  A$test_dataset_binariesaes128_z8   aes128
+     00000648  A$test_dataset_binariesaes128_z8   aes128
+     00000648  C$aes128.c$70$3_0$51               aes128
+     00000649  A$test_dataset_binariesaes128_z8   aes128
+     0000064A  A$test_dataset_binariesaes128_z8   aes128
+     0000064B  A$test_dataset_binariesaes128_z8   aes128
+     0000064C  A$test_dataset_binariesaes128_z8   aes128
+     0000064D  A$test_dataset_binariesaes128_z8   aes128
+     0000064E  A$test_dataset_binariesaes128_z8   aes128
+     0000064F  A$test_dataset_binariesaes128_z8   aes128
+     00000650  A$test_dataset_binariesaes128_z8   aes128
+     00000651  A$test_dataset_binariesaes128_z8   aes128
+     00000652  A$test_dataset_binariesaes128_z8   aes128
+     00000653  A$test_dataset_binariesaes128_z8   aes128
+     00000653  C$aes128.c$71$3_0$51               aes128
+     00000654  A$test_dataset_binariesaes128_z8   aes128
+     00000655  A$test_dataset_binariesaes128_z8   aes128
+     00000656  A$test_dataset_binariesaes128_z8   aes128
+     00000657  A$test_dataset_binariesaes128_z8   aes128
+     00000658  A$test_dataset_binariesaes128_z8   aes128
+     00000659  A$test_dataset_binariesaes128_z8   aes128
+     0000065A  A$test_dataset_binariesaes128_z8   aes128
+     0000065D  A$test_dataset_binariesaes128_z8   aes128
+     00000660  A$test_dataset_binariesaes128_z8   aes128
+     00000660  C$aes128.c$73$3_0$51               aes128
+     00000661  A$test_dataset_binariesaes128_z8   aes128
+     00000662  A$test_dataset_binariesaes128_z8   aes128
+     00000663  A$test_dataset_binariesaes128_z8   aes128
+     00000666  A$test_dataset_binariesaes128_z8   aes128
+     00000667  A$test_dataset_binariesaes128_z8   aes128
+     00000668  A$test_dataset_binariesaes128_z8   aes128
+     00000669  A$test_dataset_binariesaes128_z8   aes128
+     0000066C  A$test_dataset_binariesaes128_z8   aes128
+     0000066D  A$test_dataset_binariesaes128_z8   aes128
+     0000066E  A$test_dataset_binariesaes128_z8   aes128
+     0000066F  A$test_dataset_binariesaes128_z8   aes128
+     00000671  A$test_dataset_binariesaes128_z8   aes128
+     00000672  A$test_dataset_binariesaes128_z8   aes128
+     00000674  A$test_dataset_binariesaes128_z8   aes128
+     00000676  A$test_dataset_binariesaes128_z8   aes128
+     00000677  A$test_dataset_binariesaes128_z8   aes128
+     00000678  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 13.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000067B  A$test_dataset_binariesaes128_z8   aes128
+     0000067E  A$test_dataset_binariesaes128_z8   aes128
+     00000681  A$test_dataset_binariesaes128_z8   aes128
+     00000682  A$test_dataset_binariesaes128_z8   aes128
+     00000683  A$test_dataset_binariesaes128_z8   aes128
+     00000686  A$test_dataset_binariesaes128_z8   aes128
+     00000689  A$test_dataset_binariesaes128_z8   aes128
+     0000068C  A$test_dataset_binariesaes128_z8   aes128
+     0000068D  A$test_dataset_binariesaes128_z8   aes128
+     0000068D  C$aes128.c$74$3_0$51               aes128
+     00000690  A$test_dataset_binariesaes128_z8   aes128
+     00000692  A$test_dataset_binariesaes128_z8   aes128
+     00000695  A$test_dataset_binariesaes128_z8   aes128
+     00000698  A$test_dataset_binariesaes128_z8   aes128
+     0000069A  A$test_dataset_binariesaes128_z8   aes128
+     0000069D  A$test_dataset_binariesaes128_z8   aes128
+     0000069E  A$test_dataset_binariesaes128_z8   aes128
+     0000069F  A$test_dataset_binariesaes128_z8   aes128
+     000006A0  A$test_dataset_binariesaes128_z8   aes128
+     000006A1  A$test_dataset_binariesaes128_z8   aes128
+     000006A4  A$test_dataset_binariesaes128_z8   aes128
+     000006A5  A$test_dataset_binariesaes128_z8   aes128
+     000006A6  A$test_dataset_binariesaes128_z8   aes128
+     000006A7  A$test_dataset_binariesaes128_z8   aes128
+     000006AA  A$test_dataset_binariesaes128_z8   aes128
+     000006AB  A$test_dataset_binariesaes128_z8   aes128
+     000006AC  A$test_dataset_binariesaes128_z8   aes128
+     000006AD  A$test_dataset_binariesaes128_z8   aes128
+     000006AF  A$test_dataset_binariesaes128_z8   aes128
+     000006B0  A$test_dataset_binariesaes128_z8   aes128
+     000006B2  A$test_dataset_binariesaes128_z8   aes128
+     000006B4  A$test_dataset_binariesaes128_z8   aes128
+     000006B5  A$test_dataset_binariesaes128_z8   aes128
+     000006B6  A$test_dataset_binariesaes128_z8   aes128
+     000006B9  A$test_dataset_binariesaes128_z8   aes128
+     000006BC  A$test_dataset_binariesaes128_z8   aes128
+     000006BF  A$test_dataset_binariesaes128_z8   aes128
+     000006C0  A$test_dataset_binariesaes128_z8   aes128
+     000006C0  C$aes128.c$75$3_0$51               aes128
+     000006C3  A$test_dataset_binariesaes128_z8   aes128
+     000006C5  A$test_dataset_binariesaes128_z8   aes128
+     000006C8  A$test_dataset_binariesaes128_z8   aes128
+     000006CB  A$test_dataset_binariesaes128_z8   aes128
+     000006CD  A$test_dataset_binariesaes128_z8   aes128
+     000006D0  A$test_dataset_binariesaes128_z8   aes128
+     000006D1  A$test_dataset_binariesaes128_z8   aes128
+     000006D2  A$test_dataset_binariesaes128_z8   aes128
+     000006D3  A$test_dataset_binariesaes128_z8   aes128
+     000006D4  A$test_dataset_binariesaes128_z8   aes128
+     000006D5  A$test_dataset_binariesaes128_z8   aes128
+     000006D8  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 14.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000006D9  A$test_dataset_binariesaes128_z8   aes128
+     000006DA  A$test_dataset_binariesaes128_z8   aes128
+     000006DB  A$test_dataset_binariesaes128_z8   aes128
+     000006DE  A$test_dataset_binariesaes128_z8   aes128
+     000006DF  A$test_dataset_binariesaes128_z8   aes128
+     000006E0  A$test_dataset_binariesaes128_z8   aes128
+     000006E1  A$test_dataset_binariesaes128_z8   aes128
+     000006E3  A$test_dataset_binariesaes128_z8   aes128
+     000006E4  A$test_dataset_binariesaes128_z8   aes128
+     000006E6  A$test_dataset_binariesaes128_z8   aes128
+     000006E8  A$test_dataset_binariesaes128_z8   aes128
+     000006E9  A$test_dataset_binariesaes128_z8   aes128
+     000006EA  A$test_dataset_binariesaes128_z8   aes128
+     000006ED  A$test_dataset_binariesaes128_z8   aes128
+     000006F0  A$test_dataset_binariesaes128_z8   aes128
+     000006F3  A$test_dataset_binariesaes128_z8   aes128
+     000006F4  A$test_dataset_binariesaes128_z8   aes128
+     000006F4  C$aes128.c$76$3_0$51               aes128
+     000006F7  A$test_dataset_binariesaes128_z8   aes128
+     000006F9  A$test_dataset_binariesaes128_z8   aes128
+     000006FC  A$test_dataset_binariesaes128_z8   aes128
+     000006FF  A$test_dataset_binariesaes128_z8   aes128
+     00000701  A$test_dataset_binariesaes128_z8   aes128
+     00000704  A$test_dataset_binariesaes128_z8   aes128
+     00000705  A$test_dataset_binariesaes128_z8   aes128
+     00000706  A$test_dataset_binariesaes128_z8   aes128
+     00000707  A$test_dataset_binariesaes128_z8   aes128
+     00000708  A$test_dataset_binariesaes128_z8   aes128
+     00000709  A$test_dataset_binariesaes128_z8   aes128
+     0000070A  A$test_dataset_binariesaes128_z8   aes128
+     0000070D  A$test_dataset_binariesaes128_z8   aes128
+     0000070E  A$test_dataset_binariesaes128_z8   aes128
+     0000070F  A$test_dataset_binariesaes128_z8   aes128
+     00000710  A$test_dataset_binariesaes128_z8   aes128
+     00000713  A$test_dataset_binariesaes128_z8   aes128
+     00000714  A$test_dataset_binariesaes128_z8   aes128
+     00000715  A$test_dataset_binariesaes128_z8   aes128
+     00000716  A$test_dataset_binariesaes128_z8   aes128
+     00000718  A$test_dataset_binariesaes128_z8   aes128
+     00000719  A$test_dataset_binariesaes128_z8   aes128
+     0000071B  A$test_dataset_binariesaes128_z8   aes128
+     0000071D  A$test_dataset_binariesaes128_z8   aes128
+     0000071E  A$test_dataset_binariesaes128_z8   aes128
+     0000071F  A$test_dataset_binariesaes128_z8   aes128
+     00000722  A$test_dataset_binariesaes128_z8   aes128
+     00000725  A$test_dataset_binariesaes128_z8   aes128
+     00000728  A$test_dataset_binariesaes128_z8   aes128
+     00000729  A$test_dataset_binariesaes128_z8   aes128
+     00000729  C$aes128.c$78$2_0$49               aes128
+     0000072D  A$test_dataset_binariesaes128_z8   aes128
+     0000072E  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 15.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000731  A$test_dataset_binariesaes128_z8   aes128
+     00000734  A$test_dataset_binariesaes128_z8   aes128
+     00000736  A$test_dataset_binariesaes128_z8   aes128
+     00000739  A$test_dataset_binariesaes128_z8   aes128
+     0000073A  A$test_dataset_binariesaes128_z8   aes128
+     0000073B  A$test_dataset_binariesaes128_z8   aes128
+     0000073C  A$test_dataset_binariesaes128_z8   aes128
+     0000073E  A$test_dataset_binariesaes128_z8   aes128
+     00000741  A$test_dataset_binariesaes128_z8   aes128
+     00000741  C$aes128.c$79$4_0$52               aes128
+     00000744  A$test_dataset_binariesaes128_z8   aes128
+     00000747  A$test_dataset_binariesaes128_z8   aes128
+     0000074A  A$test_dataset_binariesaes128_z8   aes128
+     0000074D  A$test_dataset_binariesaes128_z8   aes128
+     00000750  A$test_dataset_binariesaes128_z8   aes128
+     00000753  A$test_dataset_binariesaes128_z8   aes128
+     00000756  A$test_dataset_binariesaes128_z8   aes128
+     00000759  A$test_dataset_binariesaes128_z8   aes128
+     0000075A  A$test_dataset_binariesaes128_z8   aes128
+     0000075D  A$test_dataset_binariesaes128_z8   aes128
+     00000760  A$test_dataset_binariesaes128_z8   aes128
+     00000761  A$test_dataset_binariesaes128_z8   aes128
+     00000762  A$test_dataset_binariesaes128_z8   aes128
+     00000765  A$test_dataset_binariesaes128_z8   aes128
+     00000768  A$test_dataset_binariesaes128_z8   aes128
+     0000076A  A$test_dataset_binariesaes128_z8   aes128
+     0000076B  A$test_dataset_binariesaes128_z8   aes128
+     0000076E  A$test_dataset_binariesaes128_z8   aes128
+     00000770  A$test_dataset_binariesaes128_z8   aes128
+     00000771  A$test_dataset_binariesaes128_z8   aes128
+     00000772  A$test_dataset_binariesaes128_z8   aes128
+     00000775  A$test_dataset_binariesaes128_z8   aes128
+     00000776  A$test_dataset_binariesaes128_z8   aes128
+     00000777  A$test_dataset_binariesaes128_z8   aes128
+     0000077A  A$test_dataset_binariesaes128_z8   aes128
+     0000077B  A$test_dataset_binariesaes128_z8   aes128
+     0000077C  A$test_dataset_binariesaes128_z8   aes128
+     0000077F  A$test_dataset_binariesaes128_z8   aes128
+     00000782  A$test_dataset_binariesaes128_z8   aes128
+     00000785  A$test_dataset_binariesaes128_z8   aes128
+     00000786  A$test_dataset_binariesaes128_z8   aes128
+     00000786  C$aes128.c$78$4_0$52               aes128
+     00000789  A$test_dataset_binariesaes128_z8   aes128
+     0000078C  A$test_dataset_binariesaes128_z8   aes128
+     0000078F  A$test_dataset_binariesaes128_z8   aes128
+     00000792  A$test_dataset_binariesaes128_z8   aes128
+     00000792  C$aes128.c$69$2_0$50               aes128
+     00000793  A$test_dataset_binariesaes128_z8   aes128
+     00000796  A$test_dataset_binariesaes128_z8   aes128
+     00000798  A$test_dataset_binariesaes128_z8   aes128
+     0000079A  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 16.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000079A  C$aes128.c$81$2_0$49               aes128
+     0000079A  XFaes128$KeyExpansion$0$0          aes128
+     0000079B  A$test_dataset_binariesaes128_z8   aes128
+     0000079B  C$aes128.c$83$2_0$54               aes128
+     0000079B  G$AES128_Encrypt$0$0               aes128
+     0000079B  _AES128_Encrypt                    aes128
+     0000079D  A$test_dataset_binariesaes128_z8   aes128
+     000007A1  A$test_dataset_binariesaes128_z8   aes128
+     000007A3  A$test_dataset_binariesaes128_z8   aes128
+     000007A6  A$test_dataset_binariesaes128_z8   aes128
+     000007A7  A$test_dataset_binariesaes128_z8   aes128
+     000007A8  A$test_dataset_binariesaes128_z8   aes128
+     000007A8  C$aes128.c$87$1_0$54               aes128
+     000007AB  A$test_dataset_binariesaes128_z8   aes128
+     000007AC  A$test_dataset_binariesaes128_z8   aes128
+     000007AD  A$test_dataset_binariesaes128_z8   aes128
+     000007AE  A$test_dataset_binariesaes128_z8   aes128
+     000007AF  A$test_dataset_binariesaes128_z8   aes128
+     000007B0  A$test_dataset_binariesaes128_z8   aes128
+     000007B3  A$test_dataset_binariesaes128_z8   aes128
+     000007B6  A$test_dataset_binariesaes128_z8   aes128
+     000007B7  A$test_dataset_binariesaes128_z8   aes128
+     000007BA  A$test_dataset_binariesaes128_z8   aes128
+     000007BC  A$test_dataset_binariesaes128_z8   aes128
+     000007BD  A$test_dataset_binariesaes128_z8   aes128
+     000007BD  C$aes128.c$88$1_0$54               aes128
+     000007C0  A$test_dataset_binariesaes128_z8   aes128
+     000007C1  A$test_dataset_binariesaes128_z8   aes128
+     000007C2  A$test_dataset_binariesaes128_z8   aes128
+     000007C3  A$test_dataset_binariesaes128_z8   aes128
+     000007C6  A$test_dataset_binariesaes128_z8   aes128
+     000007C9  A$test_dataset_binariesaes128_z8   aes128
+     000007CA  A$test_dataset_binariesaes128_z8   aes128
+     000007CD  A$test_dataset_binariesaes128_z8   aes128
+     000007CE  A$test_dataset_binariesaes128_z8   aes128
+     000007CF  A$test_dataset_binariesaes128_z8   aes128
+     000007D0  A$test_dataset_binariesaes128_z8   aes128
+     000007D0  C$aes128.c$90$1_0$54               aes128
+     000007D3  A$test_dataset_binariesaes128_z8   aes128
+     000007D4  A$test_dataset_binariesaes128_z8   aes128
+     000007D5  A$test_dataset_binariesaes128_z8   aes128
+     000007D6  A$test_dataset_binariesaes128_z8   aes128
+     000007D7  A$test_dataset_binariesaes128_z8   aes128
+     000007D8  A$test_dataset_binariesaes128_z8   aes128
+     000007D9  A$test_dataset_binariesaes128_z8   aes128
+     000007DC  A$test_dataset_binariesaes128_z8   aes128
+     000007DD  A$test_dataset_binariesaes128_z8   aes128
+     000007DE  A$test_dataset_binariesaes128_z8   aes128
+     000007DF  A$test_dataset_binariesaes128_z8   aes128
+     000007DF  C$aes128.c$92$3_0$56               aes128
+     000007E2  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 17.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000007E5  A$test_dataset_binariesaes128_z8   aes128
+     000007E8  A$test_dataset_binariesaes128_z8   aes128
+     000007EB  A$test_dataset_binariesaes128_z8   aes128
+     000007EE  A$test_dataset_binariesaes128_z8   aes128
+     000007F1  A$test_dataset_binariesaes128_z8   aes128
+     000007F4  A$test_dataset_binariesaes128_z8   aes128
+     000007F5  A$test_dataset_binariesaes128_z8   aes128
+     000007F8  A$test_dataset_binariesaes128_z8   aes128
+     000007FB  A$test_dataset_binariesaes128_z8   aes128
+     000007FE  A$test_dataset_binariesaes128_z8   aes128
+     00000801  A$test_dataset_binariesaes128_z8   aes128
+     00000805  A$test_dataset_binariesaes128_z8   aes128
+     00000806  A$test_dataset_binariesaes128_z8   aes128
+     00000809  A$test_dataset_binariesaes128_z8   aes128
+     0000080C  A$test_dataset_binariesaes128_z8   aes128
+     0000080E  A$test_dataset_binariesaes128_z8   aes128
+     00000811  A$test_dataset_binariesaes128_z8   aes128
+     00000812  A$test_dataset_binariesaes128_z8   aes128
+     00000813  A$test_dataset_binariesaes128_z8   aes128
+     00000814  A$test_dataset_binariesaes128_z8   aes128
+     00000816  A$test_dataset_binariesaes128_z8   aes128
+     00000819  A$test_dataset_binariesaes128_z8   aes128
+     00000819  C$aes128.c$93$3_0$56               aes128
+     0000081C  A$test_dataset_binariesaes128_z8   aes128
+     0000081F  A$test_dataset_binariesaes128_z8   aes128
+     00000820  A$test_dataset_binariesaes128_z8   aes128
+     00000821  A$test_dataset_binariesaes128_z8   aes128
+     00000824  A$test_dataset_binariesaes128_z8   aes128
+     00000825  A$test_dataset_binariesaes128_z8   aes128
+     00000826  A$test_dataset_binariesaes128_z8   aes128
+     00000826  C$aes128.c$94$3_0$56               aes128
+     00000829  A$test_dataset_binariesaes128_z8   aes128
+     0000082C  A$test_dataset_binariesaes128_z8   aes128
+     0000082D  A$test_dataset_binariesaes128_z8   aes128
+     0000082E  A$test_dataset_binariesaes128_z8   aes128
+     00000831  A$test_dataset_binariesaes128_z8   aes128
+     00000832  A$test_dataset_binariesaes128_z8   aes128
+     00000833  A$test_dataset_binariesaes128_z8   aes128
+     00000833  C$aes128.c$95$3_0$56               aes128
+     00000836  A$test_dataset_binariesaes128_z8   aes128
+     00000839  A$test_dataset_binariesaes128_z8   aes128
+     0000083A  A$test_dataset_binariesaes128_z8   aes128
+     0000083B  A$test_dataset_binariesaes128_z8   aes128
+     0000083E  A$test_dataset_binariesaes128_z8   aes128
+     0000083F  A$test_dataset_binariesaes128_z8   aes128
+     00000840  A$test_dataset_binariesaes128_z8   aes128
+     00000840  C$aes128.c$96$3_0$56               aes128
+     00000843  A$test_dataset_binariesaes128_z8   aes128
+     00000846  A$test_dataset_binariesaes128_z8   aes128
+     00000848  A$test_dataset_binariesaes128_z8   aes128
+     0000084A  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 18.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000084C  A$test_dataset_binariesaes128_z8   aes128
+     0000084E  A$test_dataset_binariesaes128_z8   aes128
+     00000850  A$test_dataset_binariesaes128_z8   aes128
+     00000852  A$test_dataset_binariesaes128_z8   aes128
+     00000854  A$test_dataset_binariesaes128_z8   aes128
+     00000856  A$test_dataset_binariesaes128_z8   aes128
+     00000857  A$test_dataset_binariesaes128_z8   aes128
+     0000085A  A$test_dataset_binariesaes128_z8   aes128
+     0000085B  A$test_dataset_binariesaes128_z8   aes128
+     0000085C  A$test_dataset_binariesaes128_z8   aes128
+     0000085F  A$test_dataset_binariesaes128_z8   aes128
+     00000860  A$test_dataset_binariesaes128_z8   aes128
+     00000863  A$test_dataset_binariesaes128_z8   aes128
+     00000866  A$test_dataset_binariesaes128_z8   aes128
+     00000867  A$test_dataset_binariesaes128_z8   aes128
+     00000868  A$test_dataset_binariesaes128_z8   aes128
+     00000869  A$test_dataset_binariesaes128_z8   aes128
+     0000086C  A$test_dataset_binariesaes128_z8   aes128
+     0000086D  A$test_dataset_binariesaes128_z8   aes128
+     0000086E  A$test_dataset_binariesaes128_z8   aes128
+     0000086F  A$test_dataset_binariesaes128_z8   aes128
+     0000086F  C$aes128.c$92$2_0$55               aes128
+     00000872  A$test_dataset_binariesaes128_z8   aes128
+     00000875  A$test_dataset_binariesaes128_z8   aes128
+     00000878  A$test_dataset_binariesaes128_z8   aes128
+     0000087B  A$test_dataset_binariesaes128_z8   aes128
+     0000087B  C$aes128.c$99$1_0$54               aes128
+     0000087C  A$test_dataset_binariesaes128_z8   aes128
+     0000087D  A$test_dataset_binariesaes128_z8   aes128
+     0000087E  A$test_dataset_binariesaes128_z8   aes128
+     0000087F  A$test_dataset_binariesaes128_z8   aes128
+     00000882  A$test_dataset_binariesaes128_z8   aes128
+     00000883  A$test_dataset_binariesaes128_z8   aes128
+     00000884  A$test_dataset_binariesaes128_z8   aes128
+     00000884  C$aes128.c$100$1_0$54              aes128
+     00000885  A$test_dataset_binariesaes128_z8   aes128
+     00000886  A$test_dataset_binariesaes128_z8   aes128
+     00000887  A$test_dataset_binariesaes128_z8   aes128
+     00000888  A$test_dataset_binariesaes128_z8   aes128
+     0000088B  A$test_dataset_binariesaes128_z8   aes128
+     0000088C  A$test_dataset_binariesaes128_z8   aes128
+     0000088D  A$test_dataset_binariesaes128_z8   aes128
+     0000088D  C$aes128.c$101$1_0$54              aes128
+     00000890  A$test_dataset_binariesaes128_z8   aes128
+     00000892  A$test_dataset_binariesaes128_z8   aes128
+     00000893  A$test_dataset_binariesaes128_z8   aes128
+     00000896  A$test_dataset_binariesaes128_z8   aes128
+     00000898  A$test_dataset_binariesaes128_z8   aes128
+     00000899  A$test_dataset_binariesaes128_z8   aes128
+     0000089A  A$test_dataset_binariesaes128_z8   aes128
+     0000089B  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000089C  A$test_dataset_binariesaes128_z8   aes128
+     0000089D  A$test_dataset_binariesaes128_z8   aes128
+     0000089E  A$test_dataset_binariesaes128_z8   aes128
+     000008A1  A$test_dataset_binariesaes128_z8   aes128
+     000008A2  A$test_dataset_binariesaes128_z8   aes128
+     000008A3  A$test_dataset_binariesaes128_z8   aes128
+     000008A4  A$test_dataset_binariesaes128_z8   aes128
+     000008A4  C$aes128.c$103$1_0$54              aes128
+     000008A7  A$test_dataset_binariesaes128_z8   aes128
+     000008AA  A$test_dataset_binariesaes128_z8   aes128
+     000008AB  A$test_dataset_binariesaes128_z8   aes128
+     000008AC  A$test_dataset_binariesaes128_z8   aes128
+     000008AF  A$test_dataset_binariesaes128_z8   aes128
+     000008B1  A$test_dataset_binariesaes128_z8   aes128
+     000008B3  A$test_dataset_binariesaes128_z8   aes128
+     000008B5  A$test_dataset_binariesaes128_z8   aes128
+     000008B5  C$aes128.c$104$1_0$54              aes128
+     000008B5  XG$AES128_Encrypt$0$0              aes128
+     000008B6  A$test_dataset_binariesaes128_z8   aes128
+     000008B6  C$aes128.c$106$1_0$57              aes128
+     000008B6  G$main$0$0                         aes128
+     000008B6  _main                              aes128
+     000008B8  A$test_dataset_binariesaes128_z8   aes128
+     000008BC  A$test_dataset_binariesaes128_z8   aes128
+     000008BE  A$test_dataset_binariesaes128_z8   aes128
+     000008C1  A$test_dataset_binariesaes128_z8   aes128
+     000008C2  A$test_dataset_binariesaes128_z8   aes128
+     000008C3  A$test_dataset_binariesaes128_z8   aes128
+     000008C3  C$aes128.c$107$2_0$57              aes128
+     000008C6  A$test_dataset_binariesaes128_z8   aes128
+     000008C7  A$test_dataset_binariesaes128_z8   aes128
+     000008C8  A$test_dataset_binariesaes128_z8   aes128
+     000008CA  A$test_dataset_binariesaes128_z8   aes128
+     000008CB  A$test_dataset_binariesaes128_z8   aes128
+     000008CC  A$test_dataset_binariesaes128_z8   aes128
+     000008CD  A$test_dataset_binariesaes128_z8   aes128
+     000008CE  A$test_dataset_binariesaes128_z8   aes128
+     000008D0  A$test_dataset_binariesaes128_z8   aes128
+     000008D1  A$test_dataset_binariesaes128_z8   aes128
+     000008D2  A$test_dataset_binariesaes128_z8   aes128
+     000008D3  A$test_dataset_binariesaes128_z8   aes128
+     000008D4  A$test_dataset_binariesaes128_z8   aes128
+     000008D6  A$test_dataset_binariesaes128_z8   aes128
+     000008D7  A$test_dataset_binariesaes128_z8   aes128
+     000008D8  A$test_dataset_binariesaes128_z8   aes128
+     000008D9  A$test_dataset_binariesaes128_z8   aes128
+     000008DA  A$test_dataset_binariesaes128_z8   aes128
+     000008DB  A$test_dataset_binariesaes128_z8   aes128
+     000008DD  A$test_dataset_binariesaes128_z8   aes128
+     000008E0  A$test_dataset_binariesaes128_z8   aes128
+     000008E1  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000008E3  A$test_dataset_binariesaes128_z8   aes128
+     000008E6  A$test_dataset_binariesaes128_z8   aes128
+     000008E7  A$test_dataset_binariesaes128_z8   aes128
+     000008E9  A$test_dataset_binariesaes128_z8   aes128
+     000008EC  A$test_dataset_binariesaes128_z8   aes128
+     000008ED  A$test_dataset_binariesaes128_z8   aes128
+     000008EF  A$test_dataset_binariesaes128_z8   aes128
+     000008F2  A$test_dataset_binariesaes128_z8   aes128
+     000008F3  A$test_dataset_binariesaes128_z8   aes128
+     000008F5  A$test_dataset_binariesaes128_z8   aes128
+     000008F8  A$test_dataset_binariesaes128_z8   aes128
+     000008F9  A$test_dataset_binariesaes128_z8   aes128
+     000008FB  A$test_dataset_binariesaes128_z8   aes128
+     000008FE  A$test_dataset_binariesaes128_z8   aes128
+     000008FF  A$test_dataset_binariesaes128_z8   aes128
+     00000901  A$test_dataset_binariesaes128_z8   aes128
+     00000904  A$test_dataset_binariesaes128_z8   aes128
+     00000905  A$test_dataset_binariesaes128_z8   aes128
+     00000907  A$test_dataset_binariesaes128_z8   aes128
+     0000090A  A$test_dataset_binariesaes128_z8   aes128
+     0000090B  A$test_dataset_binariesaes128_z8   aes128
+     0000090D  A$test_dataset_binariesaes128_z8   aes128
+     00000910  A$test_dataset_binariesaes128_z8   aes128
+     00000911  A$test_dataset_binariesaes128_z8   aes128
+     00000913  A$test_dataset_binariesaes128_z8   aes128
+     00000916  A$test_dataset_binariesaes128_z8   aes128
+     00000917  A$test_dataset_binariesaes128_z8   aes128
+     00000919  A$test_dataset_binariesaes128_z8   aes128
+     0000091C  A$test_dataset_binariesaes128_z8   aes128
+     0000091D  A$test_dataset_binariesaes128_z8   aes128
+     0000091F  A$test_dataset_binariesaes128_z8   aes128
+     00000922  A$test_dataset_binariesaes128_z8   aes128
+     00000923  A$test_dataset_binariesaes128_z8   aes128
+     00000925  A$test_dataset_binariesaes128_z8   aes128
+     00000925  C$aes128.c$112$2_0$57              aes128
+     00000928  A$test_dataset_binariesaes128_z8   aes128
+     00000929  A$test_dataset_binariesaes128_z8   aes128
+     0000092A  A$test_dataset_binariesaes128_z8   aes128
+     0000092B  A$test_dataset_binariesaes128_z8   aes128
+     0000092D  A$test_dataset_binariesaes128_z8   aes128
+     0000092E  A$test_dataset_binariesaes128_z8   aes128
+     0000092F  A$test_dataset_binariesaes128_z8   aes128
+     00000930  A$test_dataset_binariesaes128_z8   aes128
+     00000931  A$test_dataset_binariesaes128_z8   aes128
+     00000933  A$test_dataset_binariesaes128_z8   aes128
+     00000934  A$test_dataset_binariesaes128_z8   aes128
+     00000935  A$test_dataset_binariesaes128_z8   aes128
+     00000936  A$test_dataset_binariesaes128_z8   aes128
+     00000937  A$test_dataset_binariesaes128_z8   aes128
+     00000939  A$test_dataset_binariesaes128_z8   aes128
+     0000093A  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 21.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000093B  A$test_dataset_binariesaes128_z8   aes128
+     0000093C  A$test_dataset_binariesaes128_z8   aes128
+     0000093D  A$test_dataset_binariesaes128_z8   aes128
+     0000093E  A$test_dataset_binariesaes128_z8   aes128
+     00000940  A$test_dataset_binariesaes128_z8   aes128
+     00000943  A$test_dataset_binariesaes128_z8   aes128
+     00000944  A$test_dataset_binariesaes128_z8   aes128
+     00000946  A$test_dataset_binariesaes128_z8   aes128
+     00000949  A$test_dataset_binariesaes128_z8   aes128
+     0000094A  A$test_dataset_binariesaes128_z8   aes128
+     0000094C  A$test_dataset_binariesaes128_z8   aes128
+     0000094F  A$test_dataset_binariesaes128_z8   aes128
+     00000950  A$test_dataset_binariesaes128_z8   aes128
+     00000952  A$test_dataset_binariesaes128_z8   aes128
+     00000955  A$test_dataset_binariesaes128_z8   aes128
+     00000956  A$test_dataset_binariesaes128_z8   aes128
+     00000958  A$test_dataset_binariesaes128_z8   aes128
+     0000095B  A$test_dataset_binariesaes128_z8   aes128
+     0000095C  A$test_dataset_binariesaes128_z8   aes128
+     0000095E  A$test_dataset_binariesaes128_z8   aes128
+     00000961  A$test_dataset_binariesaes128_z8   aes128
+     00000962  A$test_dataset_binariesaes128_z8   aes128
+     00000964  A$test_dataset_binariesaes128_z8   aes128
+     00000967  A$test_dataset_binariesaes128_z8   aes128
+     00000968  A$test_dataset_binariesaes128_z8   aes128
+     0000096A  A$test_dataset_binariesaes128_z8   aes128
+     0000096D  A$test_dataset_binariesaes128_z8   aes128
+     0000096E  A$test_dataset_binariesaes128_z8   aes128
+     00000970  A$test_dataset_binariesaes128_z8   aes128
+     00000973  A$test_dataset_binariesaes128_z8   aes128
+     00000974  A$test_dataset_binariesaes128_z8   aes128
+     00000976  A$test_dataset_binariesaes128_z8   aes128
+     00000979  A$test_dataset_binariesaes128_z8   aes128
+     0000097A  A$test_dataset_binariesaes128_z8   aes128
+     0000097C  A$test_dataset_binariesaes128_z8   aes128
+     0000097F  A$test_dataset_binariesaes128_z8   aes128
+     00000980  A$test_dataset_binariesaes128_z8   aes128
+     00000982  A$test_dataset_binariesaes128_z8   aes128
+     00000985  A$test_dataset_binariesaes128_z8   aes128
+     00000986  A$test_dataset_binariesaes128_z8   aes128
+     00000988  A$test_dataset_binariesaes128_z8   aes128
+     00000988  C$aes128.c$119$1_0$57              aes128
+     0000098B  A$test_dataset_binariesaes128_z8   aes128
+     0000098C  A$test_dataset_binariesaes128_z8   aes128
+     0000098F  A$test_dataset_binariesaes128_z8   aes128
+     00000992  A$test_dataset_binariesaes128_z8   aes128
+     00000995  A$test_dataset_binariesaes128_z8   aes128
+     00000998  A$test_dataset_binariesaes128_z8   aes128
+     00000999  A$test_dataset_binariesaes128_z8   aes128
+     0000099A  A$test_dataset_binariesaes128_z8   aes128
+     0000099B  A$test_dataset_binariesaes128_z8   aes128
+ASxxxx Linker V03.00 + NoICE + sdld,  page 22.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000099E  A$test_dataset_binariesaes128_z8   aes128
+     000009A1  A$test_dataset_binariesaes128_z8   aes128
+     000009A2  A$test_dataset_binariesaes128_z8   aes128
+     000009A3  A$test_dataset_binariesaes128_z8   aes128
+     000009A3  C$aes128.c$121$1_0$57              aes128
+     000009A6  A$test_dataset_binariesaes128_z8   aes128
+     000009A7  A$test_dataset_binariesaes128_z8   aes128
+     000009AA  A$test_dataset_binariesaes128_z8   aes128
+     000009AB  A$test_dataset_binariesaes128_z8   aes128
+     000009AB  C$aes128.c$122$2_0$58              aes128
+     000009AE  A$test_dataset_binariesaes128_z8   aes128
+     000009AF  A$test_dataset_binariesaes128_z8   aes128
+     000009B1  A$test_dataset_binariesaes128_z8   aes128
+     000009B2  A$test_dataset_binariesaes128_z8   aes128
+     000009B3  A$test_dataset_binariesaes128_z8   aes128
+     000009B4  A$test_dataset_binariesaes128_z8   aes128
+     000009B5  A$test_dataset_binariesaes128_z8   aes128
+     000009B7  A$test_dataset_binariesaes128_z8   aes128
+     000009BA  A$test_dataset_binariesaes128_z8   aes128
+     000009BD  A$test_dataset_binariesaes128_z8   aes128
+     000009C0  A$test_dataset_binariesaes128_z8   aes128
+     000009C1  A$test_dataset_binariesaes128_z8   aes128
+     000009C2  A$test_dataset_binariesaes128_z8   aes128
+     000009C4  A$test_dataset_binariesaes128_z8   aes128
+     000009C5  A$test_dataset_binariesaes128_z8   aes128
+     000009C6  A$test_dataset_binariesaes128_z8   aes128
+     000009C9  A$test_dataset_binariesaes128_z8   aes128
+     000009CA  A$test_dataset_binariesaes128_z8   aes128
+     000009CD  A$test_dataset_binariesaes128_z8   aes128
+     000009CE  A$test_dataset_binariesaes128_z8   aes128
+     000009CF  A$test_dataset_binariesaes128_z8   aes128
+     000009D0  A$test_dataset_binariesaes128_z8   aes128
+     000009D1  A$test_dataset_binariesaes128_z8   aes128
+     000009D4  A$test_dataset_binariesaes128_z8   aes128
+     000009D4  C$aes128.c$123$1_0$57              aes128
+     000009D7  A$test_dataset_binariesaes128_z8   aes128
+     000009D8  A$test_dataset_binariesaes128_z8   aes128
+     000009DB  A$test_dataset_binariesaes128_z8   aes128
+     000009DC  A$test_dataset_binariesaes128_z8   aes128
+     000009DC  C$aes128.c$125$1_0$57              aes128
+     000009DF  A$test_dataset_binariesaes128_z8   aes128
+     000009E1  A$test_dataset_binariesaes128_z8   aes128
+     000009E3  A$test_dataset_binariesaes128_z8   aes128
+     000009E3  C$aes128.c$126$1_0$57              aes128
+     000009E3  XG$main$0$0                        aes128
+     000009E4  Faes128$__str_0$0_0$0              aes128
+     00000A0C  Faes128$__str_1$0_0$0              aes128
+     00000A12  Faes128$__str_3$0_0$0              aes128
+     00000A13  _puts                              puts
+     00000A45  _vprintf                           vprintf
+     00000A6D  _printf                            vprintf
+ASxxxx Linker V03.00 + NoICE + sdld,  page 23.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    00001530 =        5424. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000BB0  __print_format                     printf_large
+     00001720  ___sdcc_call_hl                    
+     00001721  _strlen                            
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 24.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEADER0                            00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 25.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEADER1                            00000000    00000004 =           4. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 26.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEADER2                            00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 27.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEADER3                            00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 28.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEADER4                            00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 29.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEADER5                            00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 30.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEADER6                            00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 31.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEADER7                            00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 32.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_HEADER8                            00000000    0000000C =          12. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 33.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_GSINIT                             00001730    0000000F =          15. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00001730  gsinit                             crt0
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 34.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_GSFINAL                            0000173F    00000001 =           1. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 35.
+
+Files Linked                              [ module(s) ]
+
+/usr/bin/../share/sdcc/lib/z80/crt0.rel   [ crt0 ]
+/work/test_dataset_binariesaes128_z80_sdcc_O0.rel
+                                          [ aes128 ]
+
+
+Libraries Linked                          [ object file ]
+
+/usr/bin/../share/sdcc/lib/z80/z80.lib    [ puts.rel ]
+/usr/bin/../share/sdcc/lib/z80/z80.lib    [ vprintf.rel ]
+/usr/bin/../share/sdcc/lib/z80/z80.lib    [ printf_large.rel ]
+/usr/bin/../share/sdcc/lib/z80/z80.lib    [ __sdcc_call_hl.rel ]
+/usr/bin/../share/sdcc/lib/z80/z80.lib    [ strlen.rel ]
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 36.
+
+User Base Address Definitions
+
+_CODE = 0x0200
+_DATA = 0x8000
+
+
+?ASlink-Warning-Undefined Global '_putchar' referenced by module 'puts'
+
+?ASlink-Warning-Undefined Global '_putchar' referenced by module 'vprintf'

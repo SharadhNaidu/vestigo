@@ -8,7 +8,7 @@ import math
 # CONFIG
 # ============================================================
 TARGET_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "ghidra_output")
+    os.path.join(os.path.dirname(__file__), "..", "..", "ghidra_output")
 )
 
 OUTPUT_JSON = "sha_training_dataset.json"

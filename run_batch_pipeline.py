@@ -27,8 +27,8 @@ if not GHIDRA_HOME:
         print("Please set GHIDRA_HOME environment variable or install Ghidra.")
         exit(1)
 
-BINARY_DIR = "dataset_binaries"
-OUTPUT_DIR = "ghidra_output"
+BINARY_DIR = "test_dataset_binaries"
+OUTPUT_DIR = "test_dataset_json"
 PROJECT_DIR = "/tmp/ghidra_batch_project"
 PROJECT_NAME = f"batch_extraction_{int(time.time())}"
 SCRIPT_PATH = "ghidra_scripts/extract_features.py"
@@ -39,7 +39,9 @@ import shutil
 
 def run_ghidra_on_binary(binary_path):
     """Run Ghidra analysis on a single binary"""
-    analyzer_bin = os.path.join(GHIDRA_HOME, "support", "analyzeHeadless")
+    # analyzer_bin = os.path.join(GHIDRA_HOME, "support", "analyzeHeadless")
+    analyzer_bin = os.path.join(GHIDRA_HOME, "support", "analyzeHeadless.bat")
+
     binary_name = os.path.basename(binary_path)
     
     # Ensure a clean temporary project directory

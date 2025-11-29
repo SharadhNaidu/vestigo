@@ -4,10 +4,15 @@ import time
 
 # --- CONFIGURATION ---
 # Robust path handling: relative to this script
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
-SOURCE_DIR = os.path.join(PROJECT_ROOT, "source_code")
-OUTPUT_DIR = os.path.join(PROJECT_ROOT, "dataset_binaries")
+# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+# SOURCE_DIR = os.path.join(PROJECT_ROOT, "source_code")
+# OUTPUT_DIR = os.path.join(PROJECT_ROOT, "dataset_binaries")
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))       
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))  
+
+SOURCE_DIR = os.path.join(PROJECT_ROOT, "source_code", "testingfiles")
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "test_dataset_binaries")
 
 # Map generic names to specific compiler commands available in the Docker container
 TARGETS = {
@@ -70,7 +75,8 @@ def build_dataset():
     for source in sources:
         algo_name = source.replace(".c", "")
         # Path inside Docker. We mount PROJECT_ROOT to /work
-        source_path = os.path.join("/work/source_code", source) 
+        source_path = os.path.join("/work/source_code/testingfiles/", source)
+
 
         for arch, compilers in TARGETS.items():
             for comp_name, comp_cmd in compilers.items():
@@ -78,7 +84,7 @@ def build_dataset():
                     # Naming Convention: algo_arch_compiler_opt.elf
                     # Example: aes_arm_gcc_O3.elf
                     filename = f"{algo_name}_{arch}_{comp_name}_{opt.replace('-', '')}.elf"
-                    output_path = os.path.join("/work/dataset_binaries", filename)
+                    output_path = os.path.join("/work/test_dataset_binaries", filename)
                     
                     # Construct Build Command
                     cmd = get_build_command(comp_cmd, opt, output_path, source_path)
