@@ -27,6 +27,7 @@ ghidra_project/
 .DS_Store
 Thumbs.db
 builds/
+builds_x86/
 analysis_workspace/
 report_*.json
 vulnerable_fs/
@@ -36,5 +37,5 @@ random.bin
 hardening_patch.sh
 *.bin
 *.extracted
-ghidra_output/
+# ghidra_output/
 ml/final_training_dataset.json

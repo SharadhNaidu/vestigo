@@ -27,8 +27,8 @@ if not GHIDRA_HOME:
         print("Please set GHIDRA_HOME environment variable or install Ghidra.")
         exit(1)
 
-BINARY_DIR = "test_dataset_binaries"
-OUTPUT_DIR = "test_dataset_json"
+BINARY_DIRS = ["builds", "builds_x86"]  # Process both directories
+OUTPUT_DIR = "ghidra_json"  # Combined output directory
 PROJECT_DIR = "/tmp/ghidra_batch_project"
 PROJECT_NAME = f"batch_extraction_{int(time.time())}"
 SCRIPT_PATH = "ghidra_scripts/extract_features.py"
@@ -39,8 +39,8 @@ import shutil
 
 def run_ghidra_on_binary(binary_path):
     """Run Ghidra analysis on a single binary"""
-    # analyzer_bin = os.path.join(GHIDRA_HOME, "support", "analyzeHeadless")
     analyzer_bin = os.path.join(GHIDRA_HOME, "support", "analyzeHeadless")
+    # analyzer_bin = os.path.join(GHIDRA_HOME, "support", "analyzeHeadless.bat")
 
     binary_name = os.path.basename(binary_path)
     
@@ -100,28 +100,42 @@ def main():
     
     binaries = []
 
-    # 1) Collect all .o and .a files recursively under builds/
-    for root, dirs, files in os.walk(BINARY_DIR):
-        for fname in files:
-            if fname.endswith(".o") or fname.endswith(".a") or fname.endswith(".elf"):
-                binaries.append(os.path.join(root, fname))
-
-    # 2) Add negative samples: busybox_*_unstripped (ELF only)
-    NEGATIVE_DIR = os.path.join(BINARY_DIR, "negetive")
-    if os.path.isdir(NEGATIVE_DIR):
-        for fname in os.listdir(NEGATIVE_DIR):
-            full = os.path.join(NEGATIVE_DIR, fname)
-            if fname.startswith("busybox_") and fname.endswith("_unstripped"):
-                binaries.append(full)
+    # Process both builds and builds_x86 directories
+    for binary_dir in BINARY_DIRS:
+        if not os.path.isdir(binary_dir):
+            print(f"Warning: Directory '{binary_dir}' not found, skipping...")
+            continue
+            
+        print(f"Scanning directory: {binary_dir}/")
+        
+        # 1) Collect all .o, .a, and .elf files recursively
+        for root, dirs, files in os.walk(binary_dir):
+            for fname in files:
+                if fname.endswith(".o") or fname.endswith(".a") or fname.endswith(".elf"):
+                    full_path = os.path.join(root, fname)
+                    binaries.append(full_path)
+        
+        # 2) Add negative samples from negative folder (if exists)
+            negative_dir = os.path.join(binary_dir, "negetive")
+            if os.path.isdir(negative_dir):
+                print(f"  Found negative samples: {negative_dir}/")
+                for root, dirs, files in os.walk(negative_dir):
+                    for fname in files:
+                        # Accept common binary formats in negative folder
+                        if fname.endswith(("_unstripped", ".elf", ".out", ".bin")) or \
+                           fname.startswith("busybox_"):
+                            full_path = os.path.join(root, fname)
+                            binaries.append(full_path)
 
     # 3) Deduplicate and sort
     binaries = sorted(set(binaries))
 
     if not binaries:
-        print(f"✗ No binaries found in '{BINARY_DIR}' (expected .o, .a, busybox_*_unstripped).")
+        print(f"✗ No binaries found in {BINARY_DIRS}")
+        print(f"  Expected: .o, .a, .elf files and negative samples")
         return
 
-    print(f"Found {len(binaries)} binaries (.o, .a, busybox_*_unstripped,.elf)")
+    print(f"\nFound {len(binaries)} total binaries across all directories")
     print(f"Processing in batches of {BATCH_SIZE}")
     print()
     
