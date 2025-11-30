@@ -21,30 +21,20 @@ END_INDEX   = 220
 
 
 # ============================================================
-# REAL RSA FUNCTIONS FROM YOUR DATASET
+# ONLY REAL RSA FUNCTIONS
 # ============================================================
-
 RSA_FUNCS = [
     "rsa_generate",
     "rsa_encrypt",
-    "rsa_decrypt",
-    "gen_prime",
-    "is_prime_mr",
-    "rand_in_range",
-    "pow_mod",
-    "mul_mod",
-    "inv_mod",
-    "egcd",
-    "__umodti3"
+    "rsa_decrypt"
 ]
 
 RSA_FUNCS = [f.lower() for f in RSA_FUNCS]
 
 
 # ============================================================
-# KEY SIZE DETECTION FROM FILENAME
+# DETECT KEYSIZE FROM FILENAME
 # ============================================================
-
 def detect_keysize_from_filename(filename: str):
     name = filename.lower()
     if "1024" in name:
@@ -53,13 +43,12 @@ def detect_keysize_from_filename(filename: str):
         return "RSA-2048"
     if "4096" in name:
         return "RSA-4096"
-    return None  # key size missing
+    return "RSA"   # fallback
 
 
 # ============================================================
-# STRINGIFY
+# SAFE STRINGIFY
 # ============================================================
-
 def stringify(func):
     try:
         return json.dumps(func, sort_keys=True).lower()
@@ -70,11 +59,10 @@ def stringify(func):
 # ============================================================
 # FEATURE EXTRACTION
 # ============================================================
-
 def extract_features(func):
     f = {}
     graph = func.get("graph_level", {}) or {}
-    nodes = func.get("node_level", []) or []
+    nodes = func.get("node_level", []) or {}
     op    = func.get("op_category_counts", {}) or {}
     cs    = func.get("crypto_signatures", {}) or {}
     data  = func.get("data_references", {}) or {}
@@ -83,64 +71,70 @@ def extract_features(func):
 
     ncount = max(1, len(nodes))
 
-    # graph-level
-    keys = [
+    # ---- Graph-level features ----
+    graph_keys = [
         "num_basic_blocks","num_edges","cyclomatic_complexity",
         "loop_count","loop_depth","branch_density","average_block_size",
         "num_entry_exit_paths","strongly_connected_components",
         "num_conditional_edges","num_unconditional_edges","num_loop_edges",
-        "avg_edge_branch_condition_complexplexity"
+        "avg_edge_branch_condition_complexity"
     ]
-    for k in keys:
+
+    for k in graph_keys:
         f[k] = graph.get(k, 0)
 
-    # instruction-level
+    # ---- Node-level aggregate features ----
     f["instruction_count"] = sum(n.get("instruction_count",0) for n in nodes)
     f["immediate_entropy"] = sum(n.get("immediate_entropy",0) for n in nodes) / ncount
     f["bitwise_op_density"] = sum(n.get("bitwise_op_density",0) for n in nodes) / ncount
     f["crypto_constant_hits"] = sum(n.get("crypto_constant_hits",0) for n in nodes)
-    f["branch_condition_complexity"] = sum(n.get("branch_condition_complexity",0) for n in nodes)
+    f["branch_condition_complexity"] = sum(
+        sum(n.get("branch_condition_complexity",0) for n in nodes)
+        for _ in [0]
+    )
 
-    # opcode ratio averages
+    # ---- Opcode ratio averages ----
     def avg_ratio(r):
         return sum(n.get("opcode_ratios",{}).get(r,0) for n in nodes) / ncount
 
-    for r in ["add_ratio","logical_ratio","load_store_ratio","xor_ratio",
-              "multiply_ratio","rotate_ratio"]:
+    ratio_keys = ["add_ratio","logical_ratio","load_store_ratio","xor_ratio",
+                  "multiply_ratio","rotate_ratio"]
+
+    for r in ratio_keys:
         f[r] = avg_ratio(r)
 
-    # crypto signature flags
+    # ---- Crypto signature flags ----
     f["has_aes_sbox"] = bool(cs.get("has_aes_sbox"))
     f["rsa_bigint_detected"] = bool(cs.get("rsa_bigint_detected"))
     f["has_aes_rcon"] = bool(cs.get("has_aes_rcon"))
     f["has_sha_constants"] = bool(cs.get("has_sha_constants"))
 
-    # data references
+    # ---- Data references ----
     f["rodata_refs_count"] = data.get("rodata_refs_count",0)
     f["string_refs_count"] = data.get("string_refs_count",0)
     f["stack_frame_size"] = data.get("stack_frame_size",0)
 
-    # operation categories
+    # ---- Operation category ----
     f["bitwise_ops"] = op.get("bitwise_ops",0)
     f["crypto_like_ops"] = op.get("crypto_like_ops",0)
     f["arithmetic_ops"] = op.get("arithmetic_ops",0)
     f["mem_ops_ratio"] = float(op.get("mem_ops_ratio",0))
 
-    # entropy
+    # ---- Entropy ----
     f["function_byte_entropy"] = ent.get("function_byte_entropy",0)
     f["opcode_entropy"]        = ent.get("opcode_entropy",0)
     f["cyclomatic_complexity_density"] = ent.get("cyclomatic_complexity_density",0)
 
-    # n-gram
+    # ---- N-gram ----
     f["unique_ngram_count"] = seq.get("unique_ngram_count",0)
 
     return f
 
 
+
 # ============================================================
 # MAIN PIPELINE
 # ============================================================
-
 def process():
 
     files = sorted(glob.glob(os.path.join(TARGET_DIR,"*.json")))
@@ -169,19 +163,13 @@ def process():
             lname = fname.lower()
             feats = extract_features(func)
 
-            # ---------- RSA Name Check ----------
-            is_rsa_func = lname in RSA_FUNCS
-
-            # ---------- RSA Variant ----------
-            if is_rsa_func:
-                if keysize is not None:
-                    label = keysize   # RSA-1024 / RSA-2048 / RSA-4096
-                else:
-                    label = "RSA"
+            # ----------- RSA Labeling (only 3 functions) ----------
+            if lname in RSA_FUNCS:
+                label = keysize
             else:
                 label = "Non-Crypto"
 
-            all_samples.append({
+            sample = {
                 "architecture": meta["architecture"],
                 "algorithm": label,
                 "compiler": meta["compiler"],
@@ -191,11 +179,16 @@ def process():
                 "function_address": func.get("address",""),
                 "label": label,
                 **feats
-            })
+            }
+
+            all_samples.append(sample)
 
     # ============================================================
-    # WRITE FILES
+    # OUTPUT FILES
     # ============================================================
+    if not all_samples:
+        print("[!] No samples generated.")
+        return
 
     with open(OUTPUT_CSV,"w",newline="",encoding="utf-8") as cf:
         writer = csv.DictWriter(cf, fieldnames=all_samples[0].keys())

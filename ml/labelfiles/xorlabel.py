@@ -1,5 +1,4 @@
-# xor_label.py
-# Labeling script for XOR-based cipher functions
+#!/usr/bin/env python3
 
 import os
 import glob
@@ -21,7 +20,7 @@ END_INDEX   = 355
 
 
 # ============================================================
-# TRUE XOR FUNCTION NAME SET (based on your dataset)
+# TRUE XOR FUNCTION NAME SET (rol REMOVED)
 # ============================================================
 XOR_FUNCS = {
     "xor_init",
@@ -30,7 +29,7 @@ XOR_FUNCS = {
     "xor_stream",
 
     # helper mixing/permutation functions used in your XOR cipher
-    "rol",
+    # (rol removed because NOT a crypto function)
     "sub",
     "perm",
     "diff"
@@ -46,19 +45,20 @@ def extract_features(func):
     graph = func.get("graph_level", {}) or {}
     nodes = func.get("node_level", []) or []
     op    = func.get("op_category_counts", {}) or {}
+    cs    = func.get("crypto_signatures", {}) or {}
     data  = func.get("data_references", {}) or {}
     ent   = func.get("entropy_metrics", {}) or {}
     seq   = func.get("instruction_sequence", {}) or {}
 
     ncount = max(1, len(nodes))
 
-    # graph-level
+    # graph-level (full set)
     graph_keys = [
         "num_basic_blocks","num_edges","cyclomatic_complexity",
         "loop_count","loop_depth","branch_density","average_block_size",
         "num_entry_exit_paths","strongly_connected_components",
-        "num_conditional_edges","num_unconditional_edges","num_loop_edges",
-        "avg_edge_branch_condition_complexplexity"
+        "num_conditional_edges","num_unconditional_edges",
+        "num_loop_edges","avg_edge_branch_condition_complexplexity"
     ]
     for k in graph_keys:
         f[k] = graph.get(k, 0)
@@ -67,6 +67,7 @@ def extract_features(func):
     f["instruction_count"] = sum(n.get("instruction_count",0) for n in nodes)
     f["immediate_entropy"] = sum(n.get("immediate_entropy",0) for n in nodes)/ncount
     f["bitwise_op_density"] = sum(n.get("bitwise_op_density",0) for n in nodes)/ncount
+    f["table_lookup_presence"] = any(n.get("table_lookup_presence", False) for n in nodes)
     f["crypto_constant_hits"] = sum(n.get("crypto_constant_hits",0) for n in nodes)
     f["branch_condition_complexity"] = sum(
         n.get("branch_condition_complexity",0) for n in nodes
@@ -79,6 +80,12 @@ def extract_features(func):
     for r in ["add_ratio","logical_ratio","load_store_ratio",
               "xor_ratio","multiply_ratio","rotate_ratio"]:
         f[r] = avg_ratio(r)
+
+    # crypto signature flags
+    f["has_aes_sbox"] = bool(cs.get("has_aes_sbox"))
+    f["rsa_bigint_detected"] = bool(cs.get("rsa_bigint_detected"))
+    f["has_aes_rcon"] = bool(cs.get("has_aes_rcon"))
+    f["has_sha_constants"] = bool(cs.get("has_sha_constants"))
 
     # data references
     f["rodata_refs_count"] = data.get("rodata_refs_count",0)
