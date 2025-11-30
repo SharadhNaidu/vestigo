@@ -31,8 +31,8 @@ def combine_csv_files_clean():
         'opcode_entropy', 'cyclomatic_complexity_density', 'unique_ngram_count'
     ]
     
-    csvfiles_dir = Path("ml/csvfiles")
-    output_file = "dataset.csv"
+    csvfiles_dir = Path("ml/testCsvFiles")
+    output_file = "test_dataset.csv"
     
     print("=== Clean CSV Dataset Combiner (47 columns) ===")
     print(f"Target columns: {len(EXPECTED_COLUMNS)}")
