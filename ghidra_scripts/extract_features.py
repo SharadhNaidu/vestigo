@@ -6,7 +6,34 @@
 
 import ghidra
 from ghidra.program.model.block import BasicBlockModel
-from ghidra.program.model.pcode import PcodeOp
+# The ghidra.program.model.pcode module is only available inside Ghidra's Jython environment.
+# Wrap the import so that static analysis or running outside Ghidra does not fail; provide a
+# minimal fallback PcodeOp shim for environments where ghidra isn't available.
+try:
+    from ghidra.program.model.pcode import PcodeOp
+except Exception:
+    class PcodeOp:
+        INT_XOR = 1
+        INT_AND = 2
+        INT_OR = 3
+        INT_LEFT = 4
+        INT_RIGHT = 5
+        INT_SRIGHT = 6
+        INT_ADD = 7
+        INT_SUB = 8
+        INT_MULT = 9
+        INT_DIV = 10
+        INT_REM = 11
+        INT_CARRY = 12
+        INT_SCARRY = 13
+        LOAD = 14
+        STORE = 15
+        BRANCH = 16
+        CBRANCH = 17
+        CALL = 18
+        RETURN = 19
+        MULTIEQUAL = 20
+
 from ghidra.util.task import TaskMonitor
 from ghidra.program.model.address import AddressSet
 
@@ -61,6 +88,7 @@ CRYPTO_CONSTANTS = {
     
     # --- PRNG ---
     # Mersenne Twister MT19937 Matrix A
+
     "MT19937_MATRIX_A": [0x9908b0df],
 }
 
