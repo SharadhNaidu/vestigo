@@ -12,6 +12,7 @@
 	.globl _AES192_Encrypt
 	.globl _puts
 	.globl _printf
+	.globl _putchar
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -43,11 +44,29 @@
 ; code
 ;--------------------------------------------------------
 	.area _CODE
+	G$putchar$0$0	= .
+	.globl	G$putchar$0$0
+	C$aes192.c$6$0_0$35	= .
+	.globl	C$aes192.c$6$0_0$35
+;/work/source_code/testingfiles/aes192.c:6: int putchar(int c) { (void)c; return c; }
+;	---------------------------------
+; Function putchar
+; ---------------------------------
+_putchar::
+	pop	bc
+	pop	hl
+	push	hl
+	push	bc
+	C$aes192.c$6$1_0$35	= .
+	.globl	C$aes192.c$6$1_0$35
+	XG$putchar$0$0	= .
+	.globl	XG$putchar$0$0
+	ret
 	Faes192$xt$0$0	= .
 	.globl	Faes192$xt$0$0
-	C$aes192.c$32$0_0$35	= .
-	.globl	C$aes192.c$32$0_0$35
-;/work/source_code/testingfiles/aes192.c:32: static uint8_t xt(uint8_t x) {
+	C$aes192.c$36$1_0$37	= .
+	.globl	C$aes192.c$36$1_0$37
+;/work/source_code/testingfiles/aes192.c:36: static uint8_t xt(uint8_t x) {
 ;	---------------------------------
 ; Function xt
 ; ---------------------------------
@@ -55,9 +74,9 @@ _xt:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-	C$aes192.c$33$1_0$35	= .
-	.globl	C$aes192.c$33$1_0$35
-;/work/source_code/testingfiles/aes192.c:33: return (uint8_t)((x << 1) ^ ((x & 0x80) ? 0x1B : 0));
+	C$aes192.c$37$1_0$37	= .
+	.globl	C$aes192.c$37$1_0$37
+;/work/source_code/testingfiles/aes192.c:37: return (uint8_t)((x << 1) ^ ((x & 0x80) ? 0x1B : 0));
 	ld	a, 4 (ix)
 	add	a, a
 	ld	c, a
@@ -78,12 +97,12 @@ _xt:
 	ld	l, a
 	pop	af
 	xor	a, d
-	C$aes192.c$34$1_0$35	= .
-	.globl	C$aes192.c$34$1_0$35
-;/work/source_code/testingfiles/aes192.c:34: }
+	C$aes192.c$38$1_0$37	= .
+	.globl	C$aes192.c$38$1_0$37
+;/work/source_code/testingfiles/aes192.c:38: }
 	pop	ix
-	C$aes192.c$34$1_0$35	= .
-	.globl	C$aes192.c$34$1_0$35
+	C$aes192.c$38$1_0$37	= .
+	.globl	C$aes192.c$38$1_0$37
 	XFaes192$xt$0$0	= .
 	.globl	XFaes192$xt$0$0
 	ret
@@ -362,9 +381,9 @@ _RCON:
 	.db #0xd8	; 216
 	Faes192$SubBytes$0$0	= .
 	.globl	Faes192$SubBytes$0$0
-	C$aes192.c$36$1_0$38	= .
-	.globl	C$aes192.c$36$1_0$38
-;/work/source_code/testingfiles/aes192.c:36: static void SubBytes(uint8_t *s) {
+	C$aes192.c$40$1_0$40	= .
+	.globl	C$aes192.c$40$1_0$40
+;/work/source_code/testingfiles/aes192.c:40: static void SubBytes(uint8_t *s) {
 ;	---------------------------------
 ; Function SubBytes
 ; ---------------------------------
@@ -372,9 +391,9 @@ _SubBytes:
 	push	ix
 	ld	ix,#0
 	add	ix,sp
-	C$aes192.c$37$2_0$38	= .
-	.globl	C$aes192.c$37$2_0$38
-;/work/source_code/testingfiles/aes192.c:37: for(int i=0;i<16;i++)
+	C$aes192.c$41$2_0$40	= .
+	.globl	C$aes192.c$41$2_0$40
+;/work/source_code/testingfiles/aes192.c:41: for(int i=0;i<16;i++)
 	ld	bc, #0x0000
 00103$:
 	ld	a, c
@@ -385,9 +404,9 @@ _SubBytes:
 	rra
 	sbc	a, #0x80
 	jr	NC,00105$
-	C$aes192.c$38$2_0$38	= .
-	.globl	C$aes192.c$38$2_0$38
-;/work/source_code/testingfiles/aes192.c:38: s[i] = SBOX[s[i]];
+	C$aes192.c$42$2_0$40	= .
+	.globl	C$aes192.c$42$2_0$40
+;/work/source_code/testingfiles/aes192.c:42: s[i] = SBOX[s[i]];
 	ld	a, 4 (ix)
 	add	a, c
 	ld	e, a
@@ -402,26 +421,26 @@ _SubBytes:
 	ld	h, a
 	ld	a, (hl)
 	ld	(de), a
-	C$aes192.c$37$2_0$38	= .
-	.globl	C$aes192.c$37$2_0$38
-;/work/source_code/testingfiles/aes192.c:37: for(int i=0;i<16;i++)
+	C$aes192.c$41$2_0$40	= .
+	.globl	C$aes192.c$41$2_0$40
+;/work/source_code/testingfiles/aes192.c:41: for(int i=0;i<16;i++)
 	inc	bc
 	jr	00103$
 00105$:
-	C$aes192.c$39$2_0$38	= .
-	.globl	C$aes192.c$39$2_0$38
-;/work/source_code/testingfiles/aes192.c:39: }
+	C$aes192.c$43$2_0$40	= .
+	.globl	C$aes192.c$43$2_0$40
+;/work/source_code/testingfiles/aes192.c:43: }
 	pop	ix
-	C$aes192.c$39$2_0$38	= .
-	.globl	C$aes192.c$39$2_0$38
+	C$aes192.c$43$2_0$40	= .
+	.globl	C$aes192.c$43$2_0$40
 	XFaes192$SubBytes$0$0	= .
 	.globl	XFaes192$SubBytes$0$0
 	ret
 	Faes192$ShiftRows$0$0	= .
 	.globl	Faes192$ShiftRows$0$0
-	C$aes192.c$41$2_0$40	= .
-	.globl	C$aes192.c$41$2_0$40
-;/work/source_code/testingfiles/aes192.c:41: static void ShiftRows(uint8_t *s) {
+	C$aes192.c$45$2_0$42	= .
+	.globl	C$aes192.c$45$2_0$42
+;/work/source_code/testingfiles/aes192.c:45: static void ShiftRows(uint8_t *s) {
 ;	---------------------------------
 ; Function ShiftRows
 ; ---------------------------------
@@ -432,9 +451,9 @@ _ShiftRows:
 	ld	hl, #-16
 	add	hl, sp
 	ld	sp, hl
-	C$aes192.c$43$1_0$40	= .
-	.globl	C$aes192.c$43$1_0$40
-;/work/source_code/testingfiles/aes192.c:43: memcpy(t, s, 16);
+	C$aes192.c$47$1_0$42	= .
+	.globl	C$aes192.c$47$1_0$42
+;/work/source_code/testingfiles/aes192.c:47: memcpy(t, s, 16);
 	ld	hl, #0
 	add	hl, sp
 	ld	c, l
@@ -447,9 +466,9 @@ _ShiftRows:
 	ld	bc, #0x0010
 	ldir
 	pop	bc
-	C$aes192.c$45$1_0$40	= .
-	.globl	C$aes192.c$45$1_0$40
-;/work/source_code/testingfiles/aes192.c:45: s[1]  = t[5];  s[5]  = t[9];  s[9]  = t[13]; s[13] = t[1];
+	C$aes192.c$49$1_0$42	= .
+	.globl	C$aes192.c$49$1_0$42
+;/work/source_code/testingfiles/aes192.c:49: s[1]  = t[5];  s[5]  = t[9];  s[9]  = t[13]; s[13] = t[1];
 	ld	e, 4 (ix)
 	ld	d, 5 (ix)
 	inc	de
@@ -501,9 +520,9 @@ _ShiftRows:
 	inc	hl
 	ld	a, (hl)
 	ld	(de), a
-	C$aes192.c$46$1_0$40	= .
-	.globl	C$aes192.c$46$1_0$40
-;/work/source_code/testingfiles/aes192.c:46: s[2]  = t[10]; s[10] = t[2];  s[6]  = t[14]; s[14] = t[6];
+	C$aes192.c$50$1_0$42	= .
+	.globl	C$aes192.c$50$1_0$42
+;/work/source_code/testingfiles/aes192.c:50: s[2]  = t[10]; s[10] = t[2];  s[6]  = t[14]; s[14] = t[6];
 	ld	e, 4 (ix)
 	ld	d, 5 (ix)
 	inc	de
@@ -556,9 +575,9 @@ _ShiftRows:
 	pop	bc
 	ld	a, (hl)
 	ld	(de), a
-	C$aes192.c$47$1_0$40	= .
-	.globl	C$aes192.c$47$1_0$40
-;/work/source_code/testingfiles/aes192.c:47: s[3]  = t[15]; s[7]  = t[3];  s[11] = t[7];  s[15] = t[11];
+	C$aes192.c$51$1_0$42	= .
+	.globl	C$aes192.c$51$1_0$42
+;/work/source_code/testingfiles/aes192.c:51: s[3]  = t[15]; s[7]  = t[3];  s[11] = t[7];  s[15] = t[11];
 	ld	e, 4 (ix)
 	ld	d, 5 (ix)
 	inc	de
@@ -611,21 +630,21 @@ _ShiftRows:
 	add	hl, bc
 	ld	a, (hl)
 	ld	(de), a
-	C$aes192.c$48$1_0$40	= .
-	.globl	C$aes192.c$48$1_0$40
-;/work/source_code/testingfiles/aes192.c:48: }
+	C$aes192.c$52$1_0$42	= .
+	.globl	C$aes192.c$52$1_0$42
+;/work/source_code/testingfiles/aes192.c:52: }
 	ld	sp, ix
 	pop	ix
-	C$aes192.c$48$1_0$40	= .
-	.globl	C$aes192.c$48$1_0$40
+	C$aes192.c$52$1_0$42	= .
+	.globl	C$aes192.c$52$1_0$42
 	XFaes192$ShiftRows$0$0	= .
 	.globl	XFaes192$ShiftRows$0$0
 	ret
 	Faes192$MixColumns$0$0	= .
 	.globl	Faes192$MixColumns$0$0
-	C$aes192.c$50$1_0$43	= .
-	.globl	C$aes192.c$50$1_0$43
-;/work/source_code/testingfiles/aes192.c:50: static void MixColumns(uint8_t *s) {
+	C$aes192.c$54$1_0$45	= .
+	.globl	C$aes192.c$54$1_0$45
+;/work/source_code/testingfiles/aes192.c:54: static void MixColumns(uint8_t *s) {
 ;	---------------------------------
 ; Function MixColumns
 ; ---------------------------------
@@ -636,9 +655,9 @@ _MixColumns:
 	ld	hl, #-11
 	add	hl, sp
 	ld	sp, hl
-	C$aes192.c$51$2_0$43	= .
-	.globl	C$aes192.c$51$2_0$43
-;/work/source_code/testingfiles/aes192.c:51: for(int i=0;i<4;i++){
+	C$aes192.c$55$2_0$45	= .
+	.globl	C$aes192.c$55$2_0$45
+;/work/source_code/testingfiles/aes192.c:55: for(int i=0;i<4;i++){
 	ld	bc, #0x0000
 00103$:
 	ld	a, c
@@ -649,9 +668,9 @@ _MixColumns:
 	rra
 	sbc	a, #0x80
 	jp	NC, 00105$
-	C$aes192.c$52$3_0$44	= .
-	.globl	C$aes192.c$52$3_0$44
-;/work/source_code/testingfiles/aes192.c:52: uint8_t a = s[4*i+0], b = s[4*i+1], c = s[4*i+2], d = s[4*i+3];
+	C$aes192.c$56$3_0$46	= .
+	.globl	C$aes192.c$56$3_0$46
+;/work/source_code/testingfiles/aes192.c:56: uint8_t a = s[4*i+0], b = s[4*i+1], c = s[4*i+2], d = s[4*i+3];
 	ld	e, c
 	ld	d, b
 	sla	e
@@ -708,9 +727,9 @@ _MixColumns:
 	ld	l, -2 (ix)
 	ld	h, -1 (ix)
 	ld	e, (hl)
-	C$aes192.c$53$3_0$44	= .
-	.globl	C$aes192.c$53$3_0$44
-;/work/source_code/testingfiles/aes192.c:53: s[4*i+0] = xt(a) ^ xt(b) ^ b ^ c ^ d;
+	C$aes192.c$57$3_0$46	= .
+	.globl	C$aes192.c$57$3_0$46
+;/work/source_code/testingfiles/aes192.c:57: s[4*i+0] = xt(a) ^ xt(b) ^ b ^ c ^ d;
 	push	bc
 	push	de
 	ld	a, -9 (ix)
@@ -739,9 +758,9 @@ _MixColumns:
 	pop	hl
 	push	hl
 	ld	(hl), a
-	C$aes192.c$54$3_0$44	= .
-	.globl	C$aes192.c$54$3_0$44
-;/work/source_code/testingfiles/aes192.c:54: s[4*i+1] = a ^ xt(b) ^ xt(c) ^ c ^ d;
+	C$aes192.c$58$3_0$46	= .
+	.globl	C$aes192.c$58$3_0$46
+;/work/source_code/testingfiles/aes192.c:58: s[4*i+1] = a ^ xt(b) ^ xt(c) ^ c ^ d;
 	push	bc
 	push	de
 	ld	a, -6 (ix)
@@ -770,9 +789,9 @@ _MixColumns:
 	ld	l, -8 (ix)
 	ld	h, -7 (ix)
 	ld	(hl), a
-	C$aes192.c$55$3_0$44	= .
-	.globl	C$aes192.c$55$3_0$44
-;/work/source_code/testingfiles/aes192.c:55: s[4*i+2] = a ^ b ^ xt(c) ^ xt(d) ^ d;
+	C$aes192.c$59$3_0$46	= .
+	.globl	C$aes192.c$59$3_0$46
+;/work/source_code/testingfiles/aes192.c:59: s[4*i+2] = a ^ b ^ xt(c) ^ xt(d) ^ d;
 	ld	a, -9 (ix)
 	xor	a, -6 (ix)
 	ld	d, a
@@ -803,9 +822,9 @@ _MixColumns:
 	ld	l, -5 (ix)
 	ld	h, -4 (ix)
 	ld	(hl), a
-	C$aes192.c$56$3_0$44	= .
-	.globl	C$aes192.c$56$3_0$44
-;/work/source_code/testingfiles/aes192.c:56: s[4*i+3] = xt(a) ^ a ^ b ^ c ^ xt(d);
+	C$aes192.c$60$3_0$46	= .
+	.globl	C$aes192.c$60$3_0$46
+;/work/source_code/testingfiles/aes192.c:60: s[4*i+3] = xt(a) ^ a ^ b ^ c ^ xt(d);
 	push	bc
 	push	de
 	ld	a, -9 (ix)
@@ -834,27 +853,27 @@ _MixColumns:
 	ld	l, -2 (ix)
 	ld	h, -1 (ix)
 	ld	(hl), a
-	C$aes192.c$51$2_0$43	= .
-	.globl	C$aes192.c$51$2_0$43
-;/work/source_code/testingfiles/aes192.c:51: for(int i=0;i<4;i++){
+	C$aes192.c$55$2_0$45	= .
+	.globl	C$aes192.c$55$2_0$45
+;/work/source_code/testingfiles/aes192.c:55: for(int i=0;i<4;i++){
 	inc	bc
 	jp	00103$
 00105$:
-	C$aes192.c$58$2_0$43	= .
-	.globl	C$aes192.c$58$2_0$43
-;/work/source_code/testingfiles/aes192.c:58: }
+	C$aes192.c$62$2_0$45	= .
+	.globl	C$aes192.c$62$2_0$45
+;/work/source_code/testingfiles/aes192.c:62: }
 	ld	sp, ix
 	pop	ix
-	C$aes192.c$58$2_0$43	= .
-	.globl	C$aes192.c$58$2_0$43
+	C$aes192.c$62$2_0$45	= .
+	.globl	C$aes192.c$62$2_0$45
 	XFaes192$MixColumns$0$0	= .
 	.globl	XFaes192$MixColumns$0$0
 	ret
 	Faes192$AddRoundKey$0$0	= .
 	.globl	Faes192$AddRoundKey$0$0
-	C$aes192.c$60$2_0$47	= .
-	.globl	C$aes192.c$60$2_0$47
-;/work/source_code/testingfiles/aes192.c:60: static void AddRoundKey(uint8_t *s, uint8_t rk[16]) {
+	C$aes192.c$64$2_0$49	= .
+	.globl	C$aes192.c$64$2_0$49
+;/work/source_code/testingfiles/aes192.c:64: static void AddRoundKey(uint8_t *s, uint8_t rk[16]) {
 ;	---------------------------------
 ; Function AddRoundKey
 ; ---------------------------------
@@ -863,9 +882,9 @@ _AddRoundKey:
 	ld	ix,#0
 	add	ix,sp
 	dec	sp
-	C$aes192.c$61$2_0$47	= .
-	.globl	C$aes192.c$61$2_0$47
-;/work/source_code/testingfiles/aes192.c:61: for(int i=0;i<16;i++) s[i] ^= rk[i];
+	C$aes192.c$65$2_0$49	= .
+	.globl	C$aes192.c$65$2_0$49
+;/work/source_code/testingfiles/aes192.c:65: for(int i=0;i<16;i++) s[i] ^= rk[i];
 	ld	bc, #0x0000
 00103$:
 	ld	a, c
@@ -893,21 +912,21 @@ _AddRoundKey:
 	inc	bc
 	jr	00103$
 00105$:
-	C$aes192.c$62$2_0$47	= .
-	.globl	C$aes192.c$62$2_0$47
-;/work/source_code/testingfiles/aes192.c:62: }
+	C$aes192.c$66$2_0$49	= .
+	.globl	C$aes192.c$66$2_0$49
+;/work/source_code/testingfiles/aes192.c:66: }
 	inc	sp
 	pop	ix
-	C$aes192.c$62$2_0$47	= .
-	.globl	C$aes192.c$62$2_0$47
+	C$aes192.c$66$2_0$49	= .
+	.globl	C$aes192.c$66$2_0$49
 	XFaes192$AddRoundKey$0$0	= .
 	.globl	XFaes192$AddRoundKey$0$0
 	ret
 	Faes192$KeyExpansion$0$0	= .
 	.globl	Faes192$KeyExpansion$0$0
-	C$aes192.c$64$2_0$49	= .
-	.globl	C$aes192.c$64$2_0$49
-;/work/source_code/testingfiles/aes192.c:64: static void KeyExpansion(uint8_t key[24], uint8_t roundKeys[13][16]) {
+	C$aes192.c$68$2_0$51	= .
+	.globl	C$aes192.c$68$2_0$51
+;/work/source_code/testingfiles/aes192.c:68: static void KeyExpansion(uint8_t key[24], uint8_t roundKeys[13][16]) {
 ;	---------------------------------
 ; Function KeyExpansion
 ; ---------------------------------
@@ -918,9 +937,9 @@ _KeyExpansion:
 	ld	hl, #-226
 	add	hl, sp
 	ld	sp, hl
-	C$aes192.c$68$1_0$49	= .
-	.globl	C$aes192.c$68$1_0$49
-;/work/source_code/testingfiles/aes192.c:68: memcpy(expanded, key, 24);
+	C$aes192.c$72$1_0$51	= .
+	.globl	C$aes192.c$72$1_0$51
+;/work/source_code/testingfiles/aes192.c:72: memcpy(expanded, key, 24);
 	ld	hl, #4
 	add	hl, sp
 	ld	-14 (ix), l
@@ -930,15 +949,15 @@ _KeyExpansion:
 	ld	h, 5 (ix)
 	ld	bc, #0x0018
 	ldir
-	C$aes192.c$70$2_0$50	= .
-	.globl	C$aes192.c$70$2_0$50
-;/work/source_code/testingfiles/aes192.c:70: int bytesUsed = 24;
+	C$aes192.c$74$2_0$52	= .
+	.globl	C$aes192.c$74$2_0$52
+;/work/source_code/testingfiles/aes192.c:74: int bytesUsed = 24;
 	ld	-12 (ix), #0x18
 	xor	a, a
 	ld	-11 (ix), a
-	C$aes192.c$73$3_1$52	= .
-	.globl	C$aes192.c$73$3_1$52
-;/work/source_code/testingfiles/aes192.c:73: while (bytesUsed < 208) {
+	C$aes192.c$77$3_1$54	= .
+	.globl	C$aes192.c$77$3_1$54
+;/work/source_code/testingfiles/aes192.c:77: while (bytesUsed < 208) {
 	ld	hl, #0
 	add	hl, sp
 	ld	-10 (ix), l
@@ -959,9 +978,9 @@ _KeyExpansion:
 	rra
 	sbc	a, #0x80
 	jp	NC, 00107$
-	C$aes192.c$74$3_1$52	= .
-	.globl	C$aes192.c$74$3_1$52
-;/work/source_code/testingfiles/aes192.c:74: for(int i=0;i<4;i++)
+	C$aes192.c$78$3_1$54	= .
+	.globl	C$aes192.c$78$3_1$54
+;/work/source_code/testingfiles/aes192.c:78: for(int i=0;i<4;i++)
 	ld	a, -12 (ix)
 	add	a, #0xfc
 	ld	-4 (ix), a
@@ -978,9 +997,9 @@ _KeyExpansion:
 	rra
 	sbc	a, #0x80
 	jr	NC,00101$
-	C$aes192.c$75$3_1$52	= .
-	.globl	C$aes192.c$75$3_1$52
-;/work/source_code/testingfiles/aes192.c:75: temp[i] = expanded[bytesUsed - 4 + i];
+	C$aes192.c$79$3_1$54	= .
+	.globl	C$aes192.c$79$3_1$54
+;/work/source_code/testingfiles/aes192.c:79: temp[i] = expanded[bytesUsed - 4 + i];
 	ld	a, -10 (ix)
 	add	a, c
 	ld	-2 (ix), a
@@ -1003,15 +1022,15 @@ _KeyExpansion:
 	ld	l, -2 (ix)
 	ld	h, -1 (ix)
 	ld	(hl), a
-	C$aes192.c$74$3_1$52	= .
-	.globl	C$aes192.c$74$3_1$52
-;/work/source_code/testingfiles/aes192.c:74: for(int i=0;i<4;i++)
+	C$aes192.c$78$3_1$54	= .
+	.globl	C$aes192.c$78$3_1$54
+;/work/source_code/testingfiles/aes192.c:78: for(int i=0;i<4;i++)
 	inc	bc
 	jr	00110$
 00101$:
-	C$aes192.c$77$2_1$49	= .
-	.globl	C$aes192.c$77$2_1$49
-;/work/source_code/testingfiles/aes192.c:77: if (bytesUsed % 24 == 0) {
+	C$aes192.c$81$2_1$51	= .
+	.globl	C$aes192.c$81$2_1$51
+;/work/source_code/testingfiles/aes192.c:81: if (bytesUsed % 24 == 0) {
 	ld	hl, #0x0018
 	push	hl
 	ld	l, -12 (ix)
@@ -1024,16 +1043,16 @@ _KeyExpansion:
 	ld	a, h
 	or	a, c
 	jr	NZ,00126$
-	C$aes192.c$78$3_1$53	= .
-	.globl	C$aes192.c$78$3_1$53
-;/work/source_code/testingfiles/aes192.c:78: uint8_t t = temp[0];
+	C$aes192.c$82$3_1$55	= .
+	.globl	C$aes192.c$82$3_1$55
+;/work/source_code/testingfiles/aes192.c:82: uint8_t t = temp[0];
 	ld	l, -10 (ix)
 	ld	h, -9 (ix)
 	ld	a, (hl)
 	ld	-2 (ix), a
-	C$aes192.c$79$3_1$53	= .
-	.globl	C$aes192.c$79$3_1$53
-;/work/source_code/testingfiles/aes192.c:79: temp[0] = SBOX[temp[1]];
+	C$aes192.c$83$3_1$55	= .
+	.globl	C$aes192.c$83$3_1$55
+;/work/source_code/testingfiles/aes192.c:83: temp[0] = SBOX[temp[1]];
 	ld	c, -10 (ix)
 	ld	b, -9 (ix)
 	inc	bc
@@ -1049,9 +1068,9 @@ _KeyExpansion:
 	ld	h, -9 (ix)
 	ld	a, -1 (ix)
 	ld	(hl), a
-	C$aes192.c$80$3_1$53	= .
-	.globl	C$aes192.c$80$3_1$53
-;/work/source_code/testingfiles/aes192.c:80: temp[1] = SBOX[temp[2]];
+	C$aes192.c$84$3_1$55	= .
+	.globl	C$aes192.c$84$3_1$55
+;/work/source_code/testingfiles/aes192.c:84: temp[1] = SBOX[temp[2]];
 	ld	e, -10 (ix)
 	ld	d, -9 (ix)
 	inc	de
@@ -1064,9 +1083,9 @@ _KeyExpansion:
 	ld	h, a
 	ld	a, (hl)
 	ld	(bc), a
-	C$aes192.c$81$3_1$53	= .
-	.globl	C$aes192.c$81$3_1$53
-;/work/source_code/testingfiles/aes192.c:81: temp[2] = SBOX[temp[3]];
+	C$aes192.c$85$3_1$55	= .
+	.globl	C$aes192.c$85$3_1$55
+;/work/source_code/testingfiles/aes192.c:85: temp[2] = SBOX[temp[3]];
 	ld	c, -10 (ix)
 	ld	b, -9 (ix)
 	inc	bc
@@ -1080,9 +1099,9 @@ _KeyExpansion:
 	ld	h, a
 	ld	a, (hl)
 	ld	(de), a
-	C$aes192.c$82$3_1$53	= .
-	.globl	C$aes192.c$82$3_1$53
-;/work/source_code/testingfiles/aes192.c:82: temp[3] = SBOX[t];
+	C$aes192.c$86$3_1$55	= .
+	.globl	C$aes192.c$86$3_1$55
+;/work/source_code/testingfiles/aes192.c:86: temp[3] = SBOX[t];
 	ld	a, #<(_SBOX)
 	add	a, -2 (ix)
 	ld	e, a
@@ -1091,9 +1110,9 @@ _KeyExpansion:
 	ld	d, a
 	ld	a, (de)
 	ld	(bc), a
-	C$aes192.c$83$3_1$53	= .
-	.globl	C$aes192.c$83$3_1$53
-;/work/source_code/testingfiles/aes192.c:83: temp[0] ^= RCON[rconIter++];
+	C$aes192.c$87$3_1$55	= .
+	.globl	C$aes192.c$87$3_1$55
+;/work/source_code/testingfiles/aes192.c:87: temp[0] ^= RCON[rconIter++];
 	ld	a, #<(_RCON)
 	add	a, -6 (ix)
 	ld	c, a
@@ -1109,9 +1128,9 @@ _KeyExpansion:
 	ld	l, -10 (ix)
 	ld	h, -9 (ix)
 	ld	(hl), a
-	C$aes192.c$86$2_1$49	= .
-	.globl	C$aes192.c$86$2_1$49
-;/work/source_code/testingfiles/aes192.c:86: for(int i=0;i<4;i++)
+	C$aes192.c$90$2_1$51	= .
+	.globl	C$aes192.c$90$2_1$51
+;/work/source_code/testingfiles/aes192.c:90: for(int i=0;i<4;i++)
 00126$:
 	ld	a, -12 (ix)
 	ld	-4 (ix), a
@@ -1129,9 +1148,9 @@ _KeyExpansion:
 	rra
 	sbc	a, #0x80
 	jp	NC, 00105$
-	C$aes192.c$87$3_1$54	= .
-	.globl	C$aes192.c$87$3_1$54
-;/work/source_code/testingfiles/aes192.c:87: expanded[bytesUsed++] = expanded[bytesUsed - 24] ^ temp[i];
+	C$aes192.c$91$3_1$56	= .
+	.globl	C$aes192.c$91$3_1$56
+;/work/source_code/testingfiles/aes192.c:91: expanded[bytesUsed++] = expanded[bytesUsed - 24] ^ temp[i];
 	ld	c, -4 (ix)
 	ld	b, -3 (ix)
 	inc	-4 (ix)
@@ -1172,17 +1191,17 @@ _KeyExpansion:
 	ld	a, (hl)
 	xor	a, e
 	ld	(bc), a
-	C$aes192.c$86$3_1$54	= .
-	.globl	C$aes192.c$86$3_1$54
-;/work/source_code/testingfiles/aes192.c:86: for(int i=0;i<4;i++)
+	C$aes192.c$90$3_1$56	= .
+	.globl	C$aes192.c$90$3_1$56
+;/work/source_code/testingfiles/aes192.c:90: for(int i=0;i<4;i++)
 	inc	-2 (ix)
 	jr	NZ,00113$
 	inc	-1 (ix)
 	jr	00113$
 00107$:
-	C$aes192.c$90$2_1$49	= .
-	.globl	C$aes192.c$90$2_1$49
-;/work/source_code/testingfiles/aes192.c:90: for(int r=0;r<Nr+1;r++)
+	C$aes192.c$94$2_1$51	= .
+	.globl	C$aes192.c$94$2_1$51
+;/work/source_code/testingfiles/aes192.c:94: for(int r=0;r<Nr+1;r++)
 	xor	a, a
 	ld	-2 (ix), a
 	ld	-1 (ix), a
@@ -1195,9 +1214,9 @@ _KeyExpansion:
 	rra
 	sbc	a, #0x80
 	jr	NC,00118$
-	C$aes192.c$91$2_1$55	= .
-	.globl	C$aes192.c$91$2_1$55
-;/work/source_code/testingfiles/aes192.c:91: memcpy(roundKeys[r], expanded + (r*16), 16);
+	C$aes192.c$95$2_1$57	= .
+	.globl	C$aes192.c$95$2_1$57
+;/work/source_code/testingfiles/aes192.c:95: memcpy(roundKeys[r], expanded + (r*16), 16);
 	ld	c, -2 (ix)
 	ld	b, -1 (ix)
 	sla	c
@@ -1221,29 +1240,29 @@ _KeyExpansion:
 	ld	h, a
 	ld	bc, #0x0010
 	ldir
-	C$aes192.c$90$2_1$55	= .
-	.globl	C$aes192.c$90$2_1$55
-;/work/source_code/testingfiles/aes192.c:90: for(int r=0;r<Nr+1;r++)
+	C$aes192.c$94$2_1$57	= .
+	.globl	C$aes192.c$94$2_1$57
+;/work/source_code/testingfiles/aes192.c:94: for(int r=0;r<Nr+1;r++)
 	inc	-2 (ix)
 	jr	NZ,00116$
 	inc	-1 (ix)
 	jr	00116$
 00118$:
-	C$aes192.c$92$2_1$49	= .
-	.globl	C$aes192.c$92$2_1$49
-;/work/source_code/testingfiles/aes192.c:92: }
+	C$aes192.c$96$2_1$51	= .
+	.globl	C$aes192.c$96$2_1$51
+;/work/source_code/testingfiles/aes192.c:96: }
 	ld	sp, ix
 	pop	ix
-	C$aes192.c$92$2_1$49	= .
-	.globl	C$aes192.c$92$2_1$49
+	C$aes192.c$96$2_1$51	= .
+	.globl	C$aes192.c$96$2_1$51
 	XFaes192$KeyExpansion$0$0	= .
 	.globl	XFaes192$KeyExpansion$0$0
 	ret
 	G$AES192_Encrypt$0$0	= .
 	.globl	G$AES192_Encrypt$0$0
-	C$aes192.c$94$2_1$57	= .
-	.globl	C$aes192.c$94$2_1$57
-;/work/source_code/testingfiles/aes192.c:94: void AES192_Encrypt(uint8_t *in, uint8_t *out, uint8_t key[24]) {
+	C$aes192.c$98$2_1$59	= .
+	.globl	C$aes192.c$98$2_1$59
+;/work/source_code/testingfiles/aes192.c:98: void AES192_Encrypt(uint8_t *in, uint8_t *out, uint8_t key[24]) {
 ;	---------------------------------
 ; Function AES192_Encrypt
 ; ---------------------------------
@@ -1254,9 +1273,9 @@ _AES192_Encrypt::
 	ld	hl, #-236
 	add	hl, sp
 	ld	sp, hl
-	C$aes192.c$98$1_0$57	= .
-	.globl	C$aes192.c$98$1_0$57
-;/work/source_code/testingfiles/aes192.c:98: memcpy(state, in, 16);
+	C$aes192.c$102$1_0$59	= .
+	.globl	C$aes192.c$102$1_0$59
+;/work/source_code/testingfiles/aes192.c:102: memcpy(state, in, 16);
 	ld	hl, #0
 	add	hl, sp
 	ld	c, l
@@ -1269,9 +1288,9 @@ _AES192_Encrypt::
 	ld	bc, #0x0010
 	ldir
 	pop	bc
-	C$aes192.c$99$1_0$57	= .
-	.globl	C$aes192.c$99$1_0$57
-;/work/source_code/testingfiles/aes192.c:99: KeyExpansion(key, rk);
+	C$aes192.c$103$1_0$59	= .
+	.globl	C$aes192.c$103$1_0$59
+;/work/source_code/testingfiles/aes192.c:103: KeyExpansion(key, rk);
 	ld	hl, #16
 	add	hl, sp
 	push	bc
@@ -1283,9 +1302,9 @@ _AES192_Encrypt::
 	pop	af
 	pop	af
 	pop	bc
-	C$aes192.c$101$1_0$57	= .
-	.globl	C$aes192.c$101$1_0$57
-;/work/source_code/testingfiles/aes192.c:101: AddRoundKey(state, rk[0]);
+	C$aes192.c$105$1_0$59	= .
+	.globl	C$aes192.c$105$1_0$59
+;/work/source_code/testingfiles/aes192.c:105: AddRoundKey(state, rk[0]);
 	ld	hl, #16
 	add	hl, sp
 	ld	e, c
@@ -1297,9 +1316,9 @@ _AES192_Encrypt::
 	pop	af
 	pop	af
 	pop	bc
-	C$aes192.c$103$3_0$59	= .
-	.globl	C$aes192.c$103$3_0$59
-;/work/source_code/testingfiles/aes192.c:103: for(int round=1; round<Nr; round++){
+	C$aes192.c$107$3_0$61	= .
+	.globl	C$aes192.c$107$3_0$61
+;/work/source_code/testingfiles/aes192.c:107: for(int round=1; round<Nr; round++){
 	ld	-12 (ix), c
 	ld	-11 (ix), b
 	ld	-10 (ix), c
@@ -1324,9 +1343,9 @@ _AES192_Encrypt::
 	rra
 	sbc	a, #0x80
 	jr	NC,00101$
-	C$aes192.c$104$3_0$59	= .
-	.globl	C$aes192.c$104$3_0$59
-;/work/source_code/testingfiles/aes192.c:104: SubBytes(state);
+	C$aes192.c$108$3_0$61	= .
+	.globl	C$aes192.c$108$3_0$61
+;/work/source_code/testingfiles/aes192.c:108: SubBytes(state);
 	ld	e, -12 (ix)
 	ld	d, -11 (ix)
 	push	bc
@@ -1334,9 +1353,9 @@ _AES192_Encrypt::
 	call	_SubBytes
 	pop	af
 	pop	bc
-	C$aes192.c$105$3_0$59	= .
-	.globl	C$aes192.c$105$3_0$59
-;/work/source_code/testingfiles/aes192.c:105: ShiftRows(state);
+	C$aes192.c$109$3_0$61	= .
+	.globl	C$aes192.c$109$3_0$61
+;/work/source_code/testingfiles/aes192.c:109: ShiftRows(state);
 	ld	e, -10 (ix)
 	ld	d, -9 (ix)
 	push	bc
@@ -1344,9 +1363,9 @@ _AES192_Encrypt::
 	call	_ShiftRows
 	pop	af
 	pop	bc
-	C$aes192.c$106$3_0$59	= .
-	.globl	C$aes192.c$106$3_0$59
-;/work/source_code/testingfiles/aes192.c:106: MixColumns(state);
+	C$aes192.c$110$3_0$61	= .
+	.globl	C$aes192.c$110$3_0$61
+;/work/source_code/testingfiles/aes192.c:110: MixColumns(state);
 	ld	e, -8 (ix)
 	ld	d, -7 (ix)
 	push	bc
@@ -1354,9 +1373,9 @@ _AES192_Encrypt::
 	call	_MixColumns
 	pop	af
 	pop	bc
-	C$aes192.c$107$3_0$59	= .
-	.globl	C$aes192.c$107$3_0$59
-;/work/source_code/testingfiles/aes192.c:107: AddRoundKey(state, rk[round]);
+	C$aes192.c$111$3_0$61	= .
+	.globl	C$aes192.c$111$3_0$61
+;/work/source_code/testingfiles/aes192.c:111: AddRoundKey(state, rk[round]);
 	ld	e, -2 (ix)
 	ld	d, -1 (ix)
 	sla	e
@@ -1382,17 +1401,17 @@ _AES192_Encrypt::
 	pop	af
 	pop	af
 	pop	bc
-	C$aes192.c$103$2_0$58	= .
-	.globl	C$aes192.c$103$2_0$58
-;/work/source_code/testingfiles/aes192.c:103: for(int round=1; round<Nr; round++){
+	C$aes192.c$107$2_0$60	= .
+	.globl	C$aes192.c$107$2_0$60
+;/work/source_code/testingfiles/aes192.c:107: for(int round=1; round<Nr; round++){
 	inc	-2 (ix)
 	jr	NZ,00103$
 	inc	-1 (ix)
 	jr	00103$
 00101$:
-	C$aes192.c$110$1_0$57	= .
-	.globl	C$aes192.c$110$1_0$57
-;/work/source_code/testingfiles/aes192.c:110: SubBytes(state);
+	C$aes192.c$114$1_0$59	= .
+	.globl	C$aes192.c$114$1_0$59
+;/work/source_code/testingfiles/aes192.c:114: SubBytes(state);
 	ld	e, c
 	ld	d, b
 	push	bc
@@ -1400,9 +1419,9 @@ _AES192_Encrypt::
 	call	_SubBytes
 	pop	af
 	pop	bc
-	C$aes192.c$111$1_0$57	= .
-	.globl	C$aes192.c$111$1_0$57
-;/work/source_code/testingfiles/aes192.c:111: ShiftRows(state);
+	C$aes192.c$115$1_0$59	= .
+	.globl	C$aes192.c$115$1_0$59
+;/work/source_code/testingfiles/aes192.c:115: ShiftRows(state);
 	ld	e, c
 	ld	d, b
 	push	bc
@@ -1410,9 +1429,9 @@ _AES192_Encrypt::
 	call	_ShiftRows
 	pop	af
 	pop	bc
-	C$aes192.c$112$1_0$57	= .
-	.globl	C$aes192.c$112$1_0$57
-;/work/source_code/testingfiles/aes192.c:112: AddRoundKey(state, rk[Nr]);
+	C$aes192.c$116$1_0$59	= .
+	.globl	C$aes192.c$116$1_0$59
+;/work/source_code/testingfiles/aes192.c:116: AddRoundKey(state, rk[Nr]);
 	ld	a, -6 (ix)
 	add	a, #0xc0
 	ld	e, a
@@ -1428,30 +1447,30 @@ _AES192_Encrypt::
 	pop	af
 	pop	af
 	pop	bc
-	C$aes192.c$114$1_0$57	= .
-	.globl	C$aes192.c$114$1_0$57
-;/work/source_code/testingfiles/aes192.c:114: memcpy(out, state, 16);
+	C$aes192.c$118$1_0$59	= .
+	.globl	C$aes192.c$118$1_0$59
+;/work/source_code/testingfiles/aes192.c:118: memcpy(out, state, 16);
 	ld	e, 6 (ix)
 	ld	d, 7 (ix)
 	ld	l, c
 	ld	h, b
 	ld	bc, #0x0010
 	ldir
-	C$aes192.c$115$1_0$57	= .
-	.globl	C$aes192.c$115$1_0$57
-;/work/source_code/testingfiles/aes192.c:115: }
+	C$aes192.c$119$1_0$59	= .
+	.globl	C$aes192.c$119$1_0$59
+;/work/source_code/testingfiles/aes192.c:119: }
 	ld	sp, ix
 	pop	ix
-	C$aes192.c$115$1_0$57	= .
-	.globl	C$aes192.c$115$1_0$57
+	C$aes192.c$119$1_0$59	= .
+	.globl	C$aes192.c$119$1_0$59
 	XG$AES192_Encrypt$0$0	= .
 	.globl	XG$AES192_Encrypt$0$0
 	ret
 	G$main$0$0	= .
 	.globl	G$main$0$0
-	C$aes192.c$117$1_0$60	= .
-	.globl	C$aes192.c$117$1_0$60
-;/work/source_code/testingfiles/aes192.c:117: int main() {
+	C$aes192.c$121$1_0$62	= .
+	.globl	C$aes192.c$121$1_0$62
+;/work/source_code/testingfiles/aes192.c:121: int main() {
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
@@ -1462,9 +1481,9 @@ _main::
 	ld	hl, #-58
 	add	hl, sp
 	ld	sp, hl
-	C$aes192.c$118$2_0$60	= .
-	.globl	C$aes192.c$118$2_0$60
-;/work/source_code/testingfiles/aes192.c:118: uint8_t key[24] = {
+	C$aes192.c$122$2_0$62	= .
+	.globl	C$aes192.c$122$2_0$62
+;/work/source_code/testingfiles/aes192.c:122: uint8_t key[24] = {
 	ld	hl, #0
 	add	hl, sp
 	ex	de, hl
@@ -1545,9 +1564,9 @@ _main::
 	ld	hl, #0x0017
 	add	hl, de
 	ld	(hl), #0x7b
-	C$aes192.c$124$2_0$60	= .
-	.globl	C$aes192.c$124$2_0$60
-;/work/source_code/testingfiles/aes192.c:124: uint8_t plaintext[16] = {
+	C$aes192.c$128$2_0$62	= .
+	.globl	C$aes192.c$128$2_0$62
+;/work/source_code/testingfiles/aes192.c:128: uint8_t plaintext[16] = {
 	ld	hl, #24
 	add	hl, sp
 	ld	c, l
@@ -1605,9 +1624,9 @@ _main::
 	ld	hl, #0x000f
 	add	hl, bc
 	ld	(hl), #0x2a
-	C$aes192.c$131$1_0$60	= .
-	.globl	C$aes192.c$131$1_0$60
-;/work/source_code/testingfiles/aes192.c:131: AES192_Encrypt(plaintext, ciphertext, key);
+	C$aes192.c$135$1_0$62	= .
+	.globl	C$aes192.c$135$1_0$62
+;/work/source_code/testingfiles/aes192.c:135: AES192_Encrypt(plaintext, ciphertext, key);
 	ld	hl, #40
 	add	hl, sp
 	ld	-2 (ix), l
@@ -1619,16 +1638,16 @@ _main::
 	ld	hl, #6
 	add	hl, sp
 	ld	sp, hl
-	C$aes192.c$133$1_0$60	= .
-	.globl	C$aes192.c$133$1_0$60
-;/work/source_code/testingfiles/aes192.c:133: printf("AES-192 Encryption Output:\n");
+	C$aes192.c$137$1_0$62	= .
+	.globl	C$aes192.c$137$1_0$62
+;/work/source_code/testingfiles/aes192.c:137: printf("AES-192 Encryption Output:\n");
 	ld	hl, #___str_1
 	push	hl
 	call	_puts
 	pop	af
-	C$aes192.c$134$2_0$61	= .
-	.globl	C$aes192.c$134$2_0$61
-;/work/source_code/testingfiles/aes192.c:134: for(int i=0;i<16;i++)
+	C$aes192.c$138$2_0$63	= .
+	.globl	C$aes192.c$138$2_0$63
+;/work/source_code/testingfiles/aes192.c:138: for(int i=0;i<16;i++)
 	ld	bc, #0x0000
 00103$:
 	ld	a, c
@@ -1639,9 +1658,9 @@ _main::
 	rra
 	sbc	a, #0x80
 	jr	NC,00101$
-	C$aes192.c$135$2_0$61	= .
-	.globl	C$aes192.c$135$2_0$61
-;/work/source_code/testingfiles/aes192.c:135: printf("%02x ", ciphertext[i]);
+	C$aes192.c$139$2_0$63	= .
+	.globl	C$aes192.c$139$2_0$63
+;/work/source_code/testingfiles/aes192.c:139: printf("%02x ", ciphertext[i]);
 	ld	l, -2 (ix)
 	ld	h, -1 (ix)
 	add	hl, bc
@@ -1655,30 +1674,30 @@ _main::
 	pop	af
 	pop	af
 	pop	bc
-	C$aes192.c$134$2_0$61	= .
-	.globl	C$aes192.c$134$2_0$61
-;/work/source_code/testingfiles/aes192.c:134: for(int i=0;i<16;i++)
+	C$aes192.c$138$2_0$63	= .
+	.globl	C$aes192.c$138$2_0$63
+;/work/source_code/testingfiles/aes192.c:138: for(int i=0;i<16;i++)
 	inc	bc
 	jr	00103$
 00101$:
-	C$aes192.c$136$1_0$60	= .
-	.globl	C$aes192.c$136$1_0$60
-;/work/source_code/testingfiles/aes192.c:136: printf("\n");
+	C$aes192.c$140$1_0$62	= .
+	.globl	C$aes192.c$140$1_0$62
+;/work/source_code/testingfiles/aes192.c:140: printf("\n");
 	ld	hl, #___str_4
 	push	hl
 	call	_puts
 	pop	af
-	C$aes192.c$138$1_0$60	= .
-	.globl	C$aes192.c$138$1_0$60
-;/work/source_code/testingfiles/aes192.c:138: return 0;
+	C$aes192.c$142$1_0$62	= .
+	.globl	C$aes192.c$142$1_0$62
+;/work/source_code/testingfiles/aes192.c:142: return 0;
 	ld	hl, #0x0000
-	C$aes192.c$139$1_0$60	= .
-	.globl	C$aes192.c$139$1_0$60
-;/work/source_code/testingfiles/aes192.c:139: }
+	C$aes192.c$143$1_0$62	= .
+	.globl	C$aes192.c$143$1_0$62
+;/work/source_code/testingfiles/aes192.c:143: }
 	ld	sp, ix
 	pop	ix
-	C$aes192.c$139$1_0$60	= .
-	.globl	C$aes192.c$139$1_0$60
+	C$aes192.c$143$1_0$62	= .
+	.globl	C$aes192.c$143$1_0$62
 	XG$main$0$0	= .
 	.globl	XG$main$0$0
 	ret

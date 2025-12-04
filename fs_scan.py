@@ -7,7 +7,7 @@ import stat
 class AdvancedLinuxAnalyzer:
     def __init__(self):
         self.vulnerabilities = []
-        # self.remediation_script = []  <-- REMOVED
+        self.remediation_script = []
         
         # Regex for high-entropy/secret strings (AWS keys, Private Keys, etc.)
         self.SECRET_PATTERNS = {
@@ -83,7 +83,9 @@ class AdvancedLinuxAnalyzer:
                     
                     if "WEAK" in algo or "CRITICAL" in algo:
                         self.vulnerabilities.append(f"User '{user}' uses weak hashing: {algo}")
-                        # REMOVED: Remediation script generation
+                        # Add fix to remediation script
+                        self.remediation_script.append(f"# Fix weak password for {user}")
+                        self.remediation_script.append(f"passwd -l {user} # Locking account recommended until fixed")
         except Exception as e:
             print(f"Error reading shadow: {e}")
 
@@ -107,13 +109,14 @@ class AdvancedLinuxAnalyzer:
                                 rel_path = fpath.replace(fs_path, "")
                                 hits.append({"file": rel_path, "type": name})
                                 self.vulnerabilities.append(f"Hardcoded {name} found in {rel_path}")
-                                # REMOVED: Remediation script generation
+                                # Suggest deletion
+                                self.remediation_script.append(f"rm '.{rel_path}' # Potential secret leak")
                 except: pass
         return hits
 
-    # --- FEATURE 4: CONFIG AUDIT (Renamed from analyze_and_fix_configs) ---
-    def analyze_configs(self, fs_path):
-        print("    > Analyzing configs...")
+    # --- FEATURE 4: CONFIG AUTO-FIXER ---
+    def analyze_and_fix_configs(self, fs_path):
+        print("    > Analyzing configs and generating patches...")
         
         # SSH Config
         sshd_config = os.path.join(fs_path, "etc/ssh/sshd_config")
@@ -123,11 +126,11 @@ class AdvancedLinuxAnalyzer:
                 
             if "PermitRootLogin yes" in content:
                 self.vulnerabilities.append("SSH Root Login Allowed")
-                # REMOVED: Remediation script generation
+                self.remediation_script.append(f"sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config")
             
             if "Protocol 1" in content:
                 self.vulnerabilities.append("SSH Protocol 1 Enabled (Obsolete)")
-                # REMOVED: Remediation script generation
+                self.remediation_script.append(f"sed -i 's/Protocol 1/Protocol 2/g' /etc/ssh/sshd_config")
 
     # --- MAIN ANALYZER ---
     def analyze(self, fs_path):
@@ -137,7 +140,7 @@ class AdvancedLinuxAnalyzer:
             "binary_hardening": {},
             "secrets": [],
             "vulnerabilities": [],
-            # "generated_fix_script": ""  <-- REMOVED
+            "generated_fix_script": ""
         }
 
         # 1. Binary Hardening Scan
@@ -155,14 +158,21 @@ class AdvancedLinuxAnalyzer:
         # 2. Run Sub-Scans
         report["secrets"] = self.scan_secrets(fs_path)
         self.audit_shadow(fs_path)
-        self.analyze_configs(fs_path) # Renamed call
+        self.analyze_and_fix_configs(fs_path)
 
         # 3. Finalize Report
         report["vulnerabilities"] = self.vulnerabilities
         
-        # 4. REMOVED: Generate the Fix Script block
+        # 4. Generate the Fix Script
+        fix_content = "#!/bin/bash\n# Auto-Generated Hardening Script by Vestigo\n\n"
+        fix_content += "\n".join(self.remediation_script)
+        report["generated_fix_script"] = fix_content
         
-        print(f"[\u2713] Deep Scan Complete.")
+        # Save the script to disk
+        with open("hardening_patch.sh", "w") as f:
+            f.write(fix_content)
+        
+        print(f"[\u2713] Deep Scan Complete. Generated 'hardening_patch.sh'.")
         return report
 
 if __name__ == "__main__":
@@ -170,7 +180,6 @@ if __name__ == "__main__":
     analyzer = AdvancedLinuxAnalyzer()
     # Create dummy shadow for test
     os.makedirs("test_fs/etc/ssh", exist_ok=True)
-    os.makedirs("test_fs/bin", exist_ok=True)
     with open("test_fs/etc/shadow", "w") as f: f.write("root:$1$salt$hash:0:0:99999:7:::\n") # MD5 weak
     with open("test_fs/etc/ssh/sshd_config", "w") as f: f.write("PermitRootLogin yes\n")
     
@@ -178,4 +187,5 @@ if __name__ == "__main__":
     
     # Clean up
     import shutil
-    shutil.rmtree("test_fs")
+    if os.path.exists("test_fs"):
+        shutil.rmtree("test_fs")
