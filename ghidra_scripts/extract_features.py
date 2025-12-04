@@ -991,11 +991,12 @@ def run_analysis():
     
     # Metadata Extraction
     lang = currentProgram.getLanguage()
+    arch_str = lang.getProcessor().toString()
+    endian_str = "little" if lang.isBigEndian() == False else "big"
+    bit_size_int = lang.getDefaultSpace().getPointerSize() * 8
+    
     metadata = {
         "filename": program_name,
-        "arch": lang.getProcessor().toString(),
-        "endian": "little" if lang.isBigEndian() == False else "big",
-        "bit_size": lang.getDefaultSpace().getPointerSize() * 8,
         "compiler_id": currentProgram.getCompilerSpec().getCompilerByID().toString()
     }
     
@@ -1005,7 +1006,7 @@ def run_analysis():
     }
     
     print("Starting Feature Extraction for: " + program_name)
-    print("Metadata: " + str(metadata))
+    print("Arch: {} ({}-bit {})".format(arch_str, bit_size_int, endian_str))
     
     func_iter = currentProgram.getFunctionManager().getFunctions(True)
     for func in func_iter:
@@ -1027,6 +1028,9 @@ def run_analysis():
             func_entry = {
                 "name": f_name,
                 "address": f_addr,
+                "arch": arch_str,
+                "endian": endian_str,
+                "bit_size": bit_size_int,
                 "graph_features": graph_feats,
                 "node_features": [
                     node_feats["bitwise_density"],

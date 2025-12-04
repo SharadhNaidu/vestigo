@@ -128,14 +128,19 @@ class FirmwareAnalyzer:
         with open(json_output, "r") as f:
             data = json.load(f)
             
-        # Extract Metadata
+        # Extract Metadata (Filename/Compiler only now)
         metadata = data.get("metadata", {})
-        arch = metadata.get("arch", "Unknown")
-        print(f"    > Detected Architecture: {arch} ({metadata.get('bit_size', '?')}-bit {metadata.get('endian', '?')})")
             
         # 3. Convert to DataFrame
         rows = []
+        first_arch = "Unknown"
+        
         for func in data.get("functions", []):
+            # Get arch from function entry
+            arch = func.get("arch", "Unknown")
+            if first_arch == "Unknown" and arch != "Unknown":
+                first_arch = arch
+                
             # Flatten structure
             row = {
                 "function_name": func["name"],
@@ -155,6 +160,8 @@ class FirmwareAnalyzer:
                 "crypto_constant_hits": len(func["constant_hits"])
             }
             rows.append(row)
+            
+        print(f"    > Detected Architecture: {first_arch}")
             
         if not rows:
             return {"gnn_classification": "No functions analyzed"}
