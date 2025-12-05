@@ -32,7 +32,7 @@ class FeatureExtractionService:
         self.extract_features_script = self.ghidra_scripts_dir / "extract_features.py"
         
         # Ghidra installation path (customize based on your setup)
-        self.ghidra_path = os.environ.get("GHIDRA_INSTALL_DIR", "/opt/ghidra")
+        self.ghidra_path = os.environ.get("GHIDRA_HOME", "/opt/ghidra")
         self.ghidra_headless = os.path.join(self.ghidra_path, "support", "analyzeHeadless")
         
         # Project root for output directory
