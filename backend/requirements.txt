@@ -4,3 +4,6 @@ prisma
 python-multipart 
 pydantic
 python-magic
+joblib
+pandas
+scikit-learn

@@ -327,7 +327,7 @@ install_ghidra() {
     fi
     
     print_info "Downloading Ghidra $GHIDRA_VERSION..."
-    GHIDRA_URL="https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_${GHIDRA_VERSION}_build/ghidra_${GHIDRA_VERSION}_PUBLIC_$(date +%Y%m%d).zip"
+    GHIDRA_URL="https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_${GHIDRA_VERSION}_build/ghidra_${GHIDRA_VERSION}_PUBLIC_20240130.zip"
     
     # Try multiple download sources
     TEMP_DIR=$(mktemp -d)
@@ -455,7 +455,7 @@ verify_project_structure() {
     done
     
     # Create necessary directories
-    mkdir -p analysis_workspace ghidra_json logs job_storage
+    mkdir -p analysis_workspace ghidra_json ghidra_final_output logs job_storage
     print_success "Created working directories"
 }
 
