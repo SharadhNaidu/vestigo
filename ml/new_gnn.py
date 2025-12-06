@@ -1519,8 +1519,8 @@ if __name__ == '__main__':
     parser.add_argument('--inference', action='store_true', help='Run inference mode')
     parser.add_argument('--input', type=str, help='Input JSON file for inference')
     parser.add_argument('--output', type=str, help='Output JSON file for inference results')
-    parser.add_argument('--model', type=str, default='./gnn_models/best_model.pth', help='Model path')
-    parser.add_argument('--metadata', type=str, default='./gnn_models/metadata.pkl', help='Metadata path')
+    parser.add_argument('--model', type=str, default='./ml/gnn_models/best_model.pth', help='Model path')
+    parser.add_argument('--metadata', type=str, default='./ml/gnn_models/metadata.pkl', help='Metadata path')
 
     args = parser.parse_args()
 
