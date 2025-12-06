@@ -27,6 +27,8 @@ from services.feature_extraction_service import FeatureExtractionService
 from services.filesystem_scan_service import FilesystemScanService
 from services.secure_boot_analysis_service import SecureBootAnalysisService
 from services.crypto_library_service import CryptoLibraryService
+from services.qiling_dynamic_analysis_service import QilingDynamicAnalysisService
+from services.binary_converter_service import BinaryConverterService
 from services.job_manager import job_manager, JobStatus
 
 # ==========================================================
@@ -41,6 +43,8 @@ feature_service = FeatureExtractionService()
 filesystem_service = FilesystemScanService()
 secureboot_service = SecureBootAnalysisService()
 cryptolib_service = CryptoLibraryService()
+qiling_service = QilingDynamicAnalysisService()
+converter_service = BinaryConverterService()
 
 logger.info("Vestigo Backend starting up...")
 
@@ -205,6 +209,16 @@ async def upload_and_analyze(background_tasks: BackgroundTasks, file: UploadFile
         # If it's PATH_A_BARE_METAL, add background task for feature extraction
         if analysis_result["analysis"]["routing_decision"] == "PATH_A_BARE_METAL":
             background_tasks.add_task(process_bare_metal_features, job_id, analysis_result)
+            
+            # If it's an ELF binary or object file, also run Qiling dynamic analysis in parallel
+            binary_info = analysis_result["analysis"].get("binary_info", {})
+            is_elf = binary_info.get("is_elf", False)
+            is_object = binary_info.get("is_object_file", False)
+            
+            if is_elf or is_object:
+                file_type = "ELF" if is_elf else "object file (.o)"
+                logger.info(f"{file_type} detected - adding Qiling dynamic analysis - JobID: {job_id}")
+                background_tasks.add_task(process_qiling_dynamic_analysis, job_id, analysis_result)
         
         # If it's PATH_B_LINUX_FS, add background task for filesystem scanning
         elif analysis_result["analysis"]["routing_decision"] == "PATH_B_LINUX_FS":
@@ -269,6 +283,62 @@ async def process_bare_metal_features(job_id: str, analysis_result: dict):
         job_manager.mark_job_failed(job_id, f"Feature extraction failed: {str(e)}")
 
 
+async def process_qiling_dynamic_analysis(job_id: str, analysis_result: dict):
+    """Background task to process Qiling dynamic crypto detection for ELF binaries"""
+    try:
+        logger.info(f"Starting background Qiling dynamic analysis - JobID: {job_id}")
+        
+        # Get binary file path from analysis results
+        binary_info = analysis_result["analysis"].get("binary_info", {})
+        workspace_path = analysis_result["analysis"]["workspace_path"]
+        
+        # For PATH_A_BARE_METAL, the binary file should be in the workspace
+        if workspace_path:
+            # Look for the binary file in workspace
+            import glob
+            workspace_files = glob.glob(os.path.join(workspace_path, "*"))
+            binary_files = [f for f in workspace_files if os.path.isfile(f) and not f.endswith('.json')]
+            
+            if binary_files:
+                binary_path = binary_files[0]  # Use first binary file found
+                logger.info(f"Found binary for Qiling analysis - JobID: {job_id}, Path: {binary_path}")
+                
+                # Check if it's an object file that needs conversion
+                is_object_file = binary_info.get("is_object_file", False) or converter_service.is_object_file(binary_path)
+                
+                if is_object_file:
+                    logger.info(f"Object file detected - converting to ELF - JobID: {job_id}")
+                    
+                    # Convert .o to .elf
+                    elf_path = converter_service.convert_object_to_elf(binary_path, workspace_path)
+                    
+                    if elf_path and os.path.exists(elf_path):
+                        logger.info(f"Successfully converted .o to .elf - JobID: {job_id}, ELF: {elf_path}")
+                        binary_path = elf_path  # Use converted ELF for analysis
+                    else:
+                        logger.error(f"Failed to convert .o to .elf - JobID: {job_id}")
+                        # Continue with original file anyway - Qiling might handle it
+                        logger.warning(f"Attempting Qiling analysis on original .o file - JobID: {job_id}")
+                
+                # Run Qiling dynamic analysis
+                qiling_results = await qiling_service.analyze_elf_binary(job_id, binary_path)
+                
+                # Update job with Qiling results (store in a separate field)
+                job_manager.update_job_qiling_results(job_id, qiling_results)
+                
+                logger.info(f"Background Qiling analysis completed - JobID: {job_id}")
+                logger.info(f"Qiling verdict: {qiling_results.get('verdict', {}).get('crypto_detected', 'unknown')} "
+                          f"(confidence: {qiling_results.get('verdict', {}).get('confidence', 'N/A')})")
+            else:
+                logger.error(f"No binary files found in workspace - JobID: {job_id}")
+        else:
+            logger.error(f"No workspace path available - JobID: {job_id}")
+            
+    except Exception as e:
+        logger.error(f"Background Qiling analysis failed - JobID: {job_id}, Error: {str(e)}", exc_info=True)
+        # Don't fail the entire job - Qiling is supplementary analysis
+
+
 async def process_filesystem_scan(job_id: str, analysis_result: dict):
     """Background task to process PATH_B_LINUX_FS filesystem scanning"""
     try:
@@ -305,8 +375,10 @@ async def process_filesystem_scan(job_id: str, analysis_result: dict):
             # If crypto libraries were found, process them
             if "crypto_libraries" in scan_results:
                 crypto_libs = scan_results["crypto_libraries"]
-                if crypto_libs.get("so_files") or crypto_libs.get("a_files"):
-                    total_libs = len(crypto_libs.get("so_files", [])) + len(crypto_libs.get("a_files", []))
+                if crypto_libs.get("so_files") or crypto_libs.get("a_files") or crypto_libs.get("o_files"):
+                    total_libs = (len(crypto_libs.get("so_files", [])) + 
+                                 len(crypto_libs.get("a_files", [])) +
+                                 len(crypto_libs.get("o_files", [])))
                     logger.info(f"Processing {total_libs} crypto libraries found in filesystem scan")
                     await process_crypto_libraries(job_id, crypto_libs)
             
@@ -373,6 +445,55 @@ async def process_bootloader_analyses(parent_job_id: str, bootloaders: list):
         logger.error(f"Failed to create bootloader analysis jobs - ParentJob: {parent_job_id}, Error: {str(e)}", exc_info=True)
 
 
+async def process_crypto_library_qiling_analysis(job_id: str, binary_path: str, is_object_file: bool):
+    """Background task to run Qiling dynamic analysis on crypto library binaries (.o and .so files)"""
+    try:
+        logger.info(f"Starting Qiling analysis for crypto library - JobID: {job_id}, Path: {binary_path}, IsObject: {is_object_file}")
+        
+        if not os.path.exists(binary_path):
+            logger.error(f"Binary file not found: {binary_path}")
+            return
+        
+        # Check if the file needs conversion (handles both .o and relocatable files)
+        analysis_path = binary_path
+        needs_conv = is_object_file or converter_service.needs_conversion(binary_path)
+        
+        if needs_conv:
+            logger.info(f"File needs conversion to ELF - JobID: {job_id}")
+            
+            # Get the directory to save the converted ELF
+            output_dir = os.path.dirname(binary_path)
+            
+            # Convert to .elf
+            elf_path = converter_service.convert_object_to_elf(binary_path, output_dir)
+            
+            if elf_path and os.path.exists(elf_path):
+                logger.info(f"Successfully converted to .elf - JobID: {job_id}, ELF: {elf_path}")
+                analysis_path = elf_path
+            else:
+                logger.error(f"Failed to convert to .elf - JobID: {job_id}")
+                logger.warning(f"Attempting Qiling analysis on original file - JobID: {job_id}")
+        
+        # Check if the file is ELF (either native .so or converted)
+        if not qiling_service._is_elf_binary(analysis_path):
+            logger.warning(f"File is not ELF, skipping Qiling analysis - JobID: {job_id}")
+            return
+        
+        # Run Qiling dynamic analysis
+        qiling_results = await qiling_service.analyze_elf_binary(job_id, analysis_path)
+        
+        # Update job with Qiling results
+        job_manager.update_job_qiling_results(job_id, qiling_results)
+        
+        logger.info(f"Qiling analysis completed for crypto library - JobID: {job_id}")
+        logger.info(f"Qiling verdict: {qiling_results.get('verdict', {}).get('crypto_detected', 'unknown')} "
+                  f"(confidence: {qiling_results.get('verdict', {}).get('confidence', 'N/A')})")
+        
+    except Exception as e:
+        logger.error(f"Qiling analysis failed for crypto library - JobID: {job_id}, Error: {str(e)}", exc_info=True)
+        # Don't fail the job - Qiling is supplementary
+
+
 async def process_crypto_libraries(parent_job_id: str, crypto_libs: dict):
     """Background task to process crypto libraries (.so and .a files)"""
     try:
@@ -391,10 +512,10 @@ async def process_crypto_libraries(parent_job_id: str, crypto_libs: dict):
             
             import uuid
             
-            # Create separate jobs for each object file from .a archives
+            # Create separate jobs for object files and shared libraries
             for file_info in pipeline_files:
-                if file_info.get("analysis_type") == "object_file_analysis":
-                    # This is a .o file extracted from .a archive
+                if file_info.get("analysis_type") == "object_file_analysis" or file_info.get("type") == "object_file":
+                    # This is a .o file (either from .a archive or standalone)
                     object_job_id = str(uuid.uuid4())
                     
                     job = job_manager.create_job(
@@ -403,11 +524,15 @@ async def process_crypto_libraries(parent_job_id: str, crypto_libs: dict):
                         file_info["size"]
                     )
                     
+                    # Determine source
+                    source = file_info.get('parent_archive', 'filesystem')
+                    reason = f"Object file from {source}"
+                    
                     job_manager.update_job_status(
                         object_job_id,
                         JobStatus.EXTRACTING_FEATURES,
                         routing_decision="PATH_A_BARE_METAL",
-                        routing_reason=f"Object file from {file_info.get('parent_archive', 'archive')}",
+                        routing_reason=reason,
                         workspace_path=file_info["path"]
                     )
                     
@@ -417,6 +542,10 @@ async def process_crypto_libraries(parent_job_id: str, crypto_libs: dict):
                         job_manager.update_job_feature_results(object_job_id, features)
                         
                         logger.info(f"Object file analysis completed - JobID: {object_job_id}, File: {file_info['file']}")
+                        
+                        # Also run Qiling dynamic analysis on the .o file (after conversion)
+                        logger.info(f"Starting Qiling analysis for .o file - JobID: {object_job_id}")
+                        await process_crypto_library_qiling_analysis(object_job_id, file_info["path"], is_object_file=True)
                         
                     except Exception as e:
                         logger.error(f"Object file analysis failed - JobID: {object_job_id}, Error: {str(e)}")
@@ -446,6 +575,10 @@ async def process_crypto_libraries(parent_job_id: str, crypto_libs: dict):
                         job_manager.update_job_feature_results(so_job_id, features)
                         
                         logger.info(f"Shared object analysis completed - JobID: {so_job_id}, File: {file_info['file']}")
+                        
+                        # Also run Qiling dynamic analysis on the .so file
+                        logger.info(f"Starting Qiling analysis for .so file - JobID: {so_job_id}")
+                        await process_crypto_library_qiling_analysis(so_job_id, file_info["path"], is_object_file=False)
                         
                     except Exception as e:
                         logger.error(f"Shared object analysis failed - JobID: {so_job_id}, Error: {str(e)}")
