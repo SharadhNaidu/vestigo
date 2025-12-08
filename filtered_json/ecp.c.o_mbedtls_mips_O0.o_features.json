@@ -10083,7 +10083,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010a08",
@@ -20930,7 +20930,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "0001161c",
@@ -24909,7 +24909,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000119fc",
@@ -25985,7 +25985,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011b30",
@@ -34994,7 +34994,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "0001246c",
@@ -43563,7 +43563,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012f5c",
@@ -51286,7 +51286,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00013924",
@@ -65198,7 +65198,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00014a54",
@@ -66655,7 +66655,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00014c24",
@@ -76464,7 +76464,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000156cc",
@@ -98787,7 +98787,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000170f4",
@@ -102940,7 +102940,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00017580",
@@ -113844,7 +113844,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00018108",

@@ -8465,7 +8465,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010520",
@@ -14162,7 +14162,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010900",
@@ -30052,7 +30052,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011470",
@@ -38468,7 +38468,7 @@
                     ]
                 }
             ],
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ]
 }

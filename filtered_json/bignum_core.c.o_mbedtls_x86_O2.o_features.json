@@ -1316,7 +1316,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000100b0",
@@ -2644,7 +2644,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010150",
@@ -3566,7 +3566,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000101d0",
@@ -5747,7 +5747,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000102e0",
@@ -7174,7 +7174,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010390",
@@ -9155,7 +9155,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010490",
@@ -10843,7 +10843,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010570",
@@ -13063,7 +13063,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000106a0",
@@ -14729,7 +14729,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010780",
@@ -15465,7 +15465,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000107d0",
@@ -17593,7 +17593,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010900",
@@ -20229,7 +20229,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010aa0",
@@ -21189,7 +21189,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010b10",
@@ -23084,7 +23084,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010c30",
@@ -28496,7 +28496,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011030",
@@ -31039,7 +31039,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011180",
@@ -33119,7 +33119,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000112b0",
@@ -46215,7 +46215,7 @@
                 "tbox_detected": false
             },
             "arch": "x86",
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ],
     "binary": "bignum_core.c.o_mbedtls_x86_O2.o"

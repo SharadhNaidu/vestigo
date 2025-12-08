@@ -1048,7 +1048,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "0001006a",
@@ -1490,7 +1490,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010084",
@@ -2225,7 +2225,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000100c6",
@@ -3730,7 +3730,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010162",
@@ -4232,7 +4232,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010194",
@@ -4781,7 +4781,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000101ca",
@@ -5330,7 +5330,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000101fe",
@@ -5941,7 +5941,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010250",
@@ -6974,7 +6974,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000102c4",
@@ -8909,7 +8909,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000103cc",
@@ -10513,7 +10513,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000104d0",
@@ -14824,7 +14824,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010748",
@@ -21359,7 +21359,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010be0",
@@ -23308,7 +23308,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010c9c",
@@ -23935,7 +23935,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010cca",
@@ -24472,7 +24472,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010d0c",
@@ -24765,7 +24765,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010d26",
@@ -25150,7 +25150,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010d44",
@@ -26203,7 +26203,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010da6",
@@ -26588,7 +26588,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010dc4",
@@ -27109,7 +27109,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010df8",
@@ -27346,7 +27346,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010e02",
@@ -27831,7 +27831,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010e32",
@@ -32448,7 +32448,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011154",
@@ -37371,7 +37371,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "0001149c",
@@ -37669,7 +37669,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000114ae",
@@ -38301,7 +38301,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000114ea",
@@ -38810,7 +38810,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "0001151e",
@@ -40880,7 +40880,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "0001161a",
@@ -44257,7 +44257,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000117d8",
@@ -44932,7 +44932,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011814",
@@ -45642,7 +45642,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011854",
@@ -46435,7 +46435,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011898",
@@ -46794,7 +46794,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000118b4",
@@ -47451,7 +47451,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000118e6",
@@ -50799,7 +50799,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011ae8",
@@ -52150,7 +52150,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00011b8c",
@@ -66917,7 +66917,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012474",
@@ -67381,7 +67381,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012494",
@@ -67688,7 +67688,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000124ac",
@@ -70048,7 +70048,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "0001260c",
@@ -71459,7 +71459,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000126de",
@@ -72498,7 +72498,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012770",
@@ -72805,7 +72805,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012788",
@@ -74133,7 +74133,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012842",
@@ -74653,7 +74653,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012878",
@@ -74938,7 +74938,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012892",
@@ -75366,7 +75366,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000128be",
@@ -75968,7 +75968,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000128ec",
@@ -78399,7 +78399,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012a32",
@@ -79412,7 +79412,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012a98",
@@ -80257,7 +80257,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012aee",
@@ -80542,7 +80542,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012b08",
@@ -82244,7 +82244,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012bec",
@@ -82517,7 +82517,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012c0e",
@@ -83145,7 +83145,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00012c40",
@@ -86238,7 +86238,7 @@
                 "tbox_detected": false
             },
             "arch": "ARM",
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ],
     "binary": "ecp.c.o_mbedtls_arm32_O1.o"

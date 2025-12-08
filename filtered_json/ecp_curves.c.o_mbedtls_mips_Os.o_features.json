@@ -1082,7 +1082,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "000100bc",
@@ -15450,7 +15450,7 @@
                 "tbox_detected": false
             },
             "arch": "MIPS",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00010f14",

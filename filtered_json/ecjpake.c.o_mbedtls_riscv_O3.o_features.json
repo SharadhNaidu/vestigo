@@ -716,7 +716,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00100038",
@@ -2317,7 +2317,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "001000b6",
@@ -12893,7 +12893,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "001004fa",
@@ -16600,7 +16600,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00100660",
@@ -32366,7 +32366,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00100c34",
@@ -36094,7 +36094,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00100db6",
@@ -40932,7 +40932,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00100fa8",
@@ -42986,7 +42986,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00101060",
@@ -59441,7 +59441,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ],
     "binary": "ecjpake.c.o_mbedtls_riscv_O3.o"

@@ -43277,7 +43277,7 @@
                 "mem_ops_ratio": 0.1285240464344942,
                 "logical_ratio": 0.07131011608623548
             },
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ]
 }

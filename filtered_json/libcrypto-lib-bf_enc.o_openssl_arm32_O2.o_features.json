@@ -11720,7 +11720,7 @@
                     }
                 }
             ],
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ]
 }

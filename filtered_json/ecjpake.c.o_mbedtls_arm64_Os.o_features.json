@@ -3571,7 +3571,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "001002c4",
@@ -16490,7 +16490,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00100d48",
@@ -17699,7 +17699,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00100e28",
@@ -19071,7 +19071,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00100f4c",
@@ -21285,7 +21285,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00101128",
@@ -22267,7 +22267,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00101204",
@@ -27962,7 +27962,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ],
     "binary": "ecjpake.c.o_mbedtls_arm64_Os.o"

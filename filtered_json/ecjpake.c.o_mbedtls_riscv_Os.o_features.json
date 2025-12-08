@@ -874,7 +874,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "00100044",
@@ -2354,7 +2354,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "001000c2",
@@ -3875,7 +3875,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "0010014e",
@@ -7372,7 +7372,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "001002cc",
@@ -22760,7 +22760,7 @@
                 "tbox_detected": false
             },
             "arch": "RISCV",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "0010088e",

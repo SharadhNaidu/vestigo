@@ -988,7 +988,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "001000d4",
@@ -6262,7 +6262,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "001005e0",
@@ -10651,7 +10651,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         },
         {
             "address": "001009d0",
@@ -12636,7 +12636,7 @@
                 "tbox_detected": false
             },
             "arch": "AARCH64",
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ],
     "binary": "constant_time.c.o_mbedtls_arm64_O3.o"

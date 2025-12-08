@@ -382,34 +382,51 @@ def process_files():
                         else:
                             func_name = func.get("name", "")
                             
-                            # Priority-based classification:
-                            # 1. Check function name first (most specific)
-                            inferred_from_func = infer_algo_from_name("", func_name)
+                            # Priority-based classification with hybrid approach:
                             
-                            # 2. Check filename
-                            inferred_from_file = infer_algo_from_name(file, "")
-                            
-                            # 3. Check YARA signatures
+                            # 1. Check YARA signatures (crypto constants)
                             all_immediates = []
                             for node in func.get("node_level", []):
                                 all_immediates.extend(node.get("immediates", []))
                             yara_label = check_yara_match(all_immediates, yara_rules)
                             
-                            # Decision logic:
-                            # Function name has highest priority (most specific)
+                            # 2. Check function name (very specific)
+                            inferred_from_func = infer_algo_from_name("", func_name)
+                            
+                            # 3. Check filename (file-level context)
+                            inferred_from_file = infer_algo_from_name(file, "")
+                            
+                            # Hybrid Decision Logic:
+                            # If function name or filename clearly indicates an algorithm,
+                            # prefer that over generic YARA matches (like RSA which can have false positives)
                             if inferred_from_func:
+                                # Function name is most specific - use it
                                 new_label = inferred_from_func
-                            # Then filename (file-level context)
-                            elif inferred_from_file:
-                                new_label = inferred_from_file
-                            # Then YARA (may catch constants from multiple algos)
-                            elif yara_label:
-                                if yara_label == "COMPRESSION":
+                            elif inferred_from_file and yara_label:
+                                # If both filename and YARA match, prefer YARA unless it's RSA
+                                # (RSA rule has high false positive rate due to small constants)
+                                if yara_label == "RSA":
+                                    # Filename is more reliable than RSA YARA match
+                                    new_label = inferred_from_file
+                                elif yara_label == "COMPRESSION":
                                     new_label = "non-crypto"
                                 else:
+                                    # Trust YARA for specific crypto constants
                                     new_label = yara_label
-                            # Last resort: mark as unknown crypto for re-classification
+                            elif yara_label:
+                                # YARA match without filename confirmation
+                                if yara_label == "COMPRESSION":
+                                    new_label = "non-crypto"
+                                elif yara_label == "RSA":
+                                    # RSA needs secondary confirmation
+                                    new_label = "crypto-unknown"
+                                else:
+                                    new_label = yara_label
+                            elif inferred_from_file:
+                                # Filename only
+                                new_label = inferred_from_file
                             else:
+                                # No clear indication
                                 new_label = "crypto-unknown"
 
                         if new_label != original_label:

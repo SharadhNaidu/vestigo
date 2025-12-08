@@ -244,7 +244,7 @@
                 "mem_ops_ratio": 0.038461538461538464,
                 "logical_ratio": 0.2692307692307692
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 10,
                 "top_5_bigrams": [
@@ -14915,7 +14915,7 @@
                 "mem_ops_ratio": 0.17267080745341615,
                 "logical_ratio": 0.017391304347826087
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 77,
                 "top_5_bigrams": [
@@ -17140,7 +17140,7 @@
                 "mem_ops_ratio": 0.15853658536585366,
                 "logical_ratio": 0.12195121951219512
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 22,
                 "top_5_bigrams": [
@@ -18986,7 +18986,7 @@
                 "mem_ops_ratio": 0.17704918032786884,
                 "logical_ratio": 0.10491803278688525
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 47,
                 "top_5_bigrams": [
@@ -21464,7 +21464,7 @@
                 "mem_ops_ratio": 0.17366946778711484,
                 "logical_ratio": 0.0392156862745098
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 69,
                 "top_5_bigrams": [
@@ -23387,7 +23387,7 @@
                 "mem_ops_ratio": 0.15702479338842976,
                 "logical_ratio": 0.08264462809917356
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 51,
                 "top_5_bigrams": [
@@ -28872,7 +28872,7 @@
                 "mem_ops_ratio": 0.16757741347905283,
                 "logical_ratio": 0.08014571948998178
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 86,
                 "top_5_bigrams": [
@@ -39761,7 +39761,7 @@
                 "mem_ops_ratio": 0.18181818181818182,
                 "logical_ratio": 0.01818181818181818
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 92,
                 "top_5_bigrams": [
@@ -43135,7 +43135,7 @@
                 "mem_ops_ratio": 0.18250950570342206,
                 "logical_ratio": 0.07604562737642585
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 39,
                 "top_5_bigrams": [
@@ -50259,7 +50259,7 @@
                 "mem_ops_ratio": 0.1565217391304348,
                 "logical_ratio": 0.08260869565217391
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 53,
                 "top_5_bigrams": [
@@ -51983,7 +51983,7 @@
                 "mem_ops_ratio": 0.15481171548117154,
                 "logical_ratio": 0.08368200836820083
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 52,
                 "top_5_bigrams": [
@@ -53630,7 +53630,7 @@
                 "mem_ops_ratio": 0.1565217391304348,
                 "logical_ratio": 0.08260869565217391
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 53,
                 "top_5_bigrams": [
@@ -58704,7 +58704,7 @@
                 "mem_ops_ratio": 0.16757741347905283,
                 "logical_ratio": 0.08014571948998178
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 86,
                 "top_5_bigrams": [
@@ -65404,7 +65404,7 @@
                 "mem_ops_ratio": 0.16757741347905283,
                 "logical_ratio": 0.08014571948998178
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 86,
                 "top_5_bigrams": [

@@ -6247,7 +6247,7 @@
                 "mem_ops_ratio": 0.09883720930232558,
                 "logical_ratio": 0.06395348837209303
             },
-            "label": "DSA",
+            "label": "non-crypto",
             "instruction_sequence": {
                 "unique_ngram_count": 34,
                 "top_5_bigrams": [

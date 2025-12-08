@@ -1954,7 +1954,7 @@
                 "mem_ops_ratio": 0.17518248175182483,
                 "logical_ratio": 0.058394160583941604
             },
-            "label": "RSA",
+            "label": "crypto-unknown",
             "instruction_sequence": {
                 "unique_ngram_count": 30,
                 "top_5_bigrams": [

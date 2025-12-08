@@ -4611,7 +4611,7 @@
                 "mem_ops_ratio": 0.1598224195338513,
                 "logical_ratio": 0.12985571587125416
             },
-            "label": "HMAC",
+            "label": "non-crypto",
             "instruction_sequence": {
                 "unique_ngram_count": 47,
                 "top_5_bigrams": [

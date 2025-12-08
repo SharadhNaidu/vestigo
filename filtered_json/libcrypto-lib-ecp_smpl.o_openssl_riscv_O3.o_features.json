@@ -25633,7 +25633,7 @@
                     "instruction_count": 1
                 }
             ],
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ]
 }

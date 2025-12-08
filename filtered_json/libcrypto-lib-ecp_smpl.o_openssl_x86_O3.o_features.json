@@ -42262,7 +42262,7 @@
                     "carry_chain_depth": 1
                 }
             ],
-            "label": "RSA"
+            "label": "crypto-unknown"
         }
     ]
 }
