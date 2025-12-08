@@ -29,6 +29,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ConfidenceHeatmap, AlgorithmDetectionChart, FunctionPredictionsTable } from "@/components/AnalysisCharts";
 import { JsonViewer } from "@/components/JsonViewer";
 import { AnalysisSummary, AnalysisStatusIndicator } from "@/components/AnalysisSummary";
+import { CFGVisualization } from "@/components/CFGVisualization";
+import { FunctionAnalysisDetails } from "@/components/FunctionAnalysisDetails";
+import { OpcodeAnalysis } from "@/components/OpcodeAnalysis";
 
 import { useEffect, useState } from "react";
 
@@ -215,13 +218,14 @@ const JobAnalysis = () => {
 
           {/* Analysis Tabs */}
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-6">
+            {/* <TabsList className="grid w-full grid-cols-6"> */}
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="file-info">File Info</TabsTrigger>
               <TabsTrigger value="ml-classification">ML Analysis</TabsTrigger>
               <TabsTrigger value="features">Features</TabsTrigger>
-              <TabsTrigger value="qiling">Dynamic</TabsTrigger>
-              <TabsTrigger value="raw-data">Raw Data</TabsTrigger>
+              {/* <TabsTrigger value="qiling">Dynamic</TabsTrigger> */}
+              <TabsTrigger value="file-info">File Info</TabsTrigger>
+              {/* <TabsTrigger value="raw-data">Raw Data</TabsTrigger> */}
             </TabsList>
 
             <TabsContent value="overview" className="space-y-6">
@@ -722,7 +726,8 @@ const FeatureExtractionCard = ({ jobData }: { jobData: unknown }) => {
 
   const renderFunctionSummary = (summary: Record<string, unknown>) => {
     const totalFunctions = summary.total_functions as number;
-    const totalTables = summary.metadata?.total_tables_detected as number;
+    const metadata = summary.metadata as Record<string, unknown> | undefined;
+    const totalTables = metadata?.total_tables_detected as number;
     const avgComplexity = summary.average_cyclomatic_complexity as number;
     const avgEntropy = summary.average_entropy as number;
 
@@ -747,59 +752,6 @@ const FeatureExtractionCard = ({ jobData }: { jobData: unknown }) => {
             {typeof avgEntropy === 'number' ? avgEntropy.toFixed(2) : 'N/A'}
           </div>
           <div className="text-sm text-muted-foreground">Avg Entropy</div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderTopFunctions = (functions: unknown[]) => {
-    if (!Array.isArray(functions) || functions.length === 0) return null;
-
-    // Sort functions by crypto signature strength
-    const sortedFunctions = functions
-      .slice(0, 10) // Limit to first 10 for performance
-      .map((func) => {
-        const f = func as Record<string, unknown>;
-        const cryptoSignatures = f.crypto_signatures as Record<string, boolean> || {};
-        const cryptoScore = Object.values(cryptoSignatures).filter(Boolean).length;
-        return { ...f, cryptoScore };
-      })
-      .sort((a, b) => (b.cryptoScore as number) - (a.cryptoScore as number));
-
-    return (
-      <div className="space-y-4">
-        <h4 className="text-lg font-semibold">Top Functions by Crypto Signatures</h4>
-        <div className="space-y-2">
-          {sortedFunctions.slice(0, 5).map((func, index) => {
-            const functionName = func.function_name as string || `func_${index}`;
-            const address = func.function_address as string;
-            const complexity = func.graph_level?.cyclomatic_complexity as number;
-            const cryptoScore = func.cryptoScore as number;
-            
-            return (
-              <div key={index} className="p-3 bg-muted rounded-lg">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <span className="font-mono font-medium">{functionName}</span>
-                    {address && (
-                      <span className="text-sm text-muted-foreground ml-2">
-                        @ {address}
-                      </span>
-                    )}
-                  </div>
-                  <Badge variant={cryptoScore > 0 ? "default" : "secondary"}>
-                    {cryptoScore} crypto signature{cryptoScore !== 1 ? 's' : ''}
-                  </Badge>
-                </div>
-                {typeof complexity === 'number' && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span>Complexity: {complexity}</span>
-                    <Progress value={Math.min(complexity / 10 * 100, 100)} className="flex-1 h-1" />
-                  </div>
-                )}
-              </div>
-            );
-          })}
         </div>
       </div>
     );
@@ -830,41 +782,74 @@ const FeatureExtractionCard = ({ jobData }: { jobData: unknown }) => {
   }
 
   const summary = featureData.summary as Record<string, unknown>;
-  const functions = featureData.functions as unknown[];
+  const functions = featureData.functions as Array<Record<string, unknown>>;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Activity className="w-5 h-5" />
-          Feature Extraction
-        </CardTitle>
-        <CardDescription>
-          Binary analysis features and characteristics
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="sections">Binary Sections</TabsTrigger>
-            <TabsTrigger value="functions">Functions</TabsTrigger>
-          </TabsList>
+    <div className="space-y-6">
+      {/* Summary Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="w-5 h-5" />
+            Feature Extraction Overview
+          </CardTitle>
+          <CardDescription>
+            Binary analysis summary and metadata
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="sections">Binary Sections</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="overview" className="space-y-6 mt-6">
-            {summary && renderFunctionSummary(summary)}
-          </TabsContent>
+            <TabsContent value="overview" className="space-y-6 mt-6">
+              {summary && renderFunctionSummary(summary)}
+            </TabsContent>
 
-          <TabsContent value="sections" className="space-y-6 mt-6">
-            {summary && renderBinarySections(summary)}
-          </TabsContent>
+            <TabsContent value="sections" className="space-y-6 mt-6">
+              {summary && renderBinarySections(summary)}
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
 
-          <TabsContent value="functions" className="space-y-6 mt-6">
-            {functions && renderTopFunctions(functions)}
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+      {/* Detailed Function Analysis */}
+      {functions && functions.length > 0 && (
+        <>
+          {functions.map((func, idx) => {
+            // Only show if we have the necessary data structure
+            if (!func.graph_level || !func.edge_level || !func.node_level) {
+              return null;
+            }
+
+            return (
+              <div key={idx}>
+                {/* Function Details */}
+                <FunctionAnalysisDetails functionData={func as never} />
+
+                {/* CFG Visualization */}
+                <CFGVisualization
+                  edges={func.edge_level as never[]}
+                  nodes={func.node_level as never[]}
+                  graphMetrics={func.graph_level as never}
+                />
+
+                {/* Opcode Analysis */}
+                {func.node_level && Array.isArray(func.node_level) && func.node_level.length > 0 && (
+                  <OpcodeAnalysis
+                    opcodeHistogram={(func.node_level as Array<Record<string, unknown>>)[0]?.opcode_histogram as Record<string, number> || {}}
+                    opcodeRatios={(func.node_level as Array<Record<string, unknown>>)[0]?.opcode_ratios as never || {}}
+                    instructionSequence={func.instruction_sequence as never || { unique_ngram_count: 0, top_5_bigrams: [] }}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </>
+      )}
+    </div>
   );
 };  
 
@@ -1139,6 +1124,19 @@ const QilingAnalysisCard = ({ qilingData }: { qilingData: unknown }) => {
   const executionTime = qilingResults.execution_time as number;
   const phases = qilingResults.phases as Record<string, unknown>;
   const verdict = qilingResults.verdict as Record<string, unknown>;
+  const analysisTimestamp = qilingResults.analysis_timestamp as number;
+  const binaryPath = qilingResults.binary_path as string;
+  const binaryName = qilingResults.binary_name as string;
+  const analysisTool = qilingResults.analysis_tool as string;
+  const classificationResults = qilingResults.classification_results;
+  const createdAt = qilingResults.created_at as number;
+  const updatedAt = qilingResults.updated_at as number;
+  const errorMessage = qilingResults.error_message as string;
+
+  const formatTimestamp = (timestamp: number | undefined): string => {
+    if (!timestamp || typeof timestamp !== 'number') return 'N/A';
+    return new Date(timestamp * 1000).toLocaleString();
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status?.toLowerCase()) {
@@ -1156,6 +1154,40 @@ const QilingAnalysisCard = ({ qilingData }: { qilingData: unknown }) => {
 
   return (
     <div className="space-y-6">
+      {/* Binary Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileCheck className="w-5 h-5" />
+            Binary Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div className="flex flex-col">
+                <span className="text-sm text-muted-foreground">Binary Name</span>
+                <span className="font-mono text-sm break-all">{binaryName || 'N/A'}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm text-muted-foreground">Binary Path</span>
+                <span className="font-mono text-xs break-all">{binaryPath || 'N/A'}</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex flex-col">
+                <span className="text-sm text-muted-foreground">Analysis Tool</span>
+                <Badge variant="outline" className="w-fit">{analysisTool || 'qiling'}</Badge>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm text-muted-foreground">Analysis Timestamp</span>
+                <span className="text-sm">{formatTimestamp(analysisTimestamp)}</span>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Execution Summary */}
       <Card>
         <CardHeader>
@@ -1204,6 +1236,24 @@ const QilingAnalysisCard = ({ qilingData }: { qilingData: unknown }) => {
                     {verdict.confidence_score}%
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+
+          {/* Timestamps */}
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 p-4 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-muted-foreground" />
+              <div>
+                <span className="text-sm text-muted-foreground">Created:</span>
+                <span className="ml-2 text-sm font-medium">{formatTimestamp(createdAt)}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-muted-foreground" />
+              <div>
+                <span className="text-sm text-muted-foreground">Updated:</span>
+                <span className="ml-2 text-sm font-medium">{formatTimestamp(updatedAt)}</span>
               </div>
             </div>
           </div>
@@ -1339,7 +1389,50 @@ const QilingAnalysisCard = ({ qilingData }: { qilingData: unknown }) => {
                   </div>
                 </div>
               )}
+
+              {/* Dynamic Analysis */}
+              {phases.dynamic_analysis && (
+                <div className="p-4 bg-muted/50 rounded-lg">
+                  <h4 className="font-semibold mb-2">Dynamic Analysis Phase</h4>
+                  {Object.keys(phases.dynamic_analysis as Record<string, unknown>).length > 0 ? (
+                    <div className="space-y-2">
+                      <JsonViewer 
+                        data={phases.dynamic_analysis}
+                        title=""
+                        maxHeight="300px"
+                        searchable={false}
+                        downloadable={false}
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Dynamic analysis phase was initiated but no detailed results available.
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Classification Results */}
+      {classificationResults && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="w-5 h-5" />
+              Classification Results
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <JsonViewer 
+              data={classificationResults}
+              title=""
+              maxHeight="400px"
+              searchable={true}
+              downloadable={false}
+            />
           </CardContent>
         </Card>
       )}
@@ -1348,10 +1441,16 @@ const QilingAnalysisCard = ({ qilingData }: { qilingData: unknown }) => {
       {qilingResults.raw_output && (
         <Card>
           <CardHeader>
-            <CardTitle>Execution Log</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="w-5 h-5" />
+              Execution Log
+            </CardTitle>
+            <CardDescription>
+              Complete output from the dynamic analysis execution
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <pre className="bg-muted p-4 rounded-lg text-sm overflow-auto max-h-60 whitespace-pre-wrap">
+            <pre className="bg-muted p-4 rounded-lg text-xs overflow-auto max-h-96 whitespace-pre-wrap font-mono">
               {qilingResults.raw_output as string}
             </pre>
           </CardContent>
@@ -1359,21 +1458,34 @@ const QilingAnalysisCard = ({ qilingData }: { qilingData: unknown }) => {
       )}
 
       {/* Errors */}
-      {qilingResults.errors && (
+      {/* {(qilingResults.errors || errorMessage) && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-red-500" />
-              Errors
+              Errors & Diagnostics
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <pre className="bg-red-50 border border-red-200 p-4 rounded-lg text-sm overflow-auto max-h-40 whitespace-pre-wrap text-red-800">
-              {qilingResults.errors as string}
-            </pre>
+          <CardContent className="space-y-4">
+            {errorMessage && (
+              <div>
+                <h4 className="font-semibold mb-2 text-sm">Error Message:</h4>
+                <div className="bg-red-50 border border-red-200 p-3 rounded-lg text-sm text-red-800">
+                  {errorMessage}
+                </div>
+              </div>
+            )}
+            {qilingResults.errors && (
+              <div>
+                <h4 className="font-semibold mb-2 text-sm">Detailed Error Log:</h4>
+                <pre className="bg-red-50 border border-red-200 p-4 rounded-lg text-xs overflow-auto max-h-96 whitespace-pre-wrap text-red-800">
+                  {qilingResults.errors as string}
+                </pre>
+              </div>
+            )}
           </CardContent>
         </Card>
-      )}
+      )} */}
     </div>
   );
 };

@@ -66,7 +66,7 @@ export const AnalysisSummary: React.FC<AnalysisSummaryProps> = ({ jobData }) => 
   };
 
   const getOverallRiskLevel = () => {
-    if (metrics.cryptoPercentage >= 80) return { level: 'High', color: 'text-red-600 bg-red-50 border-red-200' };
+    if (metrics.cryptoPercentage >= 80) return { level: 'High', color: 'text-red-600  border-red-200' };
     if (metrics.cryptoPercentage >= 50) return { level: 'Medium', color: 'text-orange-600 bg-orange-50 border-orange-200' };
     if (metrics.cryptoPercentage >= 20) return { level: 'Low', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' };
     return { level: 'Minimal', color: 'text-green-600 bg-green-50 border-green-200' };

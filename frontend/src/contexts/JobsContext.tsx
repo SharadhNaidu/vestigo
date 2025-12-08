@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { API_CONFIG } from '@/config/api';
 
 export interface FileUpload {
   id: string;
@@ -31,51 +32,103 @@ interface JobsContextType {
   jobs: Job[];
   addJobs: (files: FileUpload[]) => void;
   getJobById: (id: string) => Job | undefined;
+  refreshJobs: () => Promise<void>;
 }
 
 const JobsContext = createContext<JobsContextType | undefined>(undefined);
 
+// Backend job interface
+interface BackendJob {
+  jobId: string;
+  fileName: string;
+  fileSize: string;
+  status: string;
+  createdAt: number;
+  updatedAt: number;
+  routing?: {
+    decision: string;
+    reason: string;
+  };
+  progress?: {
+    ingest: boolean;
+    features: boolean;
+    classification: boolean;
+  };
+}
+
+// Transform backend job to frontend Job interface
+function transformBackendJob(backendJob: BackendJob): Job {
+  // Map backend status to frontend status
+  const statusMap: Record<string, 'analyzing' | 'complete' | 'failed'> = {
+    'pending': 'analyzing',
+    'ingesting': 'analyzing',
+    'ingest_complete': 'analyzing',
+    'extracting_features': 'analyzing',
+    'features_complete': 'complete',
+    'classifying': 'analyzing',
+    'complete': 'complete',
+    'failed': 'failed'
+  };
+
+  const frontendStatus = statusMap[backendJob.status] || 'analyzing';
+  
+  // Calculate threats based on progress - for now we'll use null since we need classification results
+  const threats = backendJob.progress?.classification ? 0 : null;
+  
+  // Determine severity - will be null until classification is done
+  const severity = frontendStatus === 'complete' ? 'safe' : null;
+
+  // Calculate analysis time if complete
+  let analysisTime = null;
+  if (backendJob.createdAt && backendJob.updatedAt) {
+    const duration = backendJob.updatedAt - backendJob.createdAt;
+    analysisTime = `${Math.round(duration)}s`;
+  }
+
+  return {
+    id: backendJob.jobId,
+    fileName: backendJob.fileName,
+    hash: backendJob.jobId.substring(0, 32), // Use job ID as hash for now
+    status: frontendStatus,
+    severity,
+    threats,
+    uploadTime: new Date(backendJob.createdAt * 1000).toISOString(),
+    analysisTime,
+    fileSize: backendJob.fileSize,
+    fileType: backendJob.routing?.decision || 'Unknown',
+    detectedThreats: []
+  };
+}
+
 export const JobsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [jobs, setJobs] = useState<Job[]>(() => {
-    const saved = localStorage.getItem('binary-analyzer-jobs');
-    if (saved) {
-      return JSON.parse(saved);
-    }
-    // Initial mock data
-    return [
-      {
-        id: "JOB-2847",
-        fileName: "suspicious_payload.exe",
-        hash: "5d41402abc4b2a76b9719d911017c592",
-        status: "complete",
-        severity: "critical",
-        threats: 8,
-        uploadTime: new Date(Date.now() - 600000).toISOString(),
-        analysisTime: "45s",
-        fileSize: "2.4 MB",
-        fileType: "PE32 Executable",
-        detectedThreats: [
-          { name: "Trojan.Generic", type: "Trojan", severity: "Critical", description: "Malicious payload detected" },
-          { name: "Backdoor.Agent", type: "Backdoor", severity: "High", description: "Remote access capability" }
-        ]
-      },
-      {
-        id: "JOB-2846",
-        fileName: "malware_sample.bin",
-        hash: "098f6bcd4621d373cade4e832627b4f6",
-        status: "complete",
-        severity: "high",
-        threats: 5,
-        uploadTime: new Date(Date.now() - 1500000).toISOString(),
-        analysisTime: "38s",
-        fileSize: "1.8 MB",
-        fileType: "Binary",
-        detectedThreats: [
-          { name: "Worm.Win32", type: "Worm", severity: "High", description: "Self-replicating code" }
-        ]
+  const [jobs, setJobs] = useState<Job[]>([]);
+
+  // Fetch jobs from backend API
+  const refreshJobs = async () => {
+    try {
+      const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.JOBS}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch jobs');
       }
-    ];
-  });
+      const data = await response.json();
+      
+      // Transform backend jobs to frontend format
+      const transformedJobs = data.jobs.map(transformBackendJob);
+      setJobs(transformedJobs);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+      // Keep existing jobs on error
+    }
+  };
+
+  // Fetch jobs on mount
+  useEffect(() => {
+    refreshJobs();
+    
+    // Optionally refresh every 30 seconds
+    const interval = setInterval(refreshJobs, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('binary-analyzer-jobs', JSON.stringify(jobs));
@@ -126,7 +179,7 @@ export const JobsProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <JobsContext.Provider value={{ jobs, addJobs, getJobById }}>
+    <JobsContext.Provider value={{ jobs, addJobs, getJobById, refreshJobs }}>
       {children}
     </JobsContext.Provider>
   );

@@ -298,7 +298,7 @@ export const FunctionPredictionsTable: React.FC<FunctionPredictionsTableProps> =
     if (confidence > 0.8) return 'text-green-600 bg-green-50';
     if (confidence > 0.6) return 'text-yellow-600 bg-yellow-50';
     if (confidence > 0.4) return 'text-orange-600 bg-orange-50';
-    return 'text-red-600 bg-red-50';
+    return 'text-red-600 ';
   };
 
   const getAlgorithmBadgeColor = (algorithm: string, isCrypto: boolean) => {

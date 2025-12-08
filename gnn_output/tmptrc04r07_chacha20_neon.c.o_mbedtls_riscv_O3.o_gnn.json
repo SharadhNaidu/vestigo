@@ -1,0 +1,18 @@
+{
+  "source_file": "tmptrc04r07_chacha20_neon.c.o_mbedtls_riscv_O3.o_features.json",
+  "binary_info": "tmptrc04r07_chacha20_neon.c.o_mbedtls_riscv_O3.o",
+  "metadata": {
+    "data_size": 0,
+    "total_tables_detected": 0,
+    "text_size": 0,
+    "rodata_size": 0,
+    "num_functions": 0
+  },
+  "crypto_functions": [],
+  "statistics": {
+    "total_functions": 0,
+    "crypto_detected": 0,
+    "non_crypto": 0,
+    "by_algorithm": {}
+  }
+}

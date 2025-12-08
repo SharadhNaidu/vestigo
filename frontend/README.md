@@ -4,7 +4,7 @@ A modern, responsive web application for advanced binary analysis and cybersecur
 
 ## 🚀 Project Overview
 
-CyberEz is a static UI implementation of a cybersecurity platform that enables users to:
+ Vestigo is a static UI implementation of a cybersecurity platform that enables users to:
 - Upload and analyze binary files
 - Track analysis jobs in real-time
 - View comprehensive security reports

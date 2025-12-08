@@ -1,0 +1,53 @@
+{
+  "job_id": "7ff8de6b-bda0-4d39-9eb6-258ad286de4a",
+  "binary_path": "/home/shinichi/Documents/VSC/vestigo-data/backend/analysis_workspace/tmpgalm_tj5_test_image.elf_analysis/tmpgalm_tj5_test_image.elf",
+  "binary_name": "tmpgalm_tj5_test_image.elf",
+  "analysis_timestamp": 1765195689.7556982,
+  "execution_time": 1.7311956882476807,
+  "status": "completed",
+  "analysis_tool": "qiling_dynamic_analysis",
+  "phases": {
+    "packer_detection": {
+      "packed": false
+    },
+    "yara_analysis": {
+      "detected": [
+        "AES",
+        "COMPRESSION",
+        "RC4/ARC4",
+        "RSA"
+      ],
+      "total_matches": 574,
+      "scan_time": 0.003
+    },
+    "constant_detection": {
+      "algorithms_detected": [
+        "AES",
+        "aes_encrypt_block @ 0x401d20",
+        "aes_shift_rows @ 0x401ce0",
+        "aes_sub_bytes @ 0x401b80"
+      ],
+      "count": 4
+    },
+    "function_symbols": {
+      "detected": true,
+      "count": 3
+    },
+    "dynamic_analysis": {
+      "total_basic_blocks": 1187,
+      "crypto_operations": 19960,
+      "crypto_op_ratio": 13.24
+    }
+  },
+  "verdict": {
+    "crypto_detected": true,
+    "confidence": "MEDIUM",
+    "confidence_score": 60,
+    "reasons": [
+      "3 crypto function candidates detected",
+      "1 crypto constants found"
+    ]
+  },
+  "raw_output": "[*] Starting Hybrid Crypto Testbench...\n[.] Running AES Encryption...\n    AES Output: DB 57 ...\n[.] Running ECC Scalar Multiplication...\n    ECC Public Key: (92, 52)\n\n============================================================\n[*] PHASE -1: Checking for packed binary...\n[-] No packer detected\n[+] Detected architecture: x86_64\n[*] Target: tmpgalm_tj5_test_image.elf\n[*] Rootfs: /home/shinichi/Documents/VSC/vestigo-data/qiling_analysis/rootfs/x8664_linux\n\n============================================================\n[*] PHASE 0: YARA static analysis\n[\u2713] YARA detected: AES, COMPRESSION, RC4/ARC4, RSA\n    Total matches: 574\n    Scan time: 0.003s\n    High-confidence rules:\n      - AES_Sbox (AES, 95%)\n\n============================================================\n[*] PHASE 1: Scanning for crypto constants...\n[\u2713] Found constants for 1 algorithm(s)\n    - AES\n\n============================================================\n[*] PHASE 2: Checking for function symbols...\n[*] Found 3 crypto candidate(s):\n    - aes_encrypt_block @ 0x401d20\n    - aes_shift_rows @ 0x401ce0\n    - aes_sub_bytes @ 0x401b80\n\n============================================================\n[*] PHASE 3: Running binary to test crypto functions...\n\n======================================================================\n   NATIVE STRACE ANALYSIS (Optional)\n======================================================================\n[*] Running native strace on binary...\n    Log: /home/shinichi/Documents/VSC/vestigo-data/qiling_analysis/tests/strace_logs/strace_tmpgalm_tj5_test_image_elf_20251208_173809.log\n[\u2713] strace log captured: 4707 bytes\n[*] Analyzing strace log...\n[*] Strace Statistics:\n    Total syscalls: 2\n[*] Installing syscall hooks (getrandom, read)...\n[!] Warning: Could not hook syscalls: 'QlOsLinux' object has no attribute 'syscall_table'\n[*] Executing binary with basic block profiling...\n[SYSCALL] getrandom() called: 8 bytes (0x8)\n          Data: c55a34a3faeca474\n          Likely: XOR-based cipher (8-byte key)\n\n============================================================\n   ENHANCED ANALYSIS RESULTS (v2.0)\n============================================================\n\n[\u2713] Binary executed successfully\n\n[*] Constant Detection (FindCrypt):\n    [\u2713] Detected 1 algorithm(s), 1 constant(s)\n      AES: AES_SBOX\n\n[*] Avalanche Effect Analysis:\n    [-] Note: Functions may be inlined or not called during this execution\n    [-] Unable to capture I/O through function hooks\n    [-] Note: Binary executed and produced output (check console above)\n    [*] Avalanche testing requires multiple runs with different inputs\n    [*] Alternative: Test manually by running binary multiple times\n\n[*] Basic Block Analysis:\n    Total Basic Blocks: 1187\n    Crypto Loops: 33\n    Total Instructions: 150702\n    Crypto Operations: 19960\n    Crypto-Op Ratio: 13.24%\n\n[*] Confidence scoring breakdown (0-100):\n    - Constants evidence : 30 pts (0-40)\n    - Function names     : 30 pts (0-30)\n    - Crypto loops       : 20 pts (0-20)\n    - Crypto-op ratio    : 15 pts (0-15)\n    - Avalanche effect   : 0 pts (0-15)\n    -> TOTAL: 95/100  => HIGH\n\n\n======================================================================\n   ALGORITHM CLASSIFICATION REPORT\n======================================================================\n\n[*] PRIMARY CLASSIFICATION: PROPRIETARY: Lightweight/Custom cipher\n    Confidence: MEDIUM\n\n[*] Standard Algorithms Detected:\n\n    AES (Score: 60/100)\n      \u2713 Known constants detected (1 matches)\n\n[*] Proprietary/Custom Cipher Indicators:\n      \u26a0 Small random key/nonce (8 bytes) - too small for standard crypto\n\n[*] Algorithms RULED OUT:\n      \u274c AES (needs 16/24/32-byte key)\n      \u274c ChaCha20\n      \u274c ChaCha20 (needs 32-byte key + 12-byte nonce)\n      \u274c DES\n      \u274c DES/3DES (needs proper key schedule, not just 8 bytes)\n      \u274c RSA\n      \u274c RSA/ECC (needs much larger keys)\n\n[*] Analysis Summary:\n      \u2192 Binary uses CUSTOM/PROPRIETARY cipher\n      \u2192 Detected 1 weakness indicator(s):\n         \u2022 Small random key/nonce (8 bytes) - too small for standard crypto\n      \u2192 \u26a0 WARNING: Custom crypto is unvetted and likely weak\n      \u2192 No peer review or cryptanalysis available\n      \u2192 Key size too small: 64 bits (need \u2265128 bits)\n      \u2192 \u26a0 URGENT: Replace with standard algorithms\n      \u2192 Recommended alternatives:\n         \u2022 AES-256-GCM (block cipher, hardware accelerated)\n         \u2022 ChaCha20-Poly1305 (stream cipher, software optimized)\n======================================================================\n\n[*] Strace log saved to: /home/shinichi/Documents/VSC/vestigo-data/qiling_analysis/tests/strace_logs/strace_tmpgalm_tj5_test_image_elf_20251208_173809.log\n",
+  "errors": "/home/shinichi/Documents/VSC/vestigo-data/qiling_analysis/qiling_env/lib/python3.12/site-packages/capstone/__init__.py:267: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  import pkg_resources\n[!] \t0x4286dc: syscall ql_syscall_rseq number = 0x14e(334) not implemented\n"
+}

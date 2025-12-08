@@ -84,7 +84,7 @@ const Jobs = () => {
   };
 
   const handleViewJob = (jobId: string) => {
-    navigate(`/job/${jobId}`);
+    navigate(`/job/${jobId}/analysis`);
   };
 
   const handleDownloadReport = (job: any) => {
