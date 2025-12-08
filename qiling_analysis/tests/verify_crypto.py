@@ -23,6 +23,25 @@ from collections import defaultdict
 from qiling import Qiling
 from qiling.const import QL_VERBOSE, QL_INTERCEPT
 
+# ========== OUTPUT CAPTURE CLASS ==========
+class TeeOutput:
+    """Capture terminal output and write to both terminal and file"""
+    def __init__(self, filepath):
+        self.terminal = sys.stdout
+        self.log = open(filepath, 'w', encoding='utf-8')
+        
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+        
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+        
+    def close(self):
+        self.log.close()
+        sys.stdout = self.terminal
+
 # Import our new modules
 from constant_scanner import scan_for_constants, print_scan_results
 from crypto_logger import CryptoLogger
@@ -1825,17 +1844,46 @@ def run_binary_with_hooks(binary_path, crypto_funcs, rootfs_path, filename, cons
         except: pass
 
 if __name__ == "__main__":
-    print("======= FILE DESCRIPTON ======")
-    subprocess.run(["file", BINARY_PATH])
-    analyze_binary()
+    # Setup output capture
+    log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "analysis_logs")
+    os.makedirs(log_dir, exist_ok=True)
     
-    # Display strace log contents if available
-    if strace_log_path and os.path.exists(strace_log_path):
-        print("\n" + "="*70)
-        print("   STRACE LOG CONTENTS")
-        print("="*70)
-        try:
-            subprocess.run(["cat", strace_log_path], check=False)
-        except Exception as e:
-            print(f"[!] Failed to display strace log: {e}")
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    binary_name = os.path.basename(BINARY_PATH).replace('.', '_') if BINARY_PATH else "unknown"
+    analysis_log = os.path.join(log_dir, f"analysis_{binary_name}_{timestamp}.log")
+    
+    # Initialize Tee output to capture everything
+    tee = TeeOutput(analysis_log)
+    sys.stdout = tee
+    
+    print(f"[*] Analysis output will be saved to: {analysis_log}")
+    print(f"[*] Starting analysis at: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+    
+    try:
+        print("======= FILE DESCRIPTON ======")
+        subprocess.run(["file", BINARY_PATH])
+        analyze_binary()
+        
+        # Display strace log contents if available
+        if strace_log_path and os.path.exists(strace_log_path):
+            print("\n" + "="*70)
+            print("   STRACE LOG CONTENTS")
+            print("="*70)
+            try:
+                subprocess.run(["cat", strace_log_path], check=False)
+            except Exception as e:
+                print(f"[!] Failed to display strace log: {e}")
+        
+        print(f"\n[*] Analysis completed at: {time.strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"[✓] Full analysis log saved to: {analysis_log}")
+        
+    except Exception as e:
+        print(f"\n[!] FATAL ERROR: {e}")
+        import traceback
+        traceback.print_exc()
+        
+    finally:
+        # Restore stdout and close log file
+        tee.close()
+
 
