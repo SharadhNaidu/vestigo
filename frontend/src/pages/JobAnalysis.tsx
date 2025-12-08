@@ -32,6 +32,7 @@ import { AnalysisSummary, AnalysisStatusIndicator } from "@/components/AnalysisS
 import { CFGVisualization } from "@/components/CFGVisualization";
 import { FunctionAnalysisDetails } from "@/components/FunctionAnalysisDetails";
 import { OpcodeAnalysis } from "@/components/OpcodeAnalysis";
+import { FileSystemAnalysis } from "@/components/FileSystemAnalysis";
 
 import { useEffect, useState } from "react";
 
@@ -219,9 +220,10 @@ const JobAnalysis = () => {
           {/* Analysis Tabs */}
           <Tabs defaultValue="overview" className="w-full">
             {/* <TabsList className="grid w-full grid-cols-6"> */}
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="ml-classification">ML Analysis</TabsTrigger>
+              <TabsTrigger value="filesystem">Filesystem</TabsTrigger>
               <TabsTrigger value="features">Features</TabsTrigger>
               {/* <TabsTrigger value="qiling">Dynamic</TabsTrigger> */}
               <TabsTrigger value="file-info">File Info</TabsTrigger>
@@ -240,6 +242,12 @@ const JobAnalysis = () => {
             <TabsContent value="ml-classification" className="space-y-6">
               <MLClassificationCard jobData={jobData} />
               <GNNClassificationCard jobData={jobData} />
+            </TabsContent>
+
+            <TabsContent value="filesystem" className="space-y-6">
+              <FileSystemAnalysis 
+                featureResults={(jobData as Record<string, unknown>)?.feature_extraction_results as Record<string, unknown> | null} 
+              />
             </TabsContent>
 
             <TabsContent value="features" className="space-y-6">
