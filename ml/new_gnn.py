@@ -238,6 +238,11 @@ class GraphDataset(Dataset):
     - Graph: Function-level statistics
     """
 
+    EXCLUDED_LABELS = {'crypto-unknown'}
+    MAX_SAMPLES_PER_CLASS = {
+        'ecc': 50s0,
+    }
+
     def __init__(self, json_files: List[str], label_encoder: Optional[LabelEncoder] = None):
         """
         Initialize dataset from JSON files.
@@ -267,6 +272,9 @@ class GraphDataset(Dataset):
         print(f"Loading {len(json_files)} JSON files...")
         all_labels = []
 
+        self.class_counts = Counter()
+        skipped_labels = Counter()
+
         for json_file in tqdm(json_files, desc="Loading data"):
             try:
                 with open(json_file, 'r') as f:
@@ -275,14 +283,26 @@ class GraphDataset(Dataset):
                 binary_info = data.get('binary', {})
 
                 for func in data['functions']:
-                    if 'label' not in func:
+                    label = func.get('label')
+                    if not label:
                         continue  # Skip unlabeled functions
+
+                    normalized_label = str(label).strip().lower()
+                    if normalized_label in self.EXCLUDED_LABELS:
+                        skipped_labels[label] += 1
+                        continue
+
+                    max_cap = self.MAX_SAMPLES_PER_CLASS.get(normalized_label)
+                    if max_cap is not None and self.class_counts[normalized_label] >= max_cap:
+                        skipped_labels[f"{label} (downsampled)"] += 1
+                        continue
 
                     graph_data = self._function_to_graph(func, binary_info)
 
                     if graph_data is not None:
                         self.graphs.append(graph_data)
-                        all_labels.append(func['label'])
+                        all_labels.append(str(label).strip())
+                        self.class_counts[normalized_label] += 1
                         self.metadata.append({
                             'address': func['address'],
                             'name': func.get('name', 'unknown'),
@@ -308,6 +328,23 @@ class GraphDataset(Dataset):
         label_counts = Counter(all_labels)
         for label, count in label_counts.most_common():
             print(f"  {label}: {count}")
+        if skipped_labels:
+            print("\nSkipped / downsampled labels:")
+            for label, count in skipped_labels.most_common():
+                print(f"  {label}: {count}")
+
+    def get_class_weights(self, smoothing: float = 0.0) -> np.ndarray:
+        """Return inverse-frequency class weights with optional smoothing."""
+        num_classes = len(self.label_encoder.classes_)
+        if len(self.labels) == 0 or num_classes == 0:
+            return np.ones(num_classes, dtype=np.float32)
+
+        counts = np.bincount(self.labels, minlength=num_classes).astype(np.float32)
+        counts += smoothing
+        counts[counts == 0] = 1.0
+        weights = 1.0 / counts
+        weights = weights / weights.sum() * num_classes
+        return weights
 
     def _function_to_graph(self, func: Dict, binary_info: Dict) -> Optional[Dict]:
         """
@@ -627,6 +664,7 @@ class AddressAwareGNN(nn.Module):
         self.hidden_dim = hidden_dim
         self.conv_type = conv_type
         self.pooling = pooling
+        self.num_graph_features = num_graph_features
 
         # Input projection layers
         self.node_encoder = nn.Sequential(
@@ -674,9 +712,16 @@ class AddressAwareGNN(nn.Module):
         else:
             pool_dim = hidden_dim
 
+        self.graph_encoder = nn.Sequential(
+            nn.Linear(num_graph_features, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(),
+            nn.Dropout(dropout)
+        )
+
         # MLP classifier
         self.classifier = nn.Sequential(
-            nn.Linear(pool_dim + num_graph_features, hidden_dim * 2),
+            nn.Linear(pool_dim + hidden_dim, hidden_dim * 2),
             nn.BatchNorm1d(hidden_dim * 2),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -691,13 +736,10 @@ class AddressAwareGNN(nn.Module):
 
     def forward(self, data):
         x, edge_index, edge_attr, batch = data.x, data.edge_index, data.edge_attr, data.batch
-        graph_features = data.graph_features
-
-        # Reshape graph_features to [num_graphs, num_features]
-        # When batched, it's concatenated into 1D: [g1_feat1, g1_feat2, ..., g2_feat1, g2_feat2, ...]
         num_graphs = batch.max().item() + 1
-        num_graph_features = graph_features.shape[0] // num_graphs
-        graph_features = graph_features.view(num_graphs, num_graph_features)
+        graph_features = data.graph_features
+        graph_features = graph_features.view(num_graphs, self.num_graph_features)
+        graph_features = self.graph_encoder(graph_features)
 
         # Encode node features
         x = self.node_encoder(x)
