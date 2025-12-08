@@ -542,32 +542,32 @@ def analyze_algorithm_evidence(constant_results, syscall_events, basic_blocks, i
 def print_classification_report(report, syscall_events=None):
     """Print a detailed classification report"""
     print("\n" + "="*70)
-    print("   ALGORITHM CLASSIFICATION REPORT")
-    print("="*70)
+    # print("   ALGORITHM CLASSIFICATION REPORT")
+    # print("="*70)
     
-    print(f"\n[*] PRIMARY CLASSIFICATION: {report['primary_classification']}")
-    print(f"    Confidence: {report['confidence']}")
+    # print(f"\n[*] PRIMARY CLASSIFICATION: {report['primary_classification']}")
+    # print(f"    Confidence: {report['confidence']}")
     
-    # Standard algorithms detected
-    if report['standard_algorithms']:
-        print("\n[*] Standard Algorithms Detected:")
-        for algo, data in sorted(report['standard_algorithms'].items(), 
-                                key=lambda x: x[1]['score'], reverse=True):
-            print(f"\n    {algo} (Score: {data['score']}/100)")
-            for evidence in data['evidence']:
-                print(f"      ✓ {evidence}")
+    # # Standard algorithms detected
+    # if report['standard_algorithms']:
+    #     print("\n[*] Standard Algorithms Detected:")
+    #     for algo, data in sorted(report['standard_algorithms'].items(), 
+    #                             key=lambda x: x[1]['score'], reverse=True):
+    #         print(f"\n    {algo} (Score: {data['score']}/100)")
+    #         for evidence in data['evidence']:
+    #             print(f"      ✓ {evidence}")
     
-    # Proprietary indicators
-    if report['proprietary_patterns']:
-        print("\n[*] Proprietary/Custom Cipher Indicators:")
-        for pattern in report['proprietary_patterns']:
-            print(f"      ⚠ {pattern}")
+    # # Proprietary indicators
+    # if report['proprietary_patterns']:
+    #     print("\n[*] Proprietary/Custom Cipher Indicators:")
+    #     for pattern in report['proprietary_patterns']:
+    #         print(f"      ⚠ {pattern}")
     
-    # Ruled out algorithms
-    if report['ruled_out']:
-        print("\n[*] Algorithms RULED OUT:")
-        for algo in sorted(report['ruled_out']):
-            print(f"      ❌ {algo}")
+    # # Ruled out algorithms
+    # if report['ruled_out']:
+    #     print("\n[*] Algorithms RULED OUT:")
+    #     for algo in sorted(report['ruled_out']):
+    #         print(f"      ❌ {algo}")
     
     # Dynamic Analysis Summary based on actual findings
     print("\n[*] Analysis Summary:")
@@ -1825,6 +1825,8 @@ def run_binary_with_hooks(binary_path, crypto_funcs, rootfs_path, filename, cons
         except: pass
 
 if __name__ == "__main__":
+    print("======= FILE DESCRIPTON ======")
+    subprocess.run(["file", BINARY_PATH])
     analyze_binary()
     
     # Display strace log contents if available
