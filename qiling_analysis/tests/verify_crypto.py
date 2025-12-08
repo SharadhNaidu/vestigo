@@ -342,15 +342,25 @@ def hook_syscalls(ql):
         except:
             pass
         
-        # Default behavior
-        return ql.os.syscall_read_orig(ql, fd, buf, count)
+        # If not random device, call original syscall
+        # Return -1 to let Qiling handle it normally
+        return None
     
     # Hook the syscalls
     try:
         ql.os.set_syscall("getrandom", syscall_getrandom)
-        # Save original read for fallback
-        ql.os.syscall_read_orig = ql.os.syscall_table.get("read", lambda *args: -1)
         ql.os.set_syscall("read", syscall_read)
+    except AttributeError as e:
+        # Qiling API change - try alternative method
+        try:
+            # For newer Qiling versions, use hook_syscall
+            if hasattr(ql, 'set_syscall'):
+                ql.set_syscall("getrandom", syscall_getrandom)
+                ql.set_syscall("read", syscall_read)
+            else:
+                print(f"[!] Warning: Syscall hooking not supported in this Qiling version")
+        except Exception as e2:
+            print(f"[!] Warning: Could not hook syscalls: {e2}")
     except Exception as e:
         print(f"[!] Warning: Could not hook syscalls: {e}")
 
