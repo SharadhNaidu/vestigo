@@ -25,11 +25,15 @@ export const AnalysisSummary: React.FC<AnalysisSummaryProps> = ({ jobData }) => 
         hasFeatureExtraction: false,
         hasMLClassification: false,
         hasQilingAnalysis: false,
+        hasHardTargetInfo: false,
+        isPathC: false,
         totalFunctions: 0,
         cryptoFunctions: 0,
         confidenceScore: 0,
         detectedAlgorithms: [],
         analysisStatus: 'unknown',
+        cryptoStringsCount: 0,
+        routingDecision: '',
       };
     }
 
@@ -37,11 +41,18 @@ export const AnalysisSummary: React.FC<AnalysisSummaryProps> = ({ jobData }) => 
     const featureResults = data.feature_extraction_results as Record<string, unknown>;
     const mlClassification = featureResults?.ml_classification as Record<string, unknown>;
     const qilingResults = data.qiling_dynamic_results as Record<string, unknown>;
+    const analysisResults = data.analysis_results as Record<string, unknown>;
+    const hardTargetInfo = analysisResults?.hard_target_info as Record<string, unknown>;
+    const routingDecision = (analysisResults?.routing as Record<string, unknown>)?.decision as string || '';
+    const isPathC = routingDecision === 'PATH_C_HARD_TARGET';
 
     return {
       hasFeatureExtraction: !!featureResults,
       hasMLClassification: !!mlClassification,
       hasQilingAnalysis: !!qilingResults,
+      hasHardTargetInfo: !!hardTargetInfo,
+      isPathC,
+      routingDecision,
       totalFunctions: (featureResults?.summary as Record<string, unknown>)?.total_functions as number || 0,
       cryptoFunctions: (featureResults?.summary as Record<string, unknown>)?.crypto_functions as number || 0,
       confidenceScore: (mlClassification?.file_summary as Record<string, unknown>)?.average_confidence as number || 0,
@@ -49,12 +60,18 @@ export const AnalysisSummary: React.FC<AnalysisSummaryProps> = ({ jobData }) => 
       analysisStatus: data.status as string || 'unknown',
       cryptoPercentage: (mlClassification?.file_summary as Record<string, unknown>)?.crypto_percentage as number || 0,
       fileStatus: (mlClassification?.file_summary as Record<string, unknown>)?.file_status as string || 'unknown',
+      cryptoStringsCount: ((hardTargetInfo?.crypto_strings as Record<string, unknown>)?.crypto_strings_count as number) || 0,
     };
   };
 
   const metrics = extractAnalysisMetrics();
 
   const getAnalysisCompleteness = () => {
+    if (metrics.isPathC) {
+      // For PATH_C, only hard target analysis is relevant
+      return metrics.hasHardTargetInfo ? 100 : 0;
+    }
+    
     let completed = 0;
     const total = 3; // Feature extraction, ML classification, Qiling
 
@@ -66,7 +83,15 @@ export const AnalysisSummary: React.FC<AnalysisSummaryProps> = ({ jobData }) => 
   };
 
   const getOverallRiskLevel = () => {
-    if (metrics.cryptoPercentage >= 80) return { level: 'High', color: 'text-red-600  border-red-200' };
+    if (metrics.isPathC) {
+      // For PATH_C, base risk on crypto strings detection
+      if (metrics.cryptoStringsCount > 500) return { level: 'High', color: 'text-red-600 bg-red-50 border-red-200' };
+      if (metrics.cryptoStringsCount > 200) return { level: 'Medium', color: 'text-orange-600 bg-orange-50 border-orange-200' };
+      if (metrics.cryptoStringsCount > 50) return { level: 'Low', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' };
+      return { level: 'Unknown', color: 'text-gray-600 bg-gray-50 border-gray-200' };
+    }
+
+    if (metrics.cryptoPercentage >= 80) return { level: 'High', color: 'text-red-600 bg-red-50 border-red-200' };
     if (metrics.cryptoPercentage >= 50) return { level: 'Medium', color: 'text-orange-600 bg-orange-50 border-orange-200' };
     if (metrics.cryptoPercentage >= 20) return { level: 'Low', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' };
     return { level: 'Minimal', color: 'text-green-600 bg-green-50 border-green-200' };
@@ -74,6 +99,73 @@ export const AnalysisSummary: React.FC<AnalysisSummaryProps> = ({ jobData }) => 
 
   const completeness = getAnalysisCompleteness();
   const riskLevel = getOverallRiskLevel();
+
+  // Render PATH_C specific summary
+  if (metrics.isPathC) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Analysis Type */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <Shield className="h-8 w-8 text-orange-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-muted-foreground">Analysis Path</p>
+                <div className="text-xl font-bold">Path C</div>
+                <p className="text-xs text-muted-foreground mt-1">Hard Target</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Crypto Strings Detected */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <FileText className="h-8 w-8 text-blue-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-muted-foreground">Crypto Strings</p>
+                <div className="text-2xl font-bold">{metrics.cryptoStringsCount}</div>
+                <p className="text-xs text-muted-foreground">Detected strings</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Risk Assessment */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <AlertCircle className="h-8 w-8 text-orange-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-muted-foreground">Risk Level</p>
+                <Badge className={riskLevel.color}>
+                  {riskLevel.level}
+                </Badge>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Based on crypto content
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Analysis Completeness */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <Clock className="h-8 w-8 text-green-600" />
+              <div className="ml-4 flex-1">
+                <p className="text-sm font-medium text-muted-foreground">Analysis Status</p>
+                <div className="text-2xl font-bold">{completeness.toFixed(0)}%</div>
+                <Progress value={completeness} className="mt-2 h-2" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -151,6 +243,7 @@ interface AnalysisStatusIndicatorProps {
   hasFeatureExtraction: boolean;
   hasMLClassification: boolean;
   hasQilingAnalysis: boolean;
+  hasLLMAnalysis?: boolean;
 }
 
 export const AnalysisStatusIndicator: React.FC<AnalysisStatusIndicatorProps> = ({
@@ -158,6 +251,7 @@ export const AnalysisStatusIndicator: React.FC<AnalysisStatusIndicatorProps> = (
   hasFeatureExtraction,
   hasMLClassification,
   hasQilingAnalysis,
+  hasLLMAnalysis = false,
 }) => {
   const getStatusIcon = (completed: boolean) => {
     return completed ? (
@@ -204,6 +298,16 @@ export const AnalysisStatusIndicator: React.FC<AnalysisStatusIndicatorProps> = (
             </div>
             <Badge variant={hasQilingAnalysis ? "default" : "secondary"}>
               {hasQilingAnalysis ? "Complete" : "Pending"}
+            </Badge>
+          </div>
+
+          <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-3">
+              {getStatusIcon(hasLLMAnalysis)}
+              <span className="font-medium">Agent Analysis</span>
+            </div>
+            <Badge variant={hasLLMAnalysis ? "default" : "secondary"}>
+              {hasLLMAnalysis ? "Complete" : "Pending"}
             </Badge>
           </div>
         </div>

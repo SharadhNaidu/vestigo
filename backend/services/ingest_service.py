@@ -17,6 +17,7 @@ sys.path.append(str(parent_dir))
 
 from ingest import IngestionModule
 from config.logging_config import logger
+from services.crypto_string_detector import crypto_string_detector
 
 class IngestService:
     """Service for handling file ingestion and routing decisions"""
@@ -206,9 +207,35 @@ class IngestService:
     
     def _add_hard_target_info(self, response: Dict[str, Any], ingest_result: Dict[str, Any]):
         """Add PATH_C_HARD_TARGET specific information"""
+        
+        # For PATH_C, run crypto string detection on the original binary
+        workspace_path = ingest_result.get("analysis_workspace")
+        crypto_strings_result = None
+        
+        if workspace_path and os.path.exists(workspace_path):
+            # Find the binary file in workspace
+            import glob
+            workspace_files = glob.glob(os.path.join(workspace_path, "*"))
+            binary_files = [f for f in workspace_files if os.path.isfile(f) and not f.endswith('.json')]
+            
+            if binary_files:
+                binary_path = binary_files[0]
+                logger.info(f"Running crypto string detection on PATH_C binary - JobID: {response['jobId']}")
+                
+                # Get file type for better LLM analysis
+                file_type = ingest_result.get("file_info", {}).get("detected_type", "unknown")
+                
+                crypto_strings_result = crypto_string_detector.extract_crypto_strings(
+                    binary_path, 
+                    job_id=response['jobId'],
+                    file_type=file_type,
+                    use_llm=True
+                )
+        
         response["analysis"]["hard_target_info"] = {
             "is_encrypted": True,
-            "extraction_failed": not ingest_result["extraction"]["was_extracted"]
+            "extraction_failed": not ingest_result["extraction"]["was_extracted"],
+            "crypto_strings": crypto_strings_result
         }
         
         response["next_actions"] = [
