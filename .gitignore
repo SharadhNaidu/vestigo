@@ -9,6 +9,7 @@ venv/
 .env
 
 filtered_json/
+rag/
 
 .env
 .venv/
