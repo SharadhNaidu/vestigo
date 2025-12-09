@@ -34,6 +34,7 @@ import { FunctionAnalysisDetails } from "@/components/FunctionAnalysisDetails";
 import { OpcodeAnalysis } from "@/components/OpcodeAnalysis";
 import { FileSystemAnalysis } from "@/components/FileSystemAnalysis";
 import { LLMAnalysisCard } from "@/components/LLMAnalysis";
+import { HardTargetAnalysis } from "@/components/HardTargetAnalysis";
 
 import { useEffect, useState } from "react";
 
@@ -221,13 +222,14 @@ const JobAnalysis = () => {
 
           {/* Analysis Tabs */}
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-7">
+            <TabsList className="grid w-full grid-cols-8">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="ml-classification">ML Analysis</TabsTrigger>
               <TabsTrigger value="filesystem">Filesystem</TabsTrigger>
               <TabsTrigger value="features">Features</TabsTrigger>
               <TabsTrigger value="qiling">Dynamic</TabsTrigger>
               <TabsTrigger value="llm">Agent</TabsTrigger>
+              <TabsTrigger value="hard-target">Hard Target</TabsTrigger>
               <TabsTrigger value="file-info">File Info</TabsTrigger>
               {/* <TabsTrigger value="raw-data">Raw Data</TabsTrigger> */}
             </TabsList>
@@ -265,6 +267,13 @@ const JobAnalysis = () => {
                 llmData={(jobData as Record<string, unknown>)?.llm_analysis_results as Record<string, unknown> | null}
                 qilingData={jobData as Record<string, unknown> | null}
                 jobId={jobId}
+              />
+            </TabsContent>
+
+            <TabsContent value="hard-target" className="space-y-6">
+              <HardTargetAnalysis 
+                hardTargetInfo={((jobData as Record<string, unknown>)?.analysis_results as Record<string, unknown>)?.hard_target_info as Record<string, unknown>}
+                jobData={jobData as Record<string, unknown>}
               />
             </TabsContent>
 

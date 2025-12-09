@@ -888,7 +888,8 @@ async def get_complete_analysis_data(job_id: str):
             ),
             "has_ml_classification": bool(
                 complete_data["job_storage_data"] and 
-                complete_data["job_storage_data"].get("feature_extraction_results", {}).get("ml_classification")
+                complete_data["job_storage_data"].get("feature_extraction_results") and
+                complete_data["job_storage_data"]["feature_extraction_results"].get("ml_classification")
             ),
             "has_qiling_analysis": bool(complete_data.get("qiling_output")),
             "analysis_complete": job and job.status in [JobStatus.COMPLETE, JobStatus.FEATURES_COMPLETE] if job else False
