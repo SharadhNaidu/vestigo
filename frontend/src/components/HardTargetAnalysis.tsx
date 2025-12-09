@@ -19,7 +19,9 @@ import {
   Server,
   Activity,
   Target,
-  FileText
+  FileText,
+  ArrowDown,
+  ArrowRight
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -391,6 +393,108 @@ export const HardTargetAnalysis = ({ hardTargetInfo, jobData }: HardTargetAnalys
           </CardContent>
         </Card>
       )}
+
+      {/* Final Verdict Summary */}
+      {llmAnalysis?.verdict && (
+        <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-background to-primary/5">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-2xl">
+                <Brain className="w-6 h-6 text-primary" />
+                Analysis Verdict & Summary
+              </CardTitle>
+              <Badge variant="outline" className={getRiskColor(String((llmAnalysis.verdict as Record<string, unknown>).risk_level || ""))}>
+                {String((llmAnalysis.verdict as Record<string, unknown>).risk_level || "UNKNOWN").toUpperCase()}
+              </Badge>
+            </div>
+            <CardDescription className="text-base mt-2">
+              Comprehensive security assessment powered by AI analysis
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Summary Statement */}
+            <div className="p-6 bg-primary/5 border border-primary/20 rounded-lg">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Executive Summary</h3>
+                  <p className="text-base leading-relaxed">
+                    {String(((llmAnalysis.verdict as Record<string, unknown>).summary || "No summary available"))}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Confidence & Risk Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-secondary/30 border border-border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Activity className="w-8 h-8 text-green-600" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Analysis Confidence</p>
+                    <p className={`text-2xl font-bold ${getConfidenceColor(String((llmAnalysis.verdict as Record<string, unknown>).confidence || ""))}`}>
+                      {String((llmAnalysis.verdict as Record<string, unknown>).confidence || "UNKNOWN").toUpperCase()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-secondary/30 border border-border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Shield className="w-8 h-8 text-orange-600" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Risk Assessment</p>
+                    <p className={`text-2xl font-bold ${getConfidenceColor(String((llmAnalysis.verdict as Record<string, unknown>).risk_level || ""))}`}>
+                      {String((llmAnalysis.verdict as Record<string, unknown>).risk_level || "UNKNOWN").toUpperCase()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Key Findings */}
+            {(llmAnalysis.verdict as Record<string, unknown>).key_findings && 
+             Array.isArray((llmAnalysis.verdict as Record<string, unknown>).key_findings) && 
+             ((llmAnalysis.verdict as Record<string, string[]>).key_findings || []).length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-primary" />
+                  Key Findings
+                </h3>
+                <div className="grid grid-cols-1 gap-3">
+                  {((llmAnalysis.verdict as Record<string, string[]>).key_findings || []).map((finding: string, idx: number) => (
+                    <div 
+                      key={idx} 
+                      className="flex items-start gap-3 p-4 bg-background border border-primary/20 rounded-lg hover:border-primary/40 transition-colors"
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="text-sm font-bold text-primary">{idx + 1}</span>
+                      </div>
+                      <p className="text-sm leading-relaxed pt-1">{finding}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Analysis Status Footer */}
+            {/* <div className="pt-4 border-t border-border">
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Info className="w-4 h-4" />
+                  <span>Analysis Status: <span className="font-semibold text-foreground">{String((llmAnalysis as Record<string, unknown>).status || "unknown").toUpperCase()}</span></span>
+                </div>
+                {(llmAnalysis as Record<string, unknown>).llm_model && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Brain className="w-4 h-4" />
+                    <span>Powered by: <span className="font-semibold text-foreground">{String((llmAnalysis as Record<string, unknown>).llm_model)}</span></span>
+                  </div>
+                )}
+              </div>
+            </div> */}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
@@ -438,7 +542,57 @@ const NetworkTLSSection = ({
     <div className="space-y-4">
       <InfoCard title="TLS/SSL Versions" icon={<Shield className="w-4 h-4" />} items={tlsVersions} />
       {/* <InfoCard title="Certificate Blocks" icon={<FileType className="w-4 h-4" />} items={certificates} /> */}
-      <InfoCard title="TLS Handshake States" icon={<Network className="w-4 h-4" />} items={handshakeStates} />
+      
+      {/* TLS Handshake States Flow - Only show if states exist */}
+      {handshakeStates && handshakeStates.length > 0 && (
+        <Card className="bg-secondary/20">
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Network className="w-4 h-4" />
+              TLS Handshake Flow
+            </CardTitle>
+            <CardDescription>
+              Detected TLS handshake states in sequence
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {/* Desktop view - horizontal flow */}
+            <div className="hidden md:flex items-center justify-start gap-3 flex-wrap">
+              {handshakeStates.map((state, idx) => (
+                <div key={idx} className="flex items-center gap-3">
+                  <div className="px-4 py-2 bg-blue-100 text-blue-800 border border-blue-300 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <p className="text-sm font-medium text-center whitespace-nowrap">{state}</p>
+                  </div>
+                  {idx < handshakeStates.length - 1 && (
+                    <ArrowRight className="w-5 h-5 text-blue-500 flex-shrink-0" />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile view - vertical flow */}
+            <div className="md:hidden flex flex-col items-center gap-3">
+              {handshakeStates.map((state, idx) => (
+                <div key={idx} className="flex flex-col items-center gap-3 w-full">
+                  <div className="w-full px-4 py-3 bg-blue-100 text-blue-800 border border-blue-300 rounded-lg shadow-sm">
+                    <p className="text-sm font-medium text-center">{state}</p>
+                  </div>
+                  {idx < handshakeStates.length - 1 && (
+                    <ArrowDown className="w-5 h-5 text-blue-500 flex-shrink-0" />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Summary */}
+            <div className="mt-4 pt-4 border-t border-border">
+              <p className="text-sm text-muted-foreground text-center">
+                <span className="font-semibold">{handshakeStates.length}</span> handshake states detected
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       
       {cryptoLibraries && (
         <Card className="bg-secondary/20">
