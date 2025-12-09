@@ -30,7 +30,6 @@ class LLMCryptoAnalyzer:
             "detected": [],  # e.g., ["wolfSSL", "OpenSSL", "mbedTLS"]
             "version": "",  # e.g., "wolfSSL 5.8.0"
             "source_files": [],  # e.g., ["./src/x509.c", "./src/x509_str.c"]
-            "errors": []  # e.g., ["RSA_new failed", "RsaPrivateKeyDecode failed"]
         },
         "tls_handshake_states": [],  # e.g., ["Server Hello", "Client Hello", "Certificate"]
         "network_protocols": {
@@ -90,6 +89,7 @@ All Crypto Strings (first 100):
 {crypto_strings}
 
 Your task:
+0. VERY IMPORTANT: try to detect architecture the architecture_indicators must not be empty (among aarch64, mips, risv, arm)
 1. Identify specific cryptographic primitives (algorithms, modes, hash functions)
 2. Detect certificates, PKI infrastructure, and PKCS standards
 3. Identify crypto libraries and versions
@@ -97,8 +97,7 @@ Your task:
 5. Assess behavioral indicators of crypto usage
 6. Determine architecture and platform
 7. Provide a security assessment with one-liner verdict
-8. Note session management mechanisms
-9. Provide file metadata analysis
+8. Note session management mechanisms 
 
 Response Schema (YOU MUST FOLLOW THIS EXACTLY):
 {schema}
@@ -109,7 +108,7 @@ Guidelines:
 - Extract actual library names and versions: "OpenSSL 1.1.1k"
 - Provide confidence levels based on evidence strength
 - The verdict should be a clear, concise one-liner (max 100 chars)
-- List actual findings, not possibilities
+- List actual findings, not possibilities. In case you don't find any actual, you can add possibilities but it should look accurate
 - If not detected, use empty arrays [] or false, not null
 - For unknown fields, use "unknown" string
 
@@ -161,7 +160,7 @@ Return ONLY the JSON object, nothing else."""
             return {"status": "no_data", "reason": "No crypto strings found"}
         
         try:
-            logger.info(f"{log_prefix}Starting LLM analysis of {len(crypto_strings)} crypto strings")
+            logger.info(f"{log_prefix}Starting analysis of {len(crypto_strings)} crypto strings")
             
             # Prepare prompt with data
             prompt = self._prepare_prompt(crypto_strings, binary_name, file_type)
