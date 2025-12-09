@@ -344,6 +344,18 @@ async def upload_and_analyze(background_tasks: BackgroundTasks, file: UploadFile
             if "bootloaders" in analysis_result["analysis"]:
                 ingest_results["bootloaders"] = analysis_result["analysis"]["bootloaders"]
             
+            # Add PATH_C hard target info (includes crypto_strings with LLM analysis)
+            if "hard_target_info" in analysis_result["analysis"]:
+                ingest_results["hard_target_info"] = analysis_result["analysis"]["hard_target_info"]
+            
+            # Add PATH_A binary info
+            if "binary_info" in analysis_result["analysis"]:
+                ingest_results["binary_info"] = analysis_result["analysis"]["binary_info"]
+            
+            # Add PATH_B filesystem info
+            if "filesystem_info" in analysis_result["analysis"]:
+                ingest_results["filesystem_info"] = analysis_result["analysis"]["filesystem_info"]
+            
             job_manager.update_job_ingest_results(job_id, ingest_results)
 
         # If it's PATH_A_BARE_METAL, add background task for feature extraction

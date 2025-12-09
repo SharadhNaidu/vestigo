@@ -14,6 +14,7 @@ import time
 
 from config.logging_config import logger
 from services.gnn_pipeline_service import GNNPipelineService
+from services.crypto_string_detector import crypto_string_detector
 
 class FeatureExtractionService:
     """
@@ -181,10 +182,29 @@ class FeatureExtractionService:
             logger.debug(f"Created temporary Ghidra workspace: {temp_dir}")
             
             try:
+                # Detect file type for better LLM analysis
+                import magic
+                try:
+                    file_type = magic.from_file(binary_path)
+                except:
+                    file_type = "unknown"
+                
+                # Run crypto string detection in parallel with Ghidra setup
+                logger.info(f"Running crypto string detection - JobID: {job_id}")
+                crypto_strings_result = crypto_string_detector.extract_crypto_strings(
+                    binary_path, 
+                    job_id=job_id,
+                    file_type=file_type,
+                    use_llm=True
+                )
+                
                 # Call Ghidra to run extract_features.py script
                 features_result = await self._run_ghidra_analysis(
                     binary_path, temp_dir, job_id
                 )
+                
+                # Add crypto string detection results to features
+                features_result["crypto_strings"] = crypto_strings_result
                 
                 # Process and structure the JSON output from Ghidra script
                 processed_features = self._process_ghidra_output(features_result, job_id)
