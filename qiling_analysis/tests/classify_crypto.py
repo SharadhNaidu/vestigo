@@ -261,9 +261,9 @@ class ArchitectureClassifier:
                 if mov_ratio > 0.3: # Feistel usually has > 30% moves
                     self.scores['Feistel'] += 40
                     self.evidence['Feistel'].append(f"High Data Movement ({mov_ratio:.1%}) with ARX ops - Typical of Feistel")
-                elif mov_ratio < 0.25: # Pure ARX usually has < 25% moves
-                    self.scores['ARX'] += 10
-                    self.evidence['ARX'].append(f"Low Data Movement ({mov_ratio:.1%}) - Typical of pure ARX")
+            elif mov_ratio < 0.25: # Pure ARX usually has < 25% moves
+                self.scores['ARX'] += 10
+                self.evidence['ARX'].append(f"Low Data Movement ({mov_ratio:.1%}) - Typical of pure ARX")
             
             if self.op_counts['SWAP_OP'] > 0:
                 self.scores['Feistel'] += 30
@@ -275,7 +275,72 @@ class ArchitectureClassifier:
             self.scores['Sponge'] += 50
             self.evidence['Sponge'].append("Detected Sponge Absorb phase")
 
+        # 5. S-Box Detection (SPN vs Feistel)
+        # Analyze memory access patterns for S-Box lookups
+        # Heuristic: Dense reads in a small range (e.g., 256 bytes)
+        # Refinement: Check for RANDOM access (S-Box) vs SEQUENTIAL (Constants/Arrays)
+        
+        sbox_candidates = 0
+        unique_reads = sorted(list(set(self.memory_access_patterns)))
+        
+        if unique_reads:
+            # 1. Cluster addresses into tables
+            clusters = []
+            if unique_reads:
+                current_cluster = [unique_reads[0]]
+                for addr in unique_reads[1:]:
+                    if addr - current_cluster[-1] < 64: # Close proximity
+                        current_cluster.append(addr)
+                    else:
+                        if len(current_cluster) > 16: # Min size for a table
+                            clusters.append(current_cluster)
+                        current_cluster = [addr]
+                if len(current_cluster) > 16:
+                    clusters.append(current_cluster)
+            
+            # 2. Analyze access pattern for each cluster
+            for cluster in clusters:
+                min_addr = cluster[0]
+                max_addr = cluster[-1]
+                span = max_addr - min_addr
+                
+                if 200 <= span <= 4096: # S-Box size (256) or larger tables (4KB)
+                    # Extract accesses to this cluster from the chronological log
+                    # Optimization: This can be slow if log is huge. 
+                    # We'll just check a sample or iterate once if needed.
+                    # For this script, we'll iterate.
+                    
+                    cluster_accesses = [a for a in self.memory_access_patterns if min_addr <= a <= max_addr]
+                    
+                    if len(cluster_accesses) < 10: continue
+
+                    # Check for sequentiality
+                    is_sequential = True
+                    stride_violations = 0
+                    for i in range(1, len(cluster_accesses)):
+                        diff = abs(cluster_accesses[i] - cluster_accesses[i-1])
+                        if diff > 16: # Arbitrary small stride
+                            stride_violations += 1
+                    
+                    # If many jumps, it's random access -> S-Box
+                    if stride_violations > len(cluster_accesses) * 0.3:
+                        sbox_candidates += 1
+                        # print(f"[DEBUG] Random Access Table detected at {hex(min_addr)} (Size: {span})")
+                    else:
+                        pass
+                        # print(f"[DEBUG] Sequential Table detected at {hex(min_addr)} (Size: {span}) - Likely Constants")
+        
+        if sbox_candidates > 0:
+            print(f"[DEBUG] S-Box Candidates Detected: {sbox_candidates}")
+            
+            # SPN relies heavily on S-Boxes
+            self.scores['SPN'] += 50 * sbox_candidates
+            self.evidence['SPN'].append(f"Detected {sbox_candidates} potential S-Box tables")
+
         return self.scores, self.evidence
+
+    def log_memory_access(self, address):
+        self.memory_access_patterns.append(address)
 
 classifier = ArchitectureClassifier()
 

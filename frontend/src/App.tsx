@@ -12,6 +12,7 @@ import JobDetail from "./pages/JobDetail";
 import JobAnalysis from "./pages/JobAnalysis";
 import CFGView from "./pages/CFGView";
 import NotFound from "./pages/NotFound";
+import CryptoReport from "./pages/CryptoReport";
 import { AnalysisDemo } from "./components/AnalysisDemo";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/job/:jobId/analysis" element={<JobAnalysis />} />
             <Route path="/job/:jobId/cfg" element={<CFGView />} />
             <Route path="/demo" element={<AnalysisDemo />} />
+            <Route path="/crypto-report" element={<CryptoReport />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -13,7 +13,8 @@ import json
 import hashlib
 import math
 import struct
-from collections import defaultdict
+import numpy as np
+from collections import defaultdict, Counter
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
 
@@ -117,6 +118,137 @@ def get_rootfs(binary_path):
     return rootfs
 
 
+class CryptoMathEngine:
+    def __init__(self):
+        # Define instruction sets
+        self.OPS = {
+            'subst': {'xor', 'and', 'orr', 'eor', 'not', 'mvn', 'pxor', 'aesenc'},
+            'perm':  {'shl', 'shr', 'rol', 'ror', 'lsl', 'lsr', 'asr'},
+            'mul':   {'mul', 'imul', 'pmull', 'vmul'},
+            'div':   {'div', 'idiv', 'rem', 'mod'},
+            'add':   {'add', 'adc', 'padd', 'vadd'},
+            'sub':   {'sub', 'sbc', 'psub', 'vsub'}
+        }
+
+    def _get_density(self, mnemonics: List[str], op_category: str) -> float:
+        """Calculates rho for a specific operation category."""
+        if not mnemonics:
+            return 0.0
+        
+        # Filter mnemonics that match the category keywords
+        count = sum(1 for m in mnemonics 
+                    if any(op in m.lower() for op in self.OPS[op_category]))
+        return count / len(mnemonics)
+
+    def calculate_entropy(self, data: bytes) -> float:
+        """Math: H(X) = -sum(p(x) log2 p(x))"""
+        if not data: 
+            return 0.0
+        
+        counts = Counter(data)
+        total = len(data)
+        entropy = 0.0
+        
+        for count in counts.values():
+            p_x = count / total
+            entropy -= p_x * math.log2(p_x)
+            
+        return entropy
+
+    def compute_spn_score(self, feature_vector: Dict[str, float]) -> float:
+        """
+        Math: S_SPN = sqrt(rho_sub * rho_perm) * 2.0
+        Scales result to roughly 0.0 - 1.0 range
+        """
+        rho_sub = feature_vector['rho_subst']
+        rho_perm = feature_vector['rho_perm']
+        
+        # Geometric mean favors blocks where BOTH are present
+        geometric_mean = math.sqrt(rho_sub * rho_perm)
+        
+        # Boost score if specific AES instructions exist
+        boost = 0.2 if feature_vector['has_aes_intrinsics'] else 0.0
+        
+        return min(1.0, (geometric_mean * 3.0) + boost)
+
+    def compute_modexp_score(self, feature_vector: Dict[str, float]) -> float:
+        """
+        Math: S_ModExp = w1*rho_mul + w2*rho_div
+        """
+        rho_mul = feature_vector['rho_mul']
+        rho_div = feature_vector['rho_div']
+        rho_add = feature_vector['rho_add']
+        
+        # Standard RSA/DH pattern
+        score = (0.6 * rho_mul) + (0.4 * rho_div)
+        
+        # Montgomery Ladder pattern (Mul + Add/Sub, no Div)
+        montgomery_score = 0.0
+        if rho_div == 0 and rho_mul > 0.1:
+            montgomery_score = math.sqrt(rho_mul * rho_add)
+            
+        return min(1.0, max(score, montgomery_score) * 2.5)
+
+    def compute_ntt_score(self, feature_vector: Dict[str, float]) -> float:
+        """
+        Math: Balance Factor Delta = 1 - (|add - sub| / (add + sub))
+        """
+        rho_add = feature_vector['rho_add']
+        rho_sub = feature_vector['rho_sub']
+        rho_mul = feature_vector['rho_mul']
+        
+        total_arithmetic = rho_add + rho_sub
+        if total_arithmetic < 0.1:
+            return 0.0
+            
+        # Calculate Balance Factor (Delta)
+        diff = abs(rho_add - rho_sub)
+        delta = 1.0 - (diff / (total_arithmetic + 1e-9))
+        
+        # NTT Score = Balance * Arithmetic_Density * Mul_Presence
+        score = delta * total_arithmetic * (1.0 + rho_mul)
+        
+        return min(1.0, score * 2.0)
+
+    def analyze_block(self, block_data: Dict) -> Dict:
+        """
+        Main processor. Takes the extracted JSON data and runs the math.
+        """
+        # 1. Pre-process mnemonics (strip operands for density check)
+        mnems = block_data.get('mnemonics_simple', [])
+        
+        if not mnems:
+            return {"error": "No instructions"}
+
+        # 2. Build Feature Vector (Densities)
+        fv = {
+            'rho_subst': self._get_density(mnems, 'subst'),
+            'rho_perm':  self._get_density(mnems, 'perm'),
+            'rho_mul':   self._get_density(mnems, 'mul'),
+            'rho_div':   self._get_density(mnems, 'div'),
+            'rho_add':   self._get_density(mnems, 'add'),
+            'rho_sub':   self._get_density(mnems, 'sub'),
+            'has_aes_intrinsics': any('aes' in m for m in mnems)
+        }
+        
+        # 3. Apply Math Models
+        scores = {
+            "SPN_Score": self.compute_spn_score(fv),
+            "ModExp_Score": self.compute_modexp_score(fv),
+            "NTT_Score": self.compute_ntt_score(fv)
+        }
+        
+        # 4. Determine Classification
+        likely_algo = max(scores, key=scores.get)
+        confidence = scores[likely_algo]
+        
+        return {
+            "feature_vector": {k: round(v, 3) for k, v in fv.items()},
+            "math_scores": {k: round(v, 3) for k, v in scores.items()},
+            "prediction": likely_algo if confidence > 0.4 else "Generic_Code"
+        }
+
+
 class ExecutionTracer:
     """
     Captures unified time-series execution trace of basic blocks and syscalls.
@@ -130,6 +262,7 @@ class ExecutionTracer:
         self.sequence_number = 0
         self.block_cache = {}  # Cache for block features to avoid recomputation
         self.disassembler = None
+        self.math_engine = CryptoMathEngine()
         
         # Block coalescing state
         self.enable_coalescing = enable_coalescing
@@ -446,6 +579,12 @@ class ExecutionTracer:
             patterns_detected = sum([has_spn, has_modexp, has_ntt])
             crypto_confidence = patterns_detected / 3.0 if patterns_detected > 0 else 0.0
             
+            # Use CryptoMathEngine for advanced scoring
+            math_analysis = self.math_engine.analyze_block({
+                "mnemonics_simple": mnemonics_simple,
+                "address": hex(address)
+            })
+            
             features = {
                 "address": hex(address),
                 "size": size,
@@ -459,7 +598,9 @@ class ExecutionTracer:
                     "has_spn": has_spn,                 # NEW: SPN detection
                     "has_modexp": has_modexp,           # NEW: Modular exponentiation
                     "has_ntt": has_ntt,                 # NEW: NTT detection
-                    "crypto_confidence": crypto_confidence  # NEW: Composite score
+                    "crypto_confidence": crypto_confidence,  # NEW: Composite score
+                    "math_scores": math_analysis.get("math_scores", {}),
+                    "math_prediction": math_analysis.get("prediction", "Unknown")
                 }
             }
             
