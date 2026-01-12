@@ -140,7 +140,7 @@ If anything is missing or you want a feature explained or automated, open an iss
 1. Clone the repository:
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/pointblank-club/vestigo.git
     cd cross-compiler
     ```
 
