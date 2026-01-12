@@ -41,6 +41,35 @@ you can get the pipeline running and contribute.
 
 See `setup.sh` for an automated environment setup script and path hints.
 
+## Environment Setup
+
+Before running the pipeline, you need to configure environment variables. Create a `.env` file in the project root:
+
+1. Copy the example environment file:
+
+     ```bash
+     cp .env.example .env
+     ```
+
+2. Edit `.env` and fill in your actual values:
+
+     ```bash
+     # OpenAI API Configuration (optional, for LLM-assisted labeling)
+     OPENAI_API_KEY=your_openai_api_key_here
+
+     # Ghidra Installation Path
+     GHIDRA_HOME=/path/to/ghidra
+
+     # Python Virtual Environment Directory
+     VENV_DIR=/path/to/vestigo-data/.venv
+
+     # Database Configuration
+     DATABASE_URL=postgresql://user:password@localhost:5432/vestigo
+
+     # Perplexity API Configuration (optional)
+     PERPLEXITY_API_KEY=your_perplexity_api_key_here
+     ```
+
 ## Quickstart (recommended test flow)
 
 1. Create and activate a virtualenv and install Python deps:
@@ -51,12 +80,11 @@ See `setup.sh` for an automated environment setup script and path hints.
      pip install -r requirements.txt
      ```
 
-2. (Optional) Install/point to Ghidra. Set env var `GHIDRA_INSTALL_DIR` if not in `/opt/ghidra`.
+2. Set up your environment variables (see "Environment Setup" section above).
 
 3. If you want to generate the ML dataset from existing Ghidra JSONs:
 
      ```bash
-     export OPENAI_API_KEY="sk-..."    # optional; generate_dataset can use LLMs to help labeling
      python3 generate_dataset.py --input-dir ghidra_output --output dataset_output.csv --limit 10
      ```
 
@@ -113,7 +141,7 @@ Please see `CONTRIBUTING.md` for the contribution process, coding style and test
 
 ## License
 
-This repository is licensed under the MIT License — see `LICENSE`.
+This repository is licensed under the Apache-2.0 License — see `LICENSE`.
 
 ## Where to go next
 
