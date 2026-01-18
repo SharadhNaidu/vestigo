@@ -1,483 +1,776 @@
 #!/bin/bash
-
 ################################################################################
-# Vestigo Project Setup Script
-# 
-# This script sets up the complete Vestigo development environment including:
-# - System dependencies (Podman, Python, build tools)
-# - Python virtual environment with required packages
-# - Firmware extractor container image
-# - Ghidra installation (optional)
-# - Database setup (PostgreSQL with Prisma)
+# Vestigo 
+################################################################################
+# This script installs ALL dependencies for the Vestigo firmware analysis and
+# crypto-detection pipeline in a single unified virtual environment.
 #
-# Supports: Fedora/RHEL and Ubuntu/Debian based systems
+# Supported OS: Ubuntu/Debian, Fedora/RHEL, Arch Linux, macOS
+# Requirements: sudo access, internet connection, ~10GB disk space
+#
+# Usage: ./setup.sh [OPTIONS]
+#   --skip-ghidra       Skip Ghidra installation
+#   --skip-containers   Skip container build
+#   --skip-cross        Skip cross-compiler installation
+#   --skip-ml           Skip ML/torch dependencies
+#   --minimal           Minimal install (backend + qiling only)
+#   --dry-run           Show what would be installed without doing it
+#   -h, --help          Show this help message
 ################################################################################
 
 set -e  # Exit on error
+
+# =============================================================================
+# CONFIGURATION
+# =============================================================================
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_DIR="${SCRIPT_DIR}/venv"
+GHIDRA_VERSION="11.2.1"
+GHIDRA_DATE="20241105"
+GHIDRA_INSTALL_DIR="/opt/ghidra"
+QILING_DIR="${SCRIPT_DIR}/qiling_analysis/qiling"
+ROOTFS_DIR="${SCRIPT_DIR}/qiling_analysis/rootfs"
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Configuration
-PYTHON_VERSION="3.10"
-VENV_DIR="venv"
-CONTAINER_IMAGE_NAME="firmware-extractor"
-GHIDRA_VERSION="11.0.1"
-GHIDRA_INSTALL_DIR="/opt/ghidra"
+# Parse command line arguments
+SKIP_GHIDRA=false
+SKIP_CONTAINERS=false
+SKIP_CROSS=false
+SKIP_ML=false
+MINIMAL=false
+DRY_RUN=false
 
-################################################################################
-# Helper Functions
-################################################################################
-
-print_header() {
-    echo -e "\n${BLUE}================================${NC}"
-    echo -e "${BLUE}$1${NC}"
-    echo -e "${BLUE}================================${NC}\n"
-}
-
-print_success() {
-    echo -e "${GREEN}✓ $1${NC}"
-}
-
-print_error() {
-    echo -e "${RED}✗ $1${NC}"
-}
-
-print_warning() {
-    echo -e "${YELLOW}⚠ $1${NC}"
-}
-
-print_info() {
-    echo -e "${BLUE}ℹ $1${NC}"
-}
-
-check_root() {
-    if [ "$EUID" -eq 0 ]; then
-        print_error "Please do not run this script as root. It will request sudo when needed."
-        exit 1
-    fi
-}
-
-detect_os() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        OS=$ID
-        OS_VERSION=$VERSION_ID
-        print_info "Detected OS: $NAME $VERSION"
-    else
-        print_error "Cannot detect OS. /etc/os-release not found."
-        exit 1
-    fi
-}
-
-################################################################################
-# System Package Installation
-################################################################################
-
-install_fedora_packages() {
-    print_header "Installing Fedora/RHEL System Packages"
-    
-    sudo dnf update -y || print_warning "Failed to update package list"
-    
-    sudo dnf install -y \
-        python3 \
-        python3-pip \
-        python3-devel \
-        podman \
-        git \
-        gcc \
-        gcc-c++ \
-        make \
-        automake \
-        autoconf \
-        libtool \
-        zlib-devel \
-        xz-devel \
-        lzo-devel \
-        openssl-devel \
-        libmagic \
-        file-devel \
-        postgresql \
-        postgresql-server \
-        postgresql-devel \
-        wget \
-        curl \
-        patch \
-        || print_error "Some packages failed to install"
-    
-    print_success "Fedora packages installed"
-}
-
-install_ubuntu_packages() {
-    print_header "Installing Ubuntu/Debian System Packages"
-    
-    sudo apt-get update || print_warning "Failed to update package list"
-    
-    sudo apt-get install -y \
-        python3 \
-        python3-pip \
-        python3-venv \
-        python3-dev \
-        podman \
-        git \
-        build-essential \
-        gcc \
-        g++ \
-        make \
-        automake \
-        autoconf \
-        libtool \
-        zlib1g-dev \
-        liblzma-dev \
-        liblzo2-dev \
-        libssl-dev \
-        libmagic1 \
-        libmagic-dev \
-        postgresql \
-        postgresql-contrib \
-        libpq-dev \
-        wget \
-        curl \
-        patch \
-        || print_error "Some packages failed to install"
-    
-    print_success "Ubuntu packages installed"
-}
-
-install_system_packages() {
-    case $OS in
-        fedora|rhel|centos)
-            install_fedora_packages
+for arg in "$@"; do
+    case $arg in
+        --skip-ghidra)
+            SKIP_GHIDRA=true
             ;;
-        ubuntu|debian)
-            install_ubuntu_packages
+        --skip-containers)
+            SKIP_CONTAINERS=true
+            ;;
+        --skip-cross)
+            SKIP_CROSS=true
+            ;;
+        --skip-ml)
+            SKIP_ML=true
+            ;;
+        --minimal)
+            MINIMAL=true
+            SKIP_GHIDRA=true
+            SKIP_CONTAINERS=true
+            SKIP_CROSS=true
+            SKIP_ML=true
+            ;;
+        --dry-run)
+            DRY_RUN=true
+            ;;
+        -h|--help)
+            head -30 "$0" | tail -25
+            exit 0
             ;;
         *)
-            print_error "Unsupported OS: $OS"
-            print_info "Supported: Fedora, RHEL, CentOS, Ubuntu, Debian"
+            echo -e "${RED}Unknown option: $arg${NC}"
+            echo "Use --help for usage information"
             exit 1
             ;;
     esac
+done
+
+# =============================================================================
+# HELPER FUNCTIONS
+# =============================================================================
+
+print_header() {
+    echo -e "\n${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}  $1${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 }
 
-################################################################################
-# Podman and Container Setup
-################################################################################
+print_success() {
+    echo -e "${GREEN}[✓]${NC} $1"
+}
 
-setup_podman() {
-    print_header "Setting Up Podman"
+print_error() {
+    echo -e "${RED}[✗]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[!]${NC} $1"
+}
+
+print_info() {
+    echo -e "${CYAN}[*]${NC} $1"
+}
+
+detect_os() {
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        if [ -f /etc/os-release ]; then
+            . /etc/os-release
+            OS=$ID
+        elif [ -f /etc/debian_version ]; then
+            OS="debian"
+        elif [ -f /etc/redhat-release ]; then
+            OS="rhel"
+        else
+            OS="unknown"
+        fi
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        OS="macos"
+    else
+        OS="unknown"
+    fi
+    echo $OS
+}
+
+check_command() {
+    command -v "$1" &> /dev/null
+}
+
+run_cmd() {
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${YELLOW}[DRY-RUN]${NC} $*"
+    else
+        "$@"
+    fi
+}
+
+# =============================================================================
+# SYSTEM DEPENDENCIES
+# =============================================================================
+
+install_system_deps() {
+    print_header "Installing System Dependencies"
     
-    # Verify podman installation
-    if ! command -v podman &> /dev/null; then
-        print_error "Podman is not installed or not in PATH"
-        exit 1
+    OS=$(detect_os)
+    print_info "Detected OS: $OS"
+    
+    case $OS in
+        ubuntu|debian|pop|linuxmint)
+            print_info "Installing dependencies for Debian/Ubuntu..."
+            run_cmd sudo apt-get update
+            run_cmd sudo apt-get install -y \
+                python3 \
+                python3-pip \
+                python3-venv \
+                python3-dev \
+                git \
+                build-essential \
+                cmake \
+                pkg-config \
+                wget \
+                curl \
+                strace \
+                file \
+                binutils \
+                binwalk \
+                libffi-dev \
+                libssl-dev \
+                liblzma-dev \
+                liblzo2-dev \
+                zlib1g-dev \
+                libsqlite3-dev \
+                libreadline-dev \
+                libncurses5-dev \
+                libncursesw5-dev \
+                libmagic-dev \
+                libbz2-dev \
+                libxml2-dev \
+                libxmlsec1-dev \
+                xz-utils \
+                tk-dev \
+                yara \
+                unzip \
+                openjdk-17-jdk
+            ;;
+            
+        fedora|rhel|centos|rocky|almalinux)
+            print_info "Installing dependencies for Fedora/RHEL..."
+            run_cmd sudo dnf install -y --skip-unavailable \
+                python3 \
+                python3-pip \
+                python3-devel \
+                git \
+                gcc \
+                gcc-c++ \
+                make \
+                cmake \
+                pkg-config \
+                wget \
+                curl \
+                strace \
+                file \
+                binutils \
+                libffi-devel \
+                openssl-devel \
+                xz-devel \
+                lzo-devel \
+                zlib-devel \
+                sqlite-devel \
+                readline-devel \
+                ncurses-devel \
+                file-devel \
+                bzip2-devel \
+                libxml2-devel \
+                xmlsec1-devel \
+                tk-devel \
+                yara \
+                unzip \
+                java-21-openjdk-devel || true
+            ;;
+            
+        arch|manjaro|endeavouros)
+            print_info "Installing dependencies for Arch Linux..."
+            run_cmd sudo pacman -Sy --noconfirm \
+                python \
+                python-pip \
+                git \
+                base-devel \
+                cmake \
+                pkg-config \
+                wget \
+                curl \
+                strace \
+                file \
+                binutils \
+                libffi \
+                openssl \
+                xz \
+                lzo \
+                zlib \
+                sqlite \
+                readline \
+                ncurses \
+                bzip2 \
+                libxml2 \
+                xmlsec \
+                tk \
+                yara \
+                unzip \
+                jdk17-openjdk
+            ;;
+            
+        macos)
+            print_info "Installing dependencies for macOS..."
+            if ! check_command brew; then
+                print_error "Homebrew not found. Installing Homebrew..."
+                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            fi
+            
+            run_cmd brew update
+            run_cmd brew install \
+                python@3.11 \
+                git \
+                cmake \
+                pkg-config \
+                wget \
+                curl \
+                libffi \
+                openssl@3 \
+                xz \
+                lzo \
+                zlib \
+                sqlite \
+                readline \
+                ncurses \
+                bzip2 \
+                libxml2 \
+                xmlsec1 \
+                tk \
+                yara \
+                openjdk@17
+            
+            print_warning "Note: strace is not available on macOS"
+            ;;
+            
+        *)
+            print_error "Unsupported OS: $OS"
+            print_warning "Please install dependencies manually. See README.md"
+            exit 1
+            ;;
+    esac
+    
+    print_success "System dependencies installed"
+}
+
+# =============================================================================
+# CONTAINER RUNTIME (PODMAN)
+# =============================================================================
+
+install_container_runtime() {
+    print_header "Installing Container Runtime (Podman)"
+    
+    if check_command podman; then
+        print_success "Podman is already installed: $(podman --version)"
+        return
     fi
     
-    print_success "Podman is available: $(podman --version)"
-    
-    # Enable podman socket for rootless operation
-    systemctl --user enable --now podman.socket 2>/dev/null || print_warning "Could not enable podman socket"
-    
-    print_success "Podman setup complete"
-}
-
-build_firmware_extractor_image() {
-    print_header "Building Firmware Extractor Container Image"
-    
-    if [ ! -f "Containerfile" ]; then
-        print_error "Containerfile not found in current directory"
-        print_info "Please run this script from the project root directory"
-        exit 1
+    if check_command docker; then
+        print_warning "Docker found but Podman preferred. Using Docker as fallback."
+        return
     fi
     
-    print_info "Building container image: $CONTAINER_IMAGE_NAME"
-    print_info "This may take 5-15 minutes depending on your internet speed..."
+    OS=$(detect_os)
     
-    podman build -t $CONTAINER_IMAGE_NAME -f Containerfile . || {
-        print_error "Container image build failed"
-        exit 1
-    }
+    case $OS in
+        ubuntu|debian|pop|linuxmint)
+            run_cmd sudo apt-get install -y podman
+            ;;
+        fedora|rhel|centos|rocky|almalinux)
+            run_cmd sudo dnf install -y podman
+            ;;
+        arch|manjaro|endeavouros)
+            run_cmd sudo pacman -Sy --noconfirm podman
+            ;;
+        macos)
+            run_cmd brew install podman
+            run_cmd podman machine init
+            run_cmd podman machine start
+            ;;
+        *)
+            print_warning "Could not install Podman automatically"
+            ;;
+    esac
     
-    print_success "Container image '$CONTAINER_IMAGE_NAME' built successfully"
-    
-    # Verify the image
-    podman images | grep $CONTAINER_IMAGE_NAME && print_success "Image verified"
+    if check_command podman; then
+        print_success "Podman installed: $(podman --version)"
+    else
+        print_warning "Podman installation may have failed. Container features may not work."
+    fi
 }
 
-################################################################################
-# Python Environment Setup
-################################################################################
+# =============================================================================
+# PYTHON VIRTUAL ENVIRONMENT
+# =============================================================================
 
 setup_python_venv() {
     print_header "Setting Up Python Virtual Environment"
     
     # Check Python version
-    if ! command -v python3 &> /dev/null; then
-        print_error "Python 3 is not installed"
+    if ! check_command python3; then
+        print_error "Python 3 not found. Please install Python 3.9 or higher."
         exit 1
     fi
     
-    PYTHON_VER=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
-    print_info "Python version: $PYTHON_VER"
+    PYTHON_VERSION=$(python3 --version | awk '{print $2}')
+    print_info "Python version: $PYTHON_VERSION"
+    
+    # Check if version is at least 3.9
+    MAJOR=$(echo $PYTHON_VERSION | cut -d. -f1)
+    MINOR=$(echo $PYTHON_VERSION | cut -d. -f2)
+    if [ "$MAJOR" -lt 3 ] || ([ "$MAJOR" -eq 3 ] && [ "$MINOR" -lt 9 ]); then
+        print_error "Python 3.9 or higher is required. Current version: $PYTHON_VERSION"
+        exit 1
+    fi
     
     # Create virtual environment
     if [ -d "$VENV_DIR" ]; then
         print_warning "Virtual environment already exists at $VENV_DIR"
-        read -p "Do you want to recreate it? (y/N): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            rm -rf $VENV_DIR
-            python3 -m venv $VENV_DIR
-            print_success "Virtual environment recreated"
-        else
-            print_info "Using existing virtual environment"
-        fi
+        print_info "Using existing virtual environment"
     else
-        python3 -m venv $VENV_DIR
-        print_success "Virtual environment created at $VENV_DIR"
+        print_info "Creating virtual environment at $VENV_DIR..."
+        run_cmd python3 -m venv "$VENV_DIR"
     fi
     
-    # Activate virtual environment
-    source $VENV_DIR/bin/activate
+    # Activate virtual environment (skip in dry-run if venv doesn't exist)
+    if [ "$DRY_RUN" = true ] && [ ! -f "$VENV_DIR/bin/activate" ]; then
+        print_info "[DRY-RUN] Would activate venv at: $VENV_DIR/bin/activate"
+        print_warning "[DRY-RUN] Skipping pip/python steps (venv not created in dry-run)"
+        print_success "Virtual environment setup previewed"
+        VENV_ACTIVE=false
+        return
+    fi
+    
+    source "$VENV_DIR/bin/activate"
+    VENV_ACTIVE=true
     
     # Upgrade pip
-    print_info "Upgrading pip..."
-    pip install --upgrade pip wheel setuptools
+    print_info "Upgrading pip, setuptools, wheel..."
+    run_cmd pip install --upgrade pip setuptools wheel
     
-    print_success "Python virtual environment ready"
+    print_success "Virtual environment ready"
 }
 
-install_python_packages() {
-    print_header "Installing Python Packages"
+# =============================================================================
+# PYTHON DEPENDENCIES
+# =============================================================================
+
+install_python_deps() {
+    print_header "Installing Python Dependencies"
     
-    # Ensure we're in the virtual environment
-    if [ -z "$VIRTUAL_ENV" ]; then
-        print_error "Virtual environment is not activated"
-        exit 1
+    # Skip if venv not active (dry-run without existing venv)
+    if [ "$DRY_RUN" = true ] && [ ! -f "$VENV_DIR/bin/activate" ]; then
+        print_info "[DRY-RUN] Would install Python packages in venv"
+        print_success "Python dependencies installation previewed"
+        return
     fi
     
-    # Install root requirements
-    if [ -f "requirements.txt" ]; then
-        print_info "Installing root requirements..."
-        pip install -r requirements.txt || print_warning "Some root packages failed to install"
-        print_success "Root requirements installed"
+    source "$VENV_DIR/bin/activate"
+    
+    # Core web framework
+    print_info "Installing typing-extensions first to avoid conflicts..."
+    run_cmd pip install 'typing_extensions>=4.6.0'
+    
+    print_info "Installing FastAPI and web dependencies..."
+    run_cmd pip install \
+        'fastapi>=0.100.0' \
+        'uvicorn>=0.23.0' \
+        'python-multipart>=0.0.6' \
+        'pydantic>=2.0.0' \
+        'python-dotenv>=1.0.0' \
+        'python-magic>=0.4.27' \
+        'requests>=2.31.0'
+    
+    # Database
+    print_info "Installing database dependencies..."
+    run_cmd pip install 'prisma>=0.11.0'
+    
+    # ML and Data Science
+    print_info "Installing ML and data science packages..."
+    run_cmd pip install \
+        'scikit-learn>=1.3.0' \
+        'lightgbm>=4.0.0' \
+        'pandas>=2.0.0' \
+        'numpy>=1.24.0' \
+        'joblib>=1.3.0'
+    
+    # Binary analysis core
+    print_info "Installing binary analysis tools..."
+    run_cmd pip install \
+        'pyelftools>=0.28' \
+        'capstone>=4.0.0' \
+        'yara-python>=4.0.0' \
+        'pycryptodome>=3.15.0' \
+        'z3-solver>=4.11.0' \
+        'binwalk'
+    
+    # Qiling dependencies
+    print_info "Installing Qiling framework dependencies..."
+    run_cmd pip install \
+        'unicorn==2.1.3' \
+        'keystone-engine>=0.9.2' \
+        'pefile>=2022.5.30' \
+        'python-registry>=1.3.1' \
+        'gevent>=20.9.0' \
+        'multiprocess>=0.70.12.2' \
+        'pyyaml>=6.0.1' \
+        'python-fx' \
+        'questionary' \
+        'termcolor'
+    
+    # LLM integration
+    print_info "Installing LLM integration..."
+    run_cmd pip install 'openai>=1.0.0'
+    
+    # Additional utilities
+    print_info "Installing additional utilities..."
+    run_cmd pip install \
+        'colorama>=0.4.6' \
+        'tqdm>=4.65.0' \
+        'rich>=13.0.0' \
+        'loguru>=0.7.0'
+    
+    # Development tools
+    print_info "Installing development tools..."
+    run_cmd pip install \
+        'pytest>=7.0.0' \
+        'pytest-cov>=4.0.0' \
+        'black>=22.0.0' \
+        'flake8>=5.0.0' \
+        'mypy>=0.990'
+    
+    # Optional ML dependencies (PyTorch for GNN) - CPU ONLY
+    if [ "$SKIP_ML" = false ]; then
+        print_info "Installing PyTorch (CPU) and GNN dependencies..."
+        # Install CPU version of torch first to avoid huge CUDA downloads
+        run_cmd pip install \
+            'torch>=2.0.0' \
+            'torchvision' \
+            'torchaudio' \
+            --index-url https://download.pytorch.org/whl/cpu
+            
+        run_cmd pip install \
+            'torch-geometric>=2.3.0' \
+            'matplotlib>=3.7.0' \
+            'seaborn>=0.12.0' \
+            'networkx>=2.6.0'
     fi
     
-    # Install backend requirements
-    if [ -f "backend/requirements.txt" ]; then
-        print_info "Installing backend requirements..."
-        pip install -r backend/requirements.txt || print_warning "Some backend packages failed to install"
-        print_success "Backend requirements installed"
-    fi
-    
-    # Install production requirements if exists
-    if [ -f "requirements_production.txt" ]; then
-        print_info "Installing production requirements..."
-        pip install -r requirements_production.txt || print_warning "Some production packages failed to install"
-    fi
-    
-    print_success "Python packages installation complete"
+    print_success "Python dependencies installed"
 }
 
-################################################################################
-# Ghidra Setup (Optional)
-################################################################################
+# =============================================================================
+# QILING FRAMEWORK
+# =============================================================================
+
+install_qiling() {
+    print_header "Installing Qiling Framework"
+    
+    # Skip pip install in dry-run if venv doesn't exist
+    if [ "$DRY_RUN" = true ] && [ ! -f "$VENV_DIR/bin/activate" ]; then
+        print_info "[DRY-RUN] Would clone and install Qiling framework"
+        print_success "Qiling installation previewed"
+        return
+    fi
+    
+    source "$VENV_DIR/bin/activate"
+    
+    # Clone Qiling if not exists
+    if [ -d "$QILING_DIR" ]; then
+        print_info "Qiling directory exists, pulling latest..."
+        cd "$QILING_DIR"
+        run_cmd git pull || print_warning "Could not pull latest Qiling updates"
+        cd "$SCRIPT_DIR"
+    else
+        print_info "Cloning Qiling framework..."
+        run_cmd git clone https://github.com/qilingframework/qiling.git "$QILING_DIR"
+    fi
+    
+    # Install Qiling in editable mode
+    print_info "Installing Qiling in editable mode..."
+    run_cmd pip install -e "$QILING_DIR"
+    
+    # Clone rootfs if not exists or empty
+    if [ -d "$ROOTFS_DIR" ] && [ "$(ls -A "$ROOTFS_DIR")" ]; then
+        print_info "Rootfs directory exists and is not empty"
+    else
+        print_info "Cloning Qiling rootfs (this may take a while)..."
+        # Removing directory if it exists but empty to avoid git clone error
+        if [ -d "$ROOTFS_DIR" ]; then
+            rm -rf "$ROOTFS_DIR"
+        fi
+        run_cmd git clone https://github.com/qilingframework/rootfs.git "$ROOTFS_DIR"
+    fi
+    
+    print_success "Qiling framework installed"
+}
+
+# =============================================================================
+# GHIDRA HEADLESS ANALYZER
+# =============================================================================
 
 install_ghidra() {
-    print_header "Ghidra Installation (Optional)"
+    print_header "Installing Ghidra Headless Analyzer"
     
-    read -p "Do you want to install Ghidra for binary analysis? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        print_info "Skipping Ghidra installation"
-        print_warning "Note: Binary feature extraction will not work without Ghidra"
+    if [ -d "$GHIDRA_INSTALL_DIR" ] && [ -f "$GHIDRA_INSTALL_DIR/support/analyzeHeadless" ]; then
+        print_success "Ghidra already installed at $GHIDRA_INSTALL_DIR"
         return
     fi
     
-    # Check if Java is installed
-    if ! command -v java &> /dev/null; then
-        print_info "Installing Java (required for Ghidra)..."
-        case $OS in
-            fedora|rhel|centos)
-                sudo dnf install -y java-17-openjdk java-17-openjdk-devel
-                ;;
-            ubuntu|debian)
-                sudo apt-get install -y openjdk-17-jdk openjdk-17-jre
-                ;;
-        esac
-    fi
-    
-    JAVA_VERSION=$(java -version 2>&1 | head -n 1)
-    print_info "Java version: $JAVA_VERSION"
-    
-    # Check if Ghidra is already installed
-    if [ -d "$GHIDRA_INSTALL_DIR" ]; then
-        print_warning "Ghidra appears to be already installed at $GHIDRA_INSTALL_DIR"
-        read -p "Do you want to reinstall? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            print_info "Using existing Ghidra installation"
-            return
-        fi
-        sudo rm -rf $GHIDRA_INSTALL_DIR
-    fi
-    
-    print_info "Downloading Ghidra $GHIDRA_VERSION..."
-    GHIDRA_URL="https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_${GHIDRA_VERSION}_build/ghidra_${GHIDRA_VERSION}_PUBLIC_20240130.zip"
-    
-    # Try multiple download sources
-    TEMP_DIR=$(mktemp -d)
-    cd $TEMP_DIR
-    
-    if ! wget -q --show-progress "$GHIDRA_URL"; then
-        print_warning "Direct download failed, trying alternative method..."
-        print_info "Please download Ghidra manually from:"
-        print_info "https://github.com/NationalSecurityAgency/ghidra/releases"
-        print_info "Then extract it to $GHIDRA_INSTALL_DIR"
-        cd - > /dev/null
+    # Check for Java
+    if ! check_command java; then
+        print_error "Java not found. Ghidra requires Java 17+."
+        print_info "Please install OpenJDK 17 and re-run this script."
         return
     fi
     
-    print_info "Extracting Ghidra..."
-    unzip -q ghidra_*.zip
-    
-    sudo mkdir -p /opt
-    sudo mv ghidra_*_PUBLIC $GHIDRA_INSTALL_DIR
-    
-    cd - > /dev/null
-    rm -rf $TEMP_DIR
-    
-    if [ -f "$GHIDRA_INSTALL_DIR/ghidraRun" ]; then
-        print_success "Ghidra installed successfully at $GHIDRA_INSTALL_DIR"
-    else
-        print_error "Ghidra installation failed - ghidraRun not found at $GHIDRA_INSTALL_DIR"
-        return
+    JAVA_VERSION=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
+    if [ "$JAVA_VERSION" -lt 17 ]; then
+        print_warning "Java 17+ recommended. Current version: $JAVA_VERSION"
     fi
     
-    # Set environment variable
-    echo "export GHIDRA_INSTALL_DIR=$GHIDRA_INSTALL_DIR" >> ~/.bashrc
-    echo "export GHIDRA_INSTALL_DIR=$GHIDRA_INSTALL_DIR" >> ~/.zshrc 2>/dev/null || true
-    export GHIDRA_INSTALL_DIR=$GHIDRA_INSTALL_DIR
+    # Download Ghidra
+    GHIDRA_URL="https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_${GHIDRA_VERSION}_build/ghidra_${GHIDRA_VERSION}_PUBLIC_${GHIDRA_DATE}.zip"
+    GHIDRA_ZIP="/tmp/ghidra_${GHIDRA_VERSION}.zip"
     
-    print_success "GHIDRA_INSTALL_DIR environment variable set"
+    print_info "Downloading Ghidra ${GHIDRA_VERSION}..."
+    run_cmd wget -O "$GHIDRA_ZIP" "$GHIDRA_URL"
+    
+    # Extract Ghidra
+    print_info "Extracting Ghidra to $GHIDRA_INSTALL_DIR..."
+    run_cmd sudo mkdir -p "$GHIDRA_INSTALL_DIR"
+    run_cmd sudo unzip -q "$GHIDRA_ZIP" -d /opt/
+    run_cmd sudo mv "/opt/ghidra_${GHIDRA_VERSION}_PUBLIC"/* "$GHIDRA_INSTALL_DIR/"
+    run_cmd sudo rmdir "/opt/ghidra_${GHIDRA_VERSION}_PUBLIC"
+    run_cmd rm "$GHIDRA_ZIP"
+    
+    # Make scripts executable
+    run_cmd sudo chmod +x "$GHIDRA_INSTALL_DIR/support/analyzeHeadless"
+    
+    print_success "Ghidra installed to $GHIDRA_INSTALL_DIR"
 }
 
-################################################################################
-# Database Setup
-################################################################################
+# =============================================================================
+# CROSS-COMPILER TOOLCHAINS
+# =============================================================================
 
-setup_database() {
-    print_header "Database Setup"
+install_cross_compilers() {
+    print_header "Installing Cross-Compiler Toolchains"
     
-    read -p "Do you want to set up PostgreSQL database? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        print_info "Skipping database setup"
-        print_warning "You'll need to configure DATABASE_URL manually in .env file"
-        return
-    fi
+    OS=$(detect_os)
     
-    # Initialize PostgreSQL (if not already done)
     case $OS in
-        fedora|rhel|centos)
-            if [ ! -d "/var/lib/pgsql/data/base" ]; then
-                print_info "Initializing PostgreSQL..."
-                sudo postgresql-setup --initdb || print_warning "PostgreSQL may already be initialized"
-            fi
-            sudo systemctl enable postgresql
-            sudo systemctl start postgresql
+        ubuntu|debian|pop|linuxmint)
+            print_info "Installing cross-compiler binutils..."
+            run_cmd sudo apt-get install -y \
+                binutils-aarch64-linux-gnu \
+                binutils-arm-linux-gnueabi \
+                binutils-arm-linux-gnueabihf \
+                binutils-mips-linux-gnu \
+                binutils-mipsel-linux-gnu \
+                gcc-aarch64-linux-gnu \
+                gcc-arm-linux-gnueabi \
+                gcc-arm-linux-gnueabihf \
+                gcc-mips-linux-gnu
             ;;
-        ubuntu|debian)
-            sudo systemctl enable postgresql
-            sudo systemctl start postgresql
+            
+        fedora|rhel|centos|rocky|almalinux)
+            run_cmd sudo dnf install -y --skip-unavailable \
+                binutils-aarch64-linux-gnu \
+                binutils-arm-linux-gnu \
+                binutils-mips-linux-gnu \
+                gcc-aarch64-linux-gnu \
+                gcc-arm-linux-gnu
+            ;;
+            
+        arch|manjaro|endeavouros)
+            run_cmd sudo pacman -Sy --noconfirm \
+                aarch64-linux-gnu-binutils \
+                arm-linux-gnueabihf-binutils
+            ;;
+            
+        macos)
+            print_warning "Cross-compilers for macOS require manual setup"
+            print_info "Consider using Docker/Podman for cross-compilation"
+            ;;
+            
+        *)
+            print_warning "Cross-compiler installation not supported for $OS"
             ;;
     esac
     
-    print_success "PostgreSQL service started"
+    # Verify installation
+    print_info "Verifying cross-compiler tools..."
+    for tool in aarch64-linux-gnu-ld arm-linux-gnueabi-ld mips-linux-gnu-ld; do
+        if check_command $tool; then
+            print_success "$tool found"
+        else
+            print_warning "$tool not found"
+        fi
+    done
+}
+
+# =============================================================================
+# CONTAINER BUILD (SASQUATCH)
+# =============================================================================
+
+build_containers() {
+    print_header "Building Containers"
     
-    # Create database and user
-    DB_NAME="vestigo"
-    DB_USER="vestigo_user"
-    DB_PASS=$(openssl rand -base64 12)
-    
-    print_info "Creating database and user..."
-    sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;" 2>/dev/null || print_warning "Database may already exist"
-    sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';" 2>/dev/null || print_warning "User may already exist"
-    sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
-    
-    # Create .env file
-    if [ ! -f "backend/.env" ]; then
-        print_info "Creating backend/.env file..."
-        cat > backend/.env <<EOF
-DATABASE_URL="postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?schema=public"
-EOF
-        print_success "Database configuration saved to backend/.env"
+    # Determine container runtime
+    if check_command podman; then
+        CONTAINER_CMD="podman"
+    elif check_command docker; then
+        CONTAINER_CMD="docker"
     else
-        print_warning "backend/.env already exists, not overwriting"
-        print_info "Database connection string: postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?schema=public"
+        print_error "No container runtime found. Skipping container build."
+        return
     fi
     
-    # Generate Prisma client
-    print_info "Generating Prisma client..."
-    cd backend
-    if [ -n "$VIRTUAL_ENV" ]; then
-        prisma generate || print_warning "Prisma generate failed - run manually later"
-        prisma db push || print_warning "Prisma db push failed - run manually later"
+    print_info "Using $CONTAINER_CMD as container runtime"
+    
+    # Build sasquatch container
+    if [ -f "$SCRIPT_DIR/Containerfile" ]; then
+        print_info "Building sasquatch_tool container..."
+        run_cmd $CONTAINER_CMD build -t sasquatch_tool -f "$SCRIPT_DIR/Containerfile" "$SCRIPT_DIR"
+        print_success "sasquatch_tool container built"
+    else
+        print_warning "Containerfile not found at $SCRIPT_DIR/Containerfile"
     fi
-    cd ..
     
-    print_success "Database setup complete"
+    # Build cross-compiler container for factory
+    if [ -f "$SCRIPT_DIR/factory/Dockerfile.builder" ]; then
+        print_info "Building cross-compiler container..."
+        run_cmd $CONTAINER_CMD build -t vestigo-builder -f "$SCRIPT_DIR/factory/Dockerfile.builder" "$SCRIPT_DIR/factory"
+        print_success "vestigo-builder container built"
+    fi
 }
 
-################################################################################
-# Project Structure Verification
-################################################################################
+# =============================================================================
+# ENVIRONMENT CONFIGURATION
+# =============================================================================
 
-verify_project_structure() {
-    print_header "Verifying Project Structure"
+setup_environment() {
+    print_header "Setting Up Environment Configuration"
     
-    REQUIRED_DIRS=("backend" "ghidra_scripts" "source_code" "analysis")
-    REQUIRED_FILES=("Containerfile" "requirements.txt" "ingest.py" "unpack.py")
-    
-    for dir in "${REQUIRED_DIRS[@]}"; do
-        if [ -d "$dir" ]; then
-            print_success "Directory '$dir' exists"
+    # Create .env file if not exists
+    if [ ! -f "$SCRIPT_DIR/.env" ]; then
+        if [ -f "$SCRIPT_DIR/.env.example" ]; then
+            print_info "Creating .env from .env.example..."
+            cp "$SCRIPT_DIR/.env.example" "$SCRIPT_DIR/.env"
         else
-            print_warning "Directory '$dir' not found (may be created on first run)"
+            print_info "Creating .env file..."
+            cat > "$SCRIPT_DIR/.env" << EOF
+# Vestigo Environment Configuration
+# Generated by setup.sh on $(date)
+
+# OpenAI API Configuration (for LLM-assisted analysis)
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Ghidra Installation Path
+GHIDRA_HOME=${GHIDRA_INSTALL_DIR}
+
+# Python Virtual Environment Directory
+VENV_DIR=${VENV_DIR}
+
+# Database Configuration (NeonDB PostgreSQL)
+DATABASE_URL=postgresql://user:password@your-neondb-host.neon.tech/vestigo?sslmode=require
+
+# Perplexity API Configuration (optional)
+PERPLEXITY_API_KEY=your_perplexity_api_key_here
+EOF
         fi
-    done
+        print_success ".env file created"
+    else
+        print_info ".env file already exists"
+    fi
     
-    for file in "${REQUIRED_FILES[@]}"; do
-        if [ -f "$file" ]; then
-            print_success "File '$file' exists"
-        else
-            print_error "File '$file' not found"
+    # Update .env with Ghidra path if installed
+    if [ -d "$GHIDRA_INSTALL_DIR" ]; then
+        if grep -q "^GHIDRA_HOME=" "$SCRIPT_DIR/.env"; then
+            sed -i "s|^GHIDRA_HOME=.*|GHIDRA_HOME=${GHIDRA_INSTALL_DIR}|" "$SCRIPT_DIR/.env"
         fi
-    done
+    fi
     
-    # Create necessary directories
-    mkdir -p analysis_workspace ghidra_json ghidra_final_output logs job_storage
-    print_success "Created working directories"
+    # Initialize Prisma client (skip in dry-run without venv)
+    if [ "$DRY_RUN" = true ] && [ ! -f "$VENV_DIR/bin/activate" ]; then
+        print_info "[DRY-RUN] Would generate Prisma client"
+    else
+        print_info "Generating Prisma client..."
+        source "$VENV_DIR/bin/activate"
+    cd "$SCRIPT_DIR/backend"
+        if [ -f "prisma/schema.prisma" ]; then
+            run_cmd prisma generate || print_warning "Prisma generate failed. Set DATABASE_URL first."
+        fi
+        cd "$SCRIPT_DIR"
+    fi
+    
+    print_success "Environment configuration complete"
 }
 
-################################################################################
-# Final Setup and Instructions
-################################################################################
+# =============================================================================
+# UPDATE ACTIVATION SCRIPT
+# =============================================================================
 
 create_activation_script() {
-    print_header "Creating Activation Helper"
+    print_header "Creating Activation Script"
     
-    cat > activate_vestigo.sh <<'EOF'
+    cat > "$SCRIPT_DIR/activate_vestigo.sh" << 'EOF'
 #!/bin/bash
 # Vestigo Environment Activation Script
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Activate Python virtual environment
-if [ -f "venv/bin/activate" ]; then
-    source venv/bin/activate
+if [ -f "$SCRIPT_DIR/venv/bin/activate" ]; then
+    source "$SCRIPT_DIR/venv/bin/activate"
     echo "✓ Python virtual environment activated"
 else
     echo "✗ Virtual environment not found. Run setup.sh first."
@@ -486,98 +779,260 @@ fi
 
 # Set Ghidra path if installed
 if [ -d "/opt/ghidra" ]; then
-    export GHIDRA_INSTALL_DIR="/opt/ghidra"
-    echo "✓ Ghidra path set: $GHIDRA_INSTALL_DIR"
+    export GHIDRA_HOME="/opt/ghidra"
+    export PATH="$GHIDRA_HOME/support:$PATH"
+    echo "✓ Ghidra path set: $GHIDRA_HOME"
+fi
+
+# Load environment variables
+if [ -f "$SCRIPT_DIR/.env" ]; then
+    export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+    echo "✓ Environment variables loaded from .env"
 fi
 
 # Show status
 echo ""
-echo "Vestigo environment ready!"
-echo "Python: $(python --version)"
-echo "Working directory: $(pwd)"
+echo "═══════════════════════════════════════════════════════════"
+echo "  Vestigo Environment Ready!"
+echo "═══════════════════════════════════════════════════════════"
+echo "Python:    $(python --version)"
+echo "Pip:       $(pip --version | cut -d' ' -f1-2)"
+echo "Directory: $SCRIPT_DIR"
 echo ""
-echo "To run the backend:"
-echo "  cd backend && uvicorn main:app --reload"
+echo "Quick commands:"
+echo "  Backend:   cd backend && uvicorn main:app --reload"
+echo "  Frontend:  cd frontend && npm run dev"
+echo "  Ghidra:    analyzeHeadless --help"
 echo ""
 echo "To deactivate: deactivate"
+echo "═══════════════════════════════════════════════════════════"
 EOF
     
-    chmod +x activate_vestigo.sh
-    print_success "Created activation script: ./activate_vestigo.sh"
+    chmod +x "$SCRIPT_DIR/activate_vestigo.sh"
+    print_success "Activation script created: activate_vestigo.sh"
 }
+
+# =============================================================================
+# VERIFICATION
+# =============================================================================
+
+verify_installation() {
+    print_header "Verifying Installation"
+    
+    # Skip verification in dry-run if venv doesn't exist
+    if [ "$DRY_RUN" = true ] && [ ! -f "$VENV_DIR/bin/activate" ]; then
+        print_info "[DRY-RUN] Would verify installation"
+        print_success "Dry-run complete - no actual changes were made"
+        return 0
+    fi
+    
+    source "$VENV_DIR/bin/activate"
+    
+    ALL_OK=true
+    
+    # Check Python modules
+    print_info "Checking Python modules..."
+    
+    MODULES=("fastapi" "prisma" "pandas" "sklearn" "lightgbm" "pyelftools" "capstone" "yara" "Crypto" "qiling")
+    
+    for module in "${MODULES[@]}"; do
+        if python3 -c "import $module" 2>/dev/null; then
+            print_success "$module"
+        else
+            print_error "$module NOT installed"
+            ALL_OK=false
+        fi
+    done
+    
+    # Check Ghidra
+    if [ "$SKIP_GHIDRA" = false ]; then
+        print_info "Checking Ghidra..."
+        if [ -f "$GHIDRA_INSTALL_DIR/support/analyzeHeadless" ]; then
+            print_success "Ghidra headless analyzer found"
+        else
+            print_warning "Ghidra headless analyzer not found"
+        fi
+    fi
+    
+    # Check containers
+    if [ "$SKIP_CONTAINERS" = false ]; then
+        print_info "Checking containers..."
+        if check_command podman; then
+            if podman image exists sasquatch_tool 2>/dev/null; then
+                print_success "sasquatch_tool container exists"
+            else
+                print_warning "sasquatch_tool container not built"
+            fi
+        elif check_command docker; then
+            if docker image inspect sasquatch_tool >/dev/null 2>&1; then
+                print_success "sasquatch_tool container exists"
+            else
+                print_warning "sasquatch_tool container not built"
+            fi
+        fi
+    fi
+    
+    # Check rootfs
+    if [ -d "$ROOTFS_DIR" ] && [ "$(ls -A $ROOTFS_DIR 2>/dev/null)" ]; then
+        print_success "Qiling rootfs populated"
+    else
+        print_warning "Qiling rootfs empty or missing"
+    fi
+    
+    if [ "$ALL_OK" = true ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# =============================================================================
+# PRINT FINAL INSTRUCTIONS
+# =============================================================================
 
 print_final_instructions() {
     print_header "Setup Complete!"
     
-    cat <<EOF
-${GREEN}Vestigo project setup is complete!${NC}
+    cat << EOF
+${GREEN}Installation successful!${NC}
 
-${BLUE}Quick Start:${NC}
+${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}
+${CYAN}Quick Start:${NC}
+${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}
+
   1. Activate the environment:
-     ${YELLOW}source ./activate_vestigo.sh${NC}
-  
-  2. Run the backend server:
+     ${YELLOW}source activate_vestigo.sh${NC}
+     
+  2. Configure your .env file:
+     ${YELLOW}nano .env${NC}
+     - Set your OpenAI API key
+     - Set your NeonDB DATABASE_URL
+     
+  3. Run the backend:
      ${YELLOW}cd backend && uvicorn main:app --reload${NC}
+     
+  4. Run the frontend (separate terminal):
+     ${YELLOW}cd frontend && npm install && npm run dev${NC}
+
+${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}
+${CYAN}Installed Components:${NC}
+${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}
+
+  Python venv:     ${YELLOW}${VENV_DIR}${NC}
+  Ghidra:          ${YELLOW}${GHIDRA_INSTALL_DIR}${NC}
+  Qiling:          ${YELLOW}${QILING_DIR}${NC}
+  Rootfs:          ${YELLOW}${ROOTFS_DIR}${NC}
   
-  3. Access the API at:
-     ${YELLOW}http://localhost:8000${NC}
+${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}
+${CYAN}Available Commands:${NC}
+${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}
 
-${BLUE}Container Image:${NC}
-  - Image name: ${YELLOW}$CONTAINER_IMAGE_NAME${NC}
-  - Used by: ${YELLOW}unpack.py${NC} for firmware extraction
-  - Test with: ${YELLOW}podman images | grep $CONTAINER_IMAGE_NAME${NC}
+  ${GREEN}Backend API:${NC}
+    cd backend && uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    
+  ${GREEN}Static Analysis (Ghidra):${NC}
+    python3 scripts/analyzer.py <binary>
+    
+  ${GREEN}Dynamic Analysis (Qiling):${NC}
+    python3 qiling_analysis/tests/verify_crypto.py <binary>
+    
+  ${GREEN}Generate Dataset:${NC}
+    python3 scripts/generate_dataset.py --input-dir ghidra_output --output dataset.csv
 
-${BLUE}Environment:${NC}
-  - Python venv: ${YELLOW}./$VENV_DIR${NC}
-  - Activate: ${YELLOW}source $VENV_DIR/bin/activate${NC}
-  - Ghidra: ${YELLOW}${GHIDRA_INSTALL_DIR:-Not installed}${NC}
+${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}
 
-${BLUE}Important Files:${NC}
-  - Backend config: ${YELLOW}backend/.env${NC}
-  - Logs: ${YELLOW}backend/logs/${NC}
-  - Job storage: ${YELLOW}job_storage/${NC}
-  - Ghidra output: ${YELLOW}ghidra_json/${NC}
-
-${BLUE}Next Steps:${NC}
-  - Test firmware extraction: ${YELLOW}python unpack.py <firmware.bin>${NC}
-  - Test backend upload: ${YELLOW}curl -F "file=@test.bin" http://localhost:8000/analyze${NC}
-  - View API docs: ${YELLOW}http://localhost:8000/docs${NC}
-
-${YELLOW}Need help?${NC} Check the README files or run this script again.
+${YELLOW}Note: Remember to edit .env with your API keys and database URL!${NC}
 
 EOF
 }
 
-################################################################################
-# Main Execution
-################################################################################
+# =============================================================================
+# MAIN
+# =============================================================================
 
 main() {
-    print_header "Vestigo Project Setup"
-    print_info "This script will set up the complete Vestigo environment"
-    print_info "Estimated time: 10-20 minutes"
+    clear
+    cat << "EOF"
+ ██╗   ██╗███████╗███████╗████████╗██╗ ██████╗  ██████╗ 
+ ██║   ██║██╔════╝██╔════╝╚══██╔══╝██║██╔════╝ ██╔═══██╗
+ ██║   ██║█████╗  ███████╗   ██║   ██║██║  ███╗██║   ██║
+ ╚██╗ ██╔╝██╔══╝  ╚════██║   ██║   ██║██║   ██║██║   ██║
+  ╚████╔╝ ███████╗███████║   ██║   ██║╚██████╔╝╚██████╔╝
+   ╚═══╝  ╚══════╝╚══════╝   ╚═╝   ╚═╝ ╚═════╝  ╚═════╝ 
+                                                         
+  Firmware Analysis & Crypto Detection Pipeline
+  Unified Setup Script v1.0
+EOF
     echo ""
     
-    check_root
-    detect_os
+    print_info "Starting installation at $(date)"
+    print_info "Installation directory: $SCRIPT_DIR"
     
-    # Core setup steps
-    install_system_packages
-    setup_podman
-    build_firmware_extractor_image
+    if [ "$DRY_RUN" = true ]; then
+        print_warning "DRY RUN MODE - No changes will be made"
+    fi
     
+    echo ""
+    
+    # System dependencies
+    install_system_deps
+    
+    # Container runtime
+    if [ "$SKIP_CONTAINERS" = false ]; then
+        install_container_runtime
+    else
+        print_warning "Skipping container runtime installation"
+    fi
+    
+    # Python virtual environment
     setup_python_venv
-    install_python_packages
     
-    # Optional components
-    install_ghidra
-    setup_database
+    # Python dependencies
+    install_python_deps
     
-    # Finalization
-    verify_project_structure
+    # Qiling framework
+    install_qiling
+    
+    # Ghidra
+    if [ "$SKIP_GHIDRA" = false ]; then
+        install_ghidra
+    else
+        print_warning "Skipping Ghidra installation"
+    fi
+    
+    # Cross-compilers
+    if [ "$SKIP_CROSS" = false ]; then
+        install_cross_compilers
+    else
+        print_warning "Skipping cross-compiler installation"
+    fi
+    
+    # Container build
+    if [ "$SKIP_CONTAINERS" = false ]; then
+        build_containers
+    else
+        print_warning "Skipping container build"
+    fi
+    
+    # Environment configuration
+    setup_environment
+    
+    # Create activation script
     create_activation_script
-    print_final_instructions
+    
+    # Verification
+    if verify_installation; then
+        print_final_instructions
+        exit 0
+    else
+        print_error "Some checks failed. Please review the output above."
+        print_final_instructions
+        exit 1
+    fi
 }
 
-# Run main function
-main
+# =============================================================================
+# RUN
+# =============================================================================
+
+main "$@"
