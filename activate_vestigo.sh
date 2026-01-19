@@ -12,6 +12,10 @@ else
     exit 1
 fi
 
+# Set PYTHONPATH to include scripts directory and project root
+export PYTHONPATH="$SCRIPT_DIR:$SCRIPT_DIR/scripts:$SCRIPT_DIR/backend:${PYTHONPATH:-}"
+echo "✓ PYTHONPATH set: scripts, backend accessible"
+
 # Set Ghidra path if installed
 if [ -d "/opt/ghidra" ]; then
     export GHIDRA_HOME="/opt/ghidra"
@@ -21,7 +25,9 @@ fi
 
 # Load environment variables
 if [ -f "$SCRIPT_DIR/.env" ]; then
-    export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+    set -a
+    source "$SCRIPT_DIR/.env"
+    set +a
     echo "✓ Environment variables loaded from .env"
 fi
 
