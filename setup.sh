@@ -703,6 +703,13 @@ build_containers() {
     if [ -f "$SCRIPT_DIR/Containerfile" ]; then
         print_info "Building sasquatch_tool container..."
         run_cmd $CONTAINER_CMD build -t sasquatch_tool -f "$SCRIPT_DIR/Containerfile" "$SCRIPT_DIR"
+        
+        # Also tag it as firmware-extractor for backward compatibility
+        if [ "$DRY_RUN" != true ]; then
+            $CONTAINER_CMD tag sasquatch_tool firmware-extractor 2>/dev/null || true
+            print_info "Tagged as both 'sasquatch_tool' and 'firmware-extractor'"
+        fi
+        
         print_success "sasquatch_tool container built"
     else
         print_warning "Containerfile not found at $SCRIPT_DIR/Containerfile"
